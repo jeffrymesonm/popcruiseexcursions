@@ -13,3 +13,7 @@ desktop.ini
 .DS_Store
 .vscode/
 .playwright-mcp/
+
+# Internal design docs, plans and agent scratch (not part of the public site)
+/docs/
+/.superpowers/
