@@ -1,17 +1,23 @@
 /**
- * i18n.js — Language switching (Spanish base, English via translations.js).
+ * i18n.js — Language switching (Spanish base; English, French and Italian via translations*.js).
  *
  * - The <head> script has already chosen the initial language and stored it in <html data-lang>.
  * - Spanish copy is read once from the markup, so switching back restores it exactly.
  * - Elements opt in with data-i18n="key" (text) and data-i18n-<attr>="key" for
  *   placeholder, aria-label, alt, content and title.
- * - Buttons with data-lang-option="es|en" switch language and save the choice.
- * Exposes window.SiteI18n = { t, setLanguage, getLanguage } and fires "i18n:change" on window.
+ * - Buttons with data-lang-option="es|en|fr|it" switch language and save the choice.
+ * - WhatsApp messages are written in messageLanguage(): the page language when the team reads it
+ *   (Spanish, English), otherwise English.
+ * Exposes window.SiteI18n = { t, messageLanguage, setLanguage, getLanguage } and fires
+ * "i18n:change" on window.
  */
 (function () {
   'use strict';
 
   var STORAGE_KEY = 'site-lang';
+  /** Languages the team reads on WhatsApp, and the one used for messages from any other page language. */
+  var TEAM_LANGUAGES = ['es', 'en'];
+  var TEAM_FALLBACK = 'en';
   var ATTRIBUTES = ['placeholder', 'aria-label', 'alt', 'content', 'title'];
   var root = document.documentElement;
   var baseLanguage = root.getAttribute('lang') || 'es';
@@ -42,14 +48,24 @@
   }
 
   /**
-   * Translates a runtime key into the current language, falling back to the base language.
+   * Translates a runtime key, falling back to the base language.
    * @param {string} key - Translation key.
+   * @param {string} [lang] - Language to translate into (defaults to the current page language).
    * @returns {string} Translated string, or the key itself if no language defines it.
    */
-  function t(key) {
-    var value = lookup(currentLanguage, key);
+  function t(key, lang) {
+    var value = lookup(lang || currentLanguage, key);
     if (value === undefined) value = lookup(baseLanguage, key);
     return value === undefined ? key : value;
+  }
+
+  /**
+   * Language for WhatsApp messages: the team reads TEAM_LANGUAGES only, so a page shown in
+   * another language (French, Italian) sends its messages in TEAM_FALLBACK (English).
+   * @returns {string} "es" or "en".
+   */
+  function messageLanguage() {
+    return TEAM_LANGUAGES.indexOf(currentLanguage) > -1 ? currentLanguage : TEAM_FALLBACK;
   }
 
   /**
@@ -155,6 +171,7 @@
 
   window.SiteI18n = {
     t: t,
+    messageLanguage: messageLanguage,
     setLanguage: setLanguage,
     getLanguage: function () { return currentLanguage; }
   };

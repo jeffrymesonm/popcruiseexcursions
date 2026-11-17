@@ -6,8 +6,10 @@
  * - `en` holds the English version of every key used in index.html (data-i18n, data-i18n-*).
  * - `es` only holds strings that JavaScript writes at runtime (menu labels, WhatsApp messages,
  *   booking form messages), because those do not exist in the markup.
- * To edit copy: Spanish → index.html (and `es` below for runtime strings), English → `en` below.
- * Keep the keys identical. Prices are not here: they live in the price tables of index.html.
+ * To edit copy: Spanish → index.html (and `es` below for runtime strings), English → `en` below,
+ * French → translations-fr.js, Italian → translations-it.js. Keep the keys identical in all four.
+ * WhatsApp message keys (booking.msg.*, wa.greeting) exist only in `es` and `en`: the team reads
+ * those two, so French/Italian visitors send their messages in English. Prices are not here: they live in the price tables of index.html.
  * Runtime strings may contain {placeholders} that booking.js fills (e.g. {max}, {total}).
  */
 window.SITE_TRANSLATIONS = {
@@ -203,6 +205,23 @@ window.SITE_TRANSLATIONS = {
     'boats.cat-jacuzzi.name': 'Catamaran with jacuzzi',
     'boats.cat-jacuzzi.desc': 'Spacious catamaran with a bow jacuzzi, water slide and upper deck. Plenty of room to celebrate with your group.',
     'boats.cat-jacuzzi.alt': 'Jacuzzi on the catamaran’s bow, in front of the saloon',
+    // Gallery: thumbnail label, strip label and the alt text of each extra photo
+    'boats.photo': 'Photo',
+    'boats.photos': 'Boat photos',
+    'boats.viking.alt2': 'The Viking yacht seen from a drone, with a group on the aft deck',
+    'boats.viking.alt3': 'Couple holding two big fish on board the yacht',
+    'boats.yacht-jacuzzi.alt2': 'Jacuzzi on the yacht’s bow, with paddle boards',
+    'boats.yacht-jacuzzi.alt3': 'Couple relaxing in the yacht’s jacuzzi',
+    'boats.fp43.alt2': 'The catamaran seen from above at an angle',
+    'boats.fp43.alt3': 'The catamaran with a group on board, seen from a speedboat',
+    'boats.ocean-king.alt2': 'People swimming next to the Ocean King IV in turquoise water',
+    'boats.libreterre.alt2': 'The Libreterre from the side, with its name on the hull',
+    'boats.libreterre.alt3': 'The Libreterre’s stern with the water slide',
+    'boats.libreterre.alt4': 'Grilled chicken and skewers on board',
+    'boats.cat-jacuzzi.alt2': 'Group on the upper deck, with the bow jacuzzi in front',
+    'boats.cat-jacuzzi.alt3': 'Going down the slide into the sea',
+    'boats.cat-jacuzzi.alt4': 'A small wedding on the catamaran’s bow',
+    'boats.cat-jacuzzi.alt5': 'Group eating on board during a party',
 
     'tours.quote.title': 'Priced by group size',
     'tours.quote.text': 'Tell us how many you are and your cruise date, and we’ll send you the price on WhatsApp.',
@@ -283,6 +302,10 @@ window.SITE_TRANSLATIONS = {
     'booking.msg.ship': 'Cruise ship',
     'booking.msg.withZipline': 'with zipline',
     'booking.msg.withoutZipline': 'no zipline',
+    // Only in messages sent from the French/Italian page (they go out in English, see i18n.js)
+    'booking.msg.clientLanguage': 'Client language',
+    'lang.fr': 'French',
+    'lang.it': 'Italian',
     'wa.greeting': 'Hi Puerto Plata Cruise Excursions! I’d like information about your tours in Puerto Plata.',
 
     // Footer

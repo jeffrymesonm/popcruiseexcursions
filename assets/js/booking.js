@@ -53,23 +53,54 @@
   }
 
   /**
-   * Translates a key and fills its {placeholders}.
-   * @param {string} key - Translation key, e.g. "booking.estimate.large" ("… {max} …").
+   * Fills the {placeholders} of an already translated text.
+   * @param {string} text - Translated template, e.g. t("booking.estimate.large") ("… {max} …").
    * @param {Object<string, string|number>} values - Placeholder values by name.
    * @returns {string} Text with every known placeholder replaced (unknown ones are left as is).
    */
-  function fill(key, values) {
-    return t(key).replace(/\{(\w+)\}/g, function (match, name) {
+  function fill(text, values) {
+    return text.replace(/\{(\w+)\}/g, function (match, name) {
       return Object.prototype.hasOwnProperty.call(values, name) ? String(values[name]) : match;
     });
   }
 
   /**
    * Current page language.
-   * @returns {string} "es" or "en".
+   * @returns {string} "es", "en", "fr" or "it".
    */
   function language() {
     return window.SiteI18n ? window.SiteI18n.getLanguage() : document.documentElement.lang || 'es';
+  }
+
+  /**
+   * Language of the WhatsApp message: the team reads Spanish and English, so French and
+   * Italian pages write their booking in English (SiteI18n.messageLanguage).
+   * @returns {string} "es" or "en".
+   */
+  function messageLanguage() {
+    return window.SiteI18n ? window.SiteI18n.messageLanguage() : language();
+  }
+
+  /**
+   * Translates a key into the message language.
+   * @param {string} key - Translation key.
+   * @returns {string} Text for the WhatsApp message.
+   */
+  function tm(key) {
+    return window.SiteI18n ? window.SiteI18n.t(key, messageLanguage()) : key;
+  }
+
+  /**
+   * Visible text of a translatable element (a select option), in the message language.
+   * When the page is already in that language the element's own text is used, since Spanish
+   * static copy lives only in the markup.
+   * @param {HTMLElement} element - Element with optional data-i18n.
+   * @returns {string} Text for the WhatsApp message.
+   */
+  function messageText(element) {
+    var key = element.getAttribute('data-i18n');
+    if (!key || messageLanguage() === language()) return element.textContent.trim();
+    return tm(key);
   }
 
   /**
@@ -97,7 +128,7 @@
   function formatDate(value) {
     var date = new Date(value + 'T00:00:00Z');
     if (isNaN(date.getTime())) return value;
-    return new Intl.DateTimeFormat(language() === 'en' ? 'en-US' : 'es-DO', {
+    return new Intl.DateTimeFormat(messageLanguage() === 'en' ? 'en-US' : 'es-DO', {
       day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC'
     }).format(date);
   }
@@ -242,11 +273,11 @@
       return format(price.perPerson) + ' ' + t('price.perPerson') + ' × ' + peopleLabel(count);
     }
     if (price.extraCount > 0) {
-      return fill('booking.estimate.charterExtra', {
+      return fill(t('booking.estimate.charterExtra'), {
         base: format(price.base), count: price.extraCount, extra: format(price.extraPrice)
       });
     }
-    return fill('booking.estimate.charter', { max: price.included });
+    return fill(t('booking.estimate.charter'), { max: price.included });
   }
 
   /**
@@ -266,7 +297,7 @@
       estimateDetail.textContent = t('booking.estimate.quoteDetail');
     } else if (result.state === 'large') {
       estimateValue.textContent = t('booking.estimate.quote');
-      estimateDetail.textContent = fill('booking.estimate.large', { max: result.max || MAX_PEOPLE });
+      estimateDetail.textContent = fill(t('booking.estimate.large'), { max: result.max || MAX_PEOPLE });
     } else {
       estimateValue.textContent = '—';
       estimateDetail.textContent = '';
@@ -274,37 +305,42 @@
   }
 
   /**
-   * Writes the booking as a WhatsApp message in the current language.
+   * Writes the booking as a WhatsApp message in the message language (Spanish or English).
+   * When the page is in another language (French, Italian) the message is in English and ends
+   * with the visitor's language, so the team knows who they are talking to.
    * @returns {string} Message text.
    */
   function buildMessage() {
-    var tourName = tourSelect.options[tourSelect.selectedIndex].textContent.trim();
+    var tourName = messageText(tourSelect.options[tourSelect.selectedIndex]);
     if (!boatField.hidden) {
-      tourName += ' — ' + boatSelect.options[boatSelect.selectedIndex].textContent.trim();
+      tourName += ' — ' + messageText(boatSelect.options[boatSelect.selectedIndex]);
     }
     if (!ziplineField.hidden) {
-      tourName += ' (' + t(ziplineInput.checked ? 'booking.msg.withZipline' : 'booking.msg.withoutZipline') + ')';
+      tourName += ' (' + tm(ziplineInput.checked ? 'booking.msg.withZipline' : 'booking.msg.withoutZipline') + ')';
     }
     var result = currentQuote();
     var format = window.SitePrices.format;
-    var priceLine = t('booking.msg.toConfirm');
+    var priceLine = tm('booking.msg.toConfirm');
     if (result.state === 'priced' && result.price.perPerson !== null) {
-      priceLine = format(result.price.perPerson) + ' ' + t('price.perPerson') + ', ' + t('booking.msg.total') + ' ' + format(result.price.total);
+      priceLine = format(result.price.perPerson) + ' ' + tm('price.perPerson') + ', ' + tm('booking.msg.total') + ' ' + format(result.price.total);
     } else if (result.state === 'priced') {
-      priceLine = fill('booking.msg.charter', { total: format(result.price.total) });
+      priceLine = fill(tm('booking.msg.charter'), { total: format(result.price.total) });
     }
     var ship = form.elements.ship.value.trim();
 
     var lines = [
-      t('booking.msg.greeting'),
+      tm('booking.msg.greeting'),
       '',
-      '• ' + t('booking.msg.tour') + ': ' + tourName,
-      '• ' + t('booking.msg.date') + ': ' + formatDate(dateInput.value),
-      '• ' + t('booking.msg.people') + ': ' + people(),
-      '• ' + t('booking.msg.price') + ': ' + priceLine,
-      '• ' + t('booking.msg.name') + ': ' + form.elements.name.value.trim()
+      '• ' + tm('booking.msg.tour') + ': ' + tourName,
+      '• ' + tm('booking.msg.date') + ': ' + formatDate(dateInput.value),
+      '• ' + tm('booking.msg.people') + ': ' + people(),
+      '• ' + tm('booking.msg.price') + ': ' + priceLine,
+      '• ' + tm('booking.msg.name') + ': ' + form.elements.name.value.trim()
     ];
-    if (ship) lines.push('• ' + t('booking.msg.ship') + ': ' + ship);
+    if (ship) lines.push('• ' + tm('booking.msg.ship') + ': ' + ship);
+    if (messageLanguage() !== language()) {
+      lines.push('• ' + tm('booking.msg.clientLanguage') + ': ' + tm('lang.' + language()));
+    }
     return lines.join('\n');
   }
 

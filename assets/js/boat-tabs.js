@@ -2,8 +2,8 @@
  * boat-tabs.js — Boat picker of tour card 05 ("Catamarán o yate privado").
  *
  * ARIA tabs pattern with automatic activation: one tab per boat ([data-boat-tab="id"]).
- * Selecting a tab shows that boat's panel ([data-boat-panel="id"]) and photo
- * ([data-boat-photo="id"]) and hides the others. Keyboard: ← / → (wrapping), Home and End.
+ * Selecting a tab shows that boat's panel ([data-boat-panel="id"]), photo ([data-boat-photo="id"])
+ * and thumbnail strip ([data-boat-shots="id"], see boat-gallery.js) and hides the others. Keyboard: ← / → (wrapping), Home and End.
  * The markup already shows the first boat, so nothing jumps while the page loads; without JS the
  * CSS hides the tabs and lists every panel, so the tabpanel roles are only added here. The booking
  * form is not touched here: the "Reservar este barco" links preselect the boat (booking.js).
@@ -17,13 +17,14 @@
   var tabs = Array.prototype.slice.call(tablist.querySelectorAll('[data-boat-tab]'));
   var panels = document.querySelectorAll('[data-boat-panel]');
   var photos = document.querySelectorAll('[data-boat-photo]');
+  var strips = document.querySelectorAll('[data-boat-shots]');
 
   /** Index change for each navigation key (Home/End are handled as absolute positions). */
   var STEP = { ArrowRight: 1, ArrowLeft: -1 };
 
   /**
    * Shows the elements that belong to one boat and hides the rest.
-   * @param {NodeList} elements - Panels or photos.
+   * @param {NodeList} elements - Panels, photos or thumbnail strips.
    * @param {string} attribute - Attribute holding the boat id.
    * @param {string} id - Boat to show.
    * @returns {void}
@@ -49,6 +50,7 @@
     });
     showOnly(panels, 'data-boat-panel', id);
     showOnly(photos, 'data-boat-photo', id);
+    showOnly(strips, 'data-boat-shots', id);
     if (moveFocus) tab.focus();
   }
 

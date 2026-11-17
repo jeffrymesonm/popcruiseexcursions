@@ -317,7 +317,7 @@ button {
   }
 }
 
-/* Language selector: two segments, the active one filled. */
+/* Language selector: one segment per language (ES, EN, FR, IT), the active one filled. */
 .lang-switch {
   display: inline-flex;
   gap: 0.125rem;
@@ -530,8 +530,17 @@ button {
   transform: rotate(45deg);
 }
 
+/* Four languages: the segments share the menu's width equally so the names fit on small phones. */
+.lang-switch--menu {
+  display: flex;
+  width: 100%;
+  max-width: 26rem;
+}
+
 .lang-switch--menu .lang-switch__option {
-  padding-inline: 1.25rem;
+  flex: 1 1 0;
+  min-width: 0;
+  padding-inline: 0.5rem;
   font-size: 0.875rem;
 }
 
@@ -1319,6 +1328,18 @@ button {
   white-space: nowrap;
 }
 
+/* Small phones: tighter cells so three columns with long names (French "Avec tyrolienne") fit 360px. */
+@media (max-width: 399px) {
+  .prices th,
+  .prices td {
+    padding-inline: 0.625rem;
+  }
+
+  .prices thead th {
+    letter-spacing: 0.02em;
+  }
+}
+
 /* City tour stops: numbered chips. */
 .stops {
   display: flex;
@@ -1520,11 +1541,14 @@ button {
 }
 
 .boat-panel[hidden],
-.boat-photo[hidden] {
+.boat-photo[hidden],
+.boat-photo img[hidden],
+.boat-shots[hidden] {
   display: none;
 }
 
-html:not(.js) .boat-tabs {
+html:not(.js) .boat-tabs,
+html:not(.js) .boat-shots {
   display: none;
 }
 
@@ -1543,8 +1567,8 @@ html:not(.js) .boat-photo__name {
 }
 
 /*
- * Phones: the photo moves between the tabs and the boat's panel, so tapping a tab changes the
- * photo right below it. display: contents lets the text column's children join the card's grid
+ * Phones: the photo and its thumbnails move between the tabs and the boat's panel, so tapping a
+ * tab changes the photo right below it. display: contents lets the text column's children join the card's grid
  * so they can be reordered; the padding the column used to give them moves onto them.
  */
 @media (max-width: 767px) {
@@ -1565,7 +1589,7 @@ html:not(.js) .boat-photo__name {
     margin-inline: 0;
   }
 
-  .js .tour-card--boats .tour-card__media {
+  .js .tour-card--boats .boat-visual {
     order: 1;
   }
 
@@ -1618,7 +1642,16 @@ html:not(.js) .boat-photo__name {
   line-height: 1.2;
 }
 
-/* Photo column: one figure per boat, stacked; the boat name sits on the photo. */
+/* Photo column: the chosen boat's photo with its thumbnails underneath (phones: above the text). */
+.boat-visual {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  order: -1;
+  min-width: 0;
+}
+
+/* One figure per boat, stacked; each holds all its photos (one visible) and the boat's name. */
 .boat-photo {
   position: absolute;
   inset: 0;
@@ -1643,16 +1676,54 @@ html:not(.js) .boat-photo__name {
   line-height: 1.2;
 }
 
+/* Thumbnails of the chosen boat's photos (boat-gallery.js); up to five in one row. */
+.boat-shots {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.boat-shot {
+  overflow: hidden;
+  border: 2px solid transparent;
+  border-radius: 0.75rem;
+  transition: border-color 0.2s var(--ease-out);
+}
+
+.boat-shot:hover {
+  border-color: var(--color-tag);
+}
+
+.boat-shot[aria-pressed="true"] {
+  border-color: var(--color-fg);
+}
+
+.boat-shot:focus-visible {
+  outline-offset: 2px;
+}
+
+.boat-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
 /*
  * Tablet and up: this card is taller than the others (six boats), so the photo keeps a square
- * frame that follows the panel while it scrolls, instead of stretching to the card's full height
- * and showing only a slice of the boat (and its name far below the tabs).
+ * frame that follows the panel while it scrolls (with its thumbnails), instead of stretching to the
+ * card's full height and showing only a slice of the boat (and its name far below the tabs).
  */
 @media (min-width: 768px) {
-  .tour-card--boats .tour-card__media {
+  .tour-card--boats .boat-visual {
     position: sticky;
     top: 1.5rem;
     align-self: start;
+    order: 0;
+  }
+
+  .tour-card--boats .tour-card__media {
     aspect-ratio: 1 / 1;
   }
 }
