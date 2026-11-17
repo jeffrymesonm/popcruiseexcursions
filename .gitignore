@@ -1,0 +1,15 @@
+# Purpose: keep internal notes and raw client files out of the public GitHub Pages repo.
+
+# Internal notes (pending client items, stock-photo notes). Kept local only.
+/README.md
+
+# Client originals: sources of the .webp/.jpg files in assets/img. The page does not use them.
+/logo-original.png
+/*.jpeg
+
+# OS / editor / tooling noise
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.playwright-mcp/
