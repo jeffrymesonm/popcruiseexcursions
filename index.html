@@ -8,8 +8,9 @@
   with price tables), why us, call-to-action band, FAQ, WhatsApp booking form, footer.
   Spanish copy lives in this file (base language); English copy lives in assets/js/translations.js.
   Prices live ONLY in the .prices tables below: prices.js and booking.js read them from there.
-  Two kinds of table: per person (default) and data-pricing="charter" (catamaran: one flat price
-  for the whole boat up to the "flat" row's data-max, plus a price per extra person).
+  Two kinds of table: per person (default) and data-pricing="charter" (one per boat in the
+  "catamaran or yacht" card: a flat price for the whole boat up to the "flat" row's data-max, plus
+  a price per extra person). Boat tables are data-prices="boat-<id>", grouped by data-tour="catamaran".
   Styles: assets/css/styles.css · Behaviour: assets/js/*.js · Icons adapted from Lucide (ISC License).
 -->
 <html lang="es">
@@ -17,7 +18,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title data-i18n="meta.title">Puerto Plata Cruise Excursions — Excursiones en Puerto Plata para cruceristas</title>
-  <meta name="description" content="Excursiones en Puerto Plata para pasajeros de crucero: Charcos de Damajagua, City Tour, cabalgatas, buggies y catamarán privado. Transporte desde el puerto. Reserva por WhatsApp." data-i18n-content="meta.description">
+  <meta name="description" content="Excursiones en Puerto Plata para pasajeros de crucero: Charcos de Damajagua, City Tour, cabalgatas, buggies y catamarán o yate privado. Transporte desde el puerto. Reserva por WhatsApp." data-i18n-content="meta.description">
   <meta name="theme-color" content="#0e3a3c">
   <link rel="canonical" href="https://popcruiseexcursions.com/">
   <!-- Link preview (WhatsApp, Facebook…): absolute URLs, so they work once the site is live on the domain. -->
@@ -25,7 +26,7 @@
   <meta property="og:site_name" content="Puerto Plata Cruise Excursions">
   <meta property="og:url" content="https://popcruiseexcursions.com/">
   <meta property="og:title" content="Puerto Plata Cruise Excursions">
-  <meta property="og:description" content="Excursiones en Puerto Plata para cruceristas: cascadas de Damajagua, City Tour, cabalgatas, buggies y catamarán privado. Reserva por WhatsApp.">
+  <meta property="og:description" content="Excursiones en Puerto Plata para cruceristas: cascadas de Damajagua, City Tour, cabalgatas, buggies y catamarán o yate privado. Reserva por WhatsApp.">
   <meta property="og:image" content="https://popcruiseexcursions.com/assets/img/og-image.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -171,7 +172,7 @@
           <li data-i18n="marquee.2">City Tour Puerto Plata</li><li class="marquee__star"><svg><use href="#icon-asterisk"/></svg></li>
           <li data-i18n="marquee.3">Cabalgatas</li><li class="marquee__star"><svg><use href="#icon-asterisk"/></svg></li>
           <li data-i18n="marquee.4">Buggies y ATV</li><li class="marquee__star"><svg><use href="#icon-asterisk"/></svg></li>
-          <li data-i18n="marquee.6">Catamarán privado</li><li class="marquee__star"><svg><use href="#icon-asterisk"/></svg></li>
+          <li data-i18n="marquee.6">Catamarán o yate privado</li><li class="marquee__star"><svg><use href="#icon-asterisk"/></svg></li>
           <li data-i18n="marquee.5">Playa Dorada</li><li class="marquee__star"><svg><use href="#icon-asterisk"/></svg></li>
         </ul>
         <ul class="marquee__group">
@@ -179,7 +180,7 @@
           <li data-i18n="marquee.2">City Tour Puerto Plata</li><li class="marquee__star"><svg><use href="#icon-asterisk"/></svg></li>
           <li data-i18n="marquee.3">Cabalgatas</li><li class="marquee__star"><svg><use href="#icon-asterisk"/></svg></li>
           <li data-i18n="marquee.4">Buggies y ATV</li><li class="marquee__star"><svg><use href="#icon-asterisk"/></svg></li>
-          <li data-i18n="marquee.6">Catamarán privado</li><li class="marquee__star"><svg><use href="#icon-asterisk"/></svg></li>
+          <li data-i18n="marquee.6">Catamarán o yate privado</li><li class="marquee__star"><svg><use href="#icon-asterisk"/></svg></li>
           <li data-i18n="marquee.5">Playa Dorada</li><li class="marquee__star"><svg><use href="#icon-asterisk"/></svg></li>
         </ul>
       </div>
@@ -280,9 +281,9 @@
             <li class="spot spot--5">
               <a class="spot__card" href="#tour-catamaran">
                 <img src="assets/img/spot-catamaran.webp" alt="" width="720" height="900" loading="lazy" decoding="async">
-                <span class="spot__name" data-i18n="tours.catamaran.short">Catamarán</span>
+                <span class="spot__name" data-i18n="tours.catamaran.short">Catamarán o yate</span>
               </a>
-              <p class="spot__info"><span data-i18n="spots.5.info">Barco privado con comida y música</span> · <span data-i18n="price.from">desde</span> <span data-price-from="catamaran">US$1,000</span></p>
+              <p class="spot__info"><span data-i18n="spots.5.info">6 barcos privados para tu grupo</span> · <span data-i18n="price.from">desde</span> <span data-price-from="catamaran">US$900</span></p>
             </li>
           </ol>
         </div>
@@ -444,39 +445,268 @@
             </div>
           </li>
 
-          <!-- 05 · Private catamaran charter (flat price for the boat: data-pricing="charter") -->
-          <li class="tour-card" id="tour-catamaran" data-stack-card>
+          <!--
+            05 · Private catamaran or yacht: six boats, one .boat-panel each (ordered by price).
+            Each panel has its own charter table (data-prices="boat-<id>", grouped by data-tour="catamaran"
+            for the "from" price): the data-charge="flat" row is the whole boat up to its data-max, the
+            data-charge="extra" row is the price per extra person up to the boat's maximum.
+            boat-tabs.js shows one panel and its photo at a time; without JS all six panels are listed.
+          -->
+          <li class="tour-card tour-card--boats" id="tour-catamaran" data-stack-card>
             <div class="tour-card__text">
               <div class="tour-card__top">
                 <span class="tour-card__index" aria-hidden="true">(05)</span>
-                <span class="tour-card__from"><span data-i18n="price.from">desde</span> <strong data-price-from="catamaran">US$1,000</strong></span>
+                <span class="tour-card__from"><span data-i18n="price.from">desde</span> <strong data-price-from="catamaran">US$900</strong></span>
               </div>
               <div>
-                <h3 class="tour-card__title" data-i18n="tours.catamaran.title">Catamarán privado</h3>
-                <p class="tour-card__desc" data-i18n="tours.catamaran.desc">Un catamarán Fountaine Pajot de 43 pies solo para tu grupo: 4 horas navegando la costa de Puerto Plata. Perfecto para cumpleaños, bodas pequeñas o un día en familia.</p>
+                <h3 class="tour-card__title" data-i18n="tours.catamaran.title">Catamarán o yate privado</h3>
+                <p class="tour-card__desc" data-i18n="tours.catamaran.desc">Alquila el barco completo solo para tu grupo y navega la costa de Puerto Plata. Elige entre 4 catamaranes y 2 yates.</p>
               </div>
-              <table class="prices" data-prices="catamaran" data-pricing="charter">
-                <caption class="visually-hidden" data-i18n="tours.catamaran.caption">Precio del alquiler privado del catamarán según el tamaño del grupo</caption>
-                <thead>
-                  <tr><th scope="col" data-i18n="price.group">Grupo</th><th scope="col" data-option="basic" data-i18n="price.boat">Precio del barco</th></tr>
-                </thead>
-                <tbody>
-                  <tr data-min="1" data-max="15" data-charge="flat"><th scope="row" data-i18n="price.c1">1 a 15 personas</th><td>US$1,000</td></tr>
-                  <tr data-min="16" data-max="18" data-charge="extra"><th scope="row" data-i18n="price.c2">Persona adicional (16 a 18)</th><td>+US$25</td></tr>
-                </tbody>
-              </table>
-              <ul class="includes" aria-label="Incluye" data-i18n-aria-label="tours.includes">
-                <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="tours.catamaran.inc1">Tripulación a bordo</span></li>
-                <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="tours.catamaran.inc2">Comida y bebidas</span></li>
-                <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="tours.catamaran.inc3">Música a bordo</span></li>
-              </ul>
-              <div class="tour-card__actions">
-                <a class="btn btn--sun" href="#booking" data-book="catamaran" data-i18n="tours.book">Reservar este tour</a>
-                <p class="tour-card__note" data-i18n="tours.catamaran.note">Se reserva con un depósito de US$400. Puedes traer bebidas o comida extra.</p>
+
+              <!-- Boat picker (boat-tabs.js): one tab per boat; hidden without JS, where every panel is listed. -->
+              <div class="boat-tabs" role="tablist" aria-label="Elige tu barco" data-i18n-aria-label="boats.choose" data-boat-tabs>
+                <button class="boat-tab" type="button" role="tab" id="boat-tab-viking" aria-controls="boat-viking" aria-selected="true" tabindex="0" data-boat-tab="viking">
+                  <img class="boat-tab__img" src="assets/img/boat-viking-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async">
+                  <span class="boat-tab__name">Viking 48'</span>
+                  <span class="boat-tab__meta"><span data-i18n="boats.type.yacht">Yate</span> · <span data-price-from="boat-viking">US$900</span></span>
+                </button>
+                <button class="boat-tab" type="button" role="tab" id="boat-tab-yacht-jacuzzi" aria-controls="boat-yacht-jacuzzi" aria-selected="false" tabindex="-1" data-boat-tab="yacht-jacuzzi">
+                  <img class="boat-tab__img" src="assets/img/boat-yacht-jacuzzi-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async">
+                  <span class="boat-tab__name"><span data-i18n="boats.yacht-jacuzzi.name">Yate con jacuzzi</span></span>
+                  <span class="boat-tab__meta"><span data-i18n="boats.type.yacht">Yate</span> · <span data-price-from="boat-yacht-jacuzzi">US$950</span></span>
+                </button>
+                <button class="boat-tab" type="button" role="tab" id="boat-tab-fp43" aria-controls="boat-fp43" aria-selected="false" tabindex="-1" data-boat-tab="fp43">
+                  <img class="boat-tab__img" src="assets/img/boat-fp43-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async">
+                  <span class="boat-tab__name">Fountaine Pajot 43'</span>
+                  <span class="boat-tab__meta"><span data-i18n="boats.type.catamaran">Catamarán</span> · <span data-price-from="boat-fp43">US$1,000</span></span>
+                </button>
+                <button class="boat-tab" type="button" role="tab" id="boat-tab-ocean-king" aria-controls="boat-ocean-king" aria-selected="false" tabindex="-1" data-boat-tab="ocean-king">
+                  <img class="boat-tab__img" src="assets/img/boat-ocean-king-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async">
+                  <span class="boat-tab__name">The Ocean King IV</span>
+                  <span class="boat-tab__meta"><span data-i18n="boats.type.catamaran">Catamarán</span> · <span data-price-from="boat-ocean-king">US$1,100</span></span>
+                </button>
+                <button class="boat-tab" type="button" role="tab" id="boat-tab-libreterre" aria-controls="boat-libreterre" aria-selected="false" tabindex="-1" data-boat-tab="libreterre">
+                  <img class="boat-tab__img" src="assets/img/boat-libreterre-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async">
+                  <span class="boat-tab__name">Libreterre</span>
+                  <span class="boat-tab__meta"><span data-i18n="boats.type.catamaran">Catamarán</span> · <span data-price-from="boat-libreterre">US$1,250</span></span>
+                </button>
+                <button class="boat-tab" type="button" role="tab" id="boat-tab-cat-jacuzzi" aria-controls="boat-cat-jacuzzi" aria-selected="false" tabindex="-1" data-boat-tab="cat-jacuzzi">
+                  <img class="boat-tab__img" src="assets/img/boat-cat-jacuzzi-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async">
+                  <span class="boat-tab__name"><span data-i18n="boats.cat-jacuzzi.name">Catamarán con jacuzzi</span></span>
+                  <span class="boat-tab__meta"><span data-i18n="boats.type.catamaran">Catamarán</span> · <span data-price-from="boat-cat-jacuzzi">US$1,300</span></span>
+                </button>
+              </div>
+
+              <!-- Viking 48' (yacht) -->
+              <div class="boat-panel" id="boat-viking" data-boat-panel="viking">
+                <div>
+                  <h4 class="boat-panel__name">Viking 48' <span class="boat-panel__type" data-i18n="boats.type.yacht">Yate</span></h4>
+                  <p class="boat-panel__desc" data-i18n="boats.viking.desc">Yate de pesca deportiva con flybridge: la terraza de arriba tiene las mejores vistas. Abajo hay salón, 2 camarotes y 2 baños, y la popa es la zona de fiesta.</p>
+                </div>
+                <ul class="boat-specs">
+                  <li>48 <span data-i18n="boats.ft">pies</span></li>
+                  <li><span data-i18n="boats.upTo">Hasta</span> 15 <span data-i18n="booking.persons">personas</span></li>
+                  <li>3–4 <span data-i18n="boats.hours">horas</span></li>
+                </ul>
+                <table class="prices" data-prices="boat-viking" data-tour="catamaran" data-pricing="charter">
+                  <caption class="visually-hidden" data-i18n="boats.caption">Precio del alquiler del barco según el tamaño del grupo</caption>
+                  <thead>
+                    <tr><th scope="col" data-i18n="price.group">Grupo</th><th scope="col" data-option="basic" data-i18n="price.boat">Precio del barco</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr data-min="1" data-max="15" data-charge="flat"><th scope="row">1 <span data-i18n="price.to">a</span> 15 <span data-i18n="booking.persons">personas</span></th><td>US$900</td></tr>
+                  </tbody>
+                </table>
+                <ul class="includes" aria-label="Incluye" data-i18n-aria-label="tours.includes">
+                  <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.crew">Tripulación a bordo</span></li>
+                  <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.viking.inc2">Snacks, cerveza, refrescos y agua</span></li>
+                  <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.viking.inc3">Parrilla y música Bluetooth</span></li>
+                  <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.snorkel">Parada para snorkel</span></li>
+                </ul>
+                <div class="tour-card__actions">
+                  <a class="btn btn--sun" href="#booking" data-book="catamaran" data-book-boat="viking" data-i18n="boats.book">Reservar este barco</a>
+                  <p class="tour-card__note" data-i18n="boats.deposit.ask">Te confirmamos el depósito por WhatsApp.</p>
+                </div>
+              </div>
+
+              <!-- Yacht with jacuzzi -->
+              <div class="boat-panel" id="boat-yacht-jacuzzi" data-boat-panel="yacht-jacuzzi" hidden>
+                <div>
+                  <h4 class="boat-panel__name"><span data-i18n="boats.yacht-jacuzzi.name">Yate con jacuzzi</span> <span class="boat-panel__type" data-i18n="boats.type.yacht">Yate</span></h4>
+                  <p class="boat-panel__desc" data-i18n="boats.yacht-jacuzzi.desc">Yate con jacuzzi en la proa para relajarte mientras navegas. Barbacoa, frutas y barra libre incluidas.</p>
+                </div>
+                <ul class="boat-specs">
+                  <li><span data-i18n="boats.upTo">Hasta</span> 25 <span data-i18n="booking.persons">personas</span></li>
+                </ul>
+                <table class="prices" data-prices="boat-yacht-jacuzzi" data-tour="catamaran" data-pricing="charter">
+                  <caption class="visually-hidden" data-i18n="boats.caption">Precio del alquiler del barco según el tamaño del grupo</caption>
+                  <thead>
+                    <tr><th scope="col" data-i18n="price.group">Grupo</th><th scope="col" data-option="basic" data-i18n="price.boat">Precio del barco</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr data-min="1" data-max="10" data-charge="flat"><th scope="row">1 <span data-i18n="price.to">a</span> 10 <span data-i18n="booking.persons">personas</span></th><td>US$950</td></tr>
+                    <tr data-min="11" data-max="25" data-charge="extra"><th scope="row"><span data-i18n="price.extra">Persona adicional</span> (11 <span data-i18n="price.to">a</span> 25)</th><td>+US$40</td></tr>
+                  </tbody>
+                </table>
+                <ul class="includes" aria-label="Incluye" data-i18n-aria-label="tours.includes">
+                  <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.snacks">Frutas, nachos y salsa</span></li>
+                  <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.bbq">Barbacoa</span></li>
+                  <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.bar">Ron, cerveza, refrescos, jugo y agua</span></li>
+                </ul>
+                <div class="tour-card__actions">
+                  <a class="btn btn--sun" href="#booking" data-book="catamaran" data-book-boat="yacht-jacuzzi" data-i18n="boats.book">Reservar este barco</a>
+                  <p class="tour-card__note" data-i18n="boats.deposit.400">Se reserva con un depósito de US$400.</p>
+                </div>
+              </div>
+
+              <!-- Fountaine Pajot 43' (catamaran) -->
+              <div class="boat-panel" id="boat-fp43" data-boat-panel="fp43" hidden>
+                <div>
+                  <h4 class="boat-panel__name">Fountaine Pajot 43' <span class="boat-panel__type" data-i18n="boats.type.catamaran">Catamarán</span></h4>
+                  <p class="boat-panel__desc" data-i18n="boats.fp43.desc">Catamarán de vela con red en la proa para tomar sol: 4 horas navegando la costa de Puerto Plata. Perfecto para cumpleaños, bodas pequeñas o un día en familia.</p>
+                </div>
+                <ul class="boat-specs">
+                  <li>43 <span data-i18n="boats.ft">pies</span></li>
+                  <li><span data-i18n="boats.upTo">Hasta</span> 18 <span data-i18n="booking.persons">personas</span></li>
+                  <li>4 <span data-i18n="boats.hours">horas</span></li>
+                </ul>
+                <table class="prices" data-prices="boat-fp43" data-tour="catamaran" data-pricing="charter">
+                  <caption class="visually-hidden" data-i18n="boats.caption">Precio del alquiler del barco según el tamaño del grupo</caption>
+                  <thead>
+                    <tr><th scope="col" data-i18n="price.group">Grupo</th><th scope="col" data-option="basic" data-i18n="price.boat">Precio del barco</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr data-min="1" data-max="15" data-charge="flat"><th scope="row">1 <span data-i18n="price.to">a</span> 15 <span data-i18n="booking.persons">personas</span></th><td>US$1,000</td></tr>
+                    <tr data-min="16" data-max="18" data-charge="extra"><th scope="row"><span data-i18n="price.extra">Persona adicional</span> (16 <span data-i18n="price.to">a</span> 18)</th><td>+US$25</td></tr>
+                  </tbody>
+                </table>
+                <ul class="includes" aria-label="Incluye" data-i18n-aria-label="tours.includes">
+                  <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.crew">Tripulación a bordo</span></li>
+                  <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.food">Comida y bebidas</span></li>
+                  <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.music">Música a bordo</span></li>
+                </ul>
+                <div class="tour-card__actions">
+                  <a class="btn btn--sun" href="#booking" data-book="catamaran" data-book-boat="fp43" data-i18n="boats.book">Reservar este barco</a>
+                  <p class="tour-card__note" data-i18n="boats.fp43.note">Se reserva con un depósito de US$400. Puedes traer bebidas o comida extra.</p>
+                </div>
+              </div>
+
+              <!-- The Ocean King IV (power catamaran) -->
+              <div class="boat-panel" id="boat-ocean-king" data-boat-panel="ocean-king" hidden>
+                <div>
+                  <h4 class="boat-panel__name">The Ocean King IV <span class="boat-panel__type" data-i18n="boats.type.catamaran">Catamarán</span></h4>
+                  <p class="boat-panel__desc" data-i18n="boats.ocean-king.desc">Catamarán de motor de dos pisos con terraza arriba: espacio de sobra para grupos grandes, barbacoa y paradas para nadar en aguas turquesa.</p>
+                </div>
+                <ul class="boat-specs">
+                  <li><span data-i18n="boats.upTo">Hasta</span> 25 <span data-i18n="booking.persons">personas</span></li>
+                </ul>
+                <table class="prices" data-prices="boat-ocean-king" data-tour="catamaran" data-pricing="charter">
+                  <caption class="visually-hidden" data-i18n="boats.caption">Precio del alquiler del barco según el tamaño del grupo</caption>
+                  <thead>
+                    <tr><th scope="col" data-i18n="price.group">Grupo</th><th scope="col" data-option="basic" data-i18n="price.boat">Precio del barco</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr data-min="1" data-max="10" data-charge="flat"><th scope="row">1 <span data-i18n="price.to">a</span> 10 <span data-i18n="booking.persons">personas</span></th><td>US$1,100</td></tr>
+                    <tr data-min="11" data-max="25" data-charge="extra"><th scope="row"><span data-i18n="price.extra">Persona adicional</span> (11 <span data-i18n="price.to">a</span> 25)</th><td>+US$45</td></tr>
+                  </tbody>
+                </table>
+                <ul class="includes" aria-label="Incluye" data-i18n-aria-label="tours.includes">
+                  <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.snacks">Frutas, nachos y salsa</span></li>
+                  <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.bbq">Barbacoa</span></li>
+                  <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.bar">Ron, cerveza, refrescos, jugo y agua</span></li>
+                </ul>
+                <div class="tour-card__actions">
+                  <a class="btn btn--sun" href="#booking" data-book="catamaran" data-book-boat="ocean-king" data-i18n="boats.book">Reservar este barco</a>
+                  <p class="tour-card__note" data-i18n="boats.deposit.ask">Te confirmamos el depósito por WhatsApp.</p>
+                </div>
+              </div>
+
+              <!-- Libreterre · Privilege 52' (catamaran) -->
+              <div class="boat-panel" id="boat-libreterre" data-boat-panel="libreterre" hidden>
+                <div>
+                  <h4 class="boat-panel__name">Libreterre · Privilege 52' <span class="boat-panel__type" data-i18n="boats.type.catamaran">Catamarán</span></h4>
+                  <p class="boat-panel__desc" data-i18n="boats.libreterre.desc">Catamarán de vela con jacuzzi, tobogán al agua, trampolín y terraza arriba; 4 camarotes y 4 baños. El favorito para despedidas de soltera y cumpleaños: te ayudamos con decoración, pastel, catering, fotos y video (a consultar).</p>
+                </div>
+                <ul class="boat-specs">
+                  <li>52 <span data-i18n="boats.ft">pies</span></li>
+                  <li><span data-i18n="boats.upTo">Hasta</span> 30 <span data-i18n="booking.persons">personas</span></li>
+                  <li>4 <span data-i18n="boats.hours">horas</span></li>
+                </ul>
+                <table class="prices" data-prices="boat-libreterre" data-tour="catamaran" data-pricing="charter">
+                  <caption class="visually-hidden" data-i18n="boats.caption">Precio del alquiler del barco según el tamaño del grupo</caption>
+                  <thead>
+                    <tr><th scope="col" data-i18n="price.group">Grupo</th><th scope="col" data-option="basic" data-i18n="price.boat">Precio del barco</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr data-min="1" data-max="20" data-charge="flat"><th scope="row">1 <span data-i18n="price.to">a</span> 20 <span data-i18n="booking.persons">personas</span></th><td>US$1,250</td></tr>
+                    <tr data-min="21" data-max="30" data-charge="extra"><th scope="row"><span data-i18n="price.extra">Persona adicional</span> (21 <span data-i18n="price.to">a</span> 30)</th><td>+US$25</td></tr>
+                  </tbody>
+                </table>
+                <ul class="includes" aria-label="Incluye" data-i18n-aria-label="tours.includes">
+                  <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.crew">Tripulación a bordo</span></li>
+                  <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.food">Comida y bebidas</span></li>
+                  <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.music">Música a bordo</span></li>
+                  <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.snorkel">Parada para snorkel</span></li>
+                </ul>
+                <div class="tour-card__actions">
+                  <a class="btn btn--sun" href="#booking" data-book="catamaran" data-book-boat="libreterre" data-i18n="boats.book">Reservar este barco</a>
+                  <p class="tour-card__note" data-i18n="boats.libreterre.note">Se reserva con un depósito de US$550. Horario flexible según la llegada de tu crucero a Amber Cove o Taíno Bay.</p>
+                </div>
+              </div>
+
+              <!-- Catamaran with jacuzzi -->
+              <div class="boat-panel" id="boat-cat-jacuzzi" data-boat-panel="cat-jacuzzi" hidden>
+                <div>
+                  <h4 class="boat-panel__name"><span data-i18n="boats.cat-jacuzzi.name">Catamarán con jacuzzi</span> <span class="boat-panel__type" data-i18n="boats.type.catamaran">Catamarán</span></h4>
+                  <p class="boat-panel__desc" data-i18n="boats.cat-jacuzzi.desc">Catamarán amplio con jacuzzi en la proa, tobogán al agua y terraza arriba. Mucho espacio para celebrar con tu grupo.</p>
+                </div>
+                <ul class="boat-specs">
+                  <li><span data-i18n="boats.upTo">Hasta</span> 25 <span data-i18n="booking.persons">personas</span></li>
+                </ul>
+                <table class="prices" data-prices="boat-cat-jacuzzi" data-tour="catamaran" data-pricing="charter">
+                  <caption class="visually-hidden" data-i18n="boats.caption">Precio del alquiler del barco según el tamaño del grupo</caption>
+                  <thead>
+                    <tr><th scope="col" data-i18n="price.group">Grupo</th><th scope="col" data-option="basic" data-i18n="price.boat">Precio del barco</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr data-min="1" data-max="15" data-charge="flat"><th scope="row">1 <span data-i18n="price.to">a</span> 15 <span data-i18n="booking.persons">personas</span></th><td>US$1,300</td></tr>
+                    <tr data-min="16" data-max="25" data-charge="extra"><th scope="row"><span data-i18n="price.extra">Persona adicional</span> (16 <span data-i18n="price.to">a</span> 25)</th><td>+US$30</td></tr>
+                  </tbody>
+                </table>
+                <ul class="includes" aria-label="Incluye" data-i18n-aria-label="tours.includes">
+                  <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.crew">Tripulación a bordo</span></li>
+                </ul>
+                <div class="tour-card__actions">
+                  <a class="btn btn--sun" href="#booking" data-book="catamaran" data-book-boat="cat-jacuzzi" data-i18n="boats.book">Reservar este barco</a>
+                  <p class="tour-card__note" data-i18n="boats.deposit.700">Se reserva con un depósito de US$700.</p>
+                </div>
               </div>
             </div>
             <div class="tour-card__media">
-              <img src="assets/img/tour-catamaran.webp" alt="Catamarán blanco navegando frente a la costa de Puerto Plata, visto desde el aire" data-i18n-alt="tours.catamaran.alt" width="720" height="960" loading="lazy" decoding="async">
+              <figure class="boat-photo" data-boat-photo="viking">
+                <img src="assets/img/boat-viking.webp" alt="Yate Viking blanco anclado en aguas turquesa" data-i18n-alt="boats.viking.alt" width="1000" height="750" loading="lazy" decoding="async" style="--focus: 62% 50%">
+                <figcaption class="boat-photo__name">Viking 48'</figcaption>
+              </figure>
+              <figure class="boat-photo" data-boat-photo="yacht-jacuzzi" hidden>
+                <img src="assets/img/boat-yacht-jacuzzi.webp" alt="Yate de casco azul anclado frente a la costa" data-i18n-alt="boats.yacht-jacuzzi.alt" width="722" height="1000" loading="lazy" decoding="async">
+                <figcaption class="boat-photo__name" data-i18n="boats.yacht-jacuzzi.name">Yate con jacuzzi</figcaption>
+              </figure>
+              <figure class="boat-photo" data-boat-photo="fp43" hidden>
+                <img src="assets/img/boat-fp43.webp" alt="Catamarán blanco navegando frente a la costa de Puerto Plata, visto desde el aire" data-i18n-alt="boats.fp43.alt" width="720" height="960" loading="lazy" decoding="async">
+                <figcaption class="boat-photo__name">Fountaine Pajot 43'</figcaption>
+              </figure>
+              <figure class="boat-photo" data-boat-photo="ocean-king" hidden>
+                <img src="assets/img/boat-ocean-king.webp" alt="Catamarán de motor The Ocean King IV anclado en agua turquesa" data-i18n-alt="boats.ocean-king.alt" width="720" height="523" loading="lazy" decoding="async" style="--focus: 45% 50%">
+                <figcaption class="boat-photo__name">The Ocean King IV</figcaption>
+              </figure>
+              <figure class="boat-photo" data-boat-photo="libreterre" hidden>
+                <img src="assets/img/boat-libreterre.webp" alt="Catamarán Libreterre con tobogán, visto desde el aire en aguas cristalinas" data-i18n-alt="boats.libreterre.alt" width="828" height="824" loading="lazy" decoding="async">
+                <figcaption class="boat-photo__name">Libreterre · Privilege 52'</figcaption>
+              </figure>
+              <figure class="boat-photo" data-boat-photo="cat-jacuzzi" hidden>
+                <img src="assets/img/boat-cat-jacuzzi.webp" alt="Jacuzzi en la proa del catamarán, frente al salón" data-i18n-alt="boats.cat-jacuzzi.alt" width="960" height="740" loading="lazy" decoding="async">
+                <figcaption class="boat-photo__name" data-i18n="boats.cat-jacuzzi.name">Catamarán con jacuzzi</figcaption>
+              </figure>
               <span class="tour-card__kicker" data-i18n="tours.catamaran.kicker">Privado · Mar</span>
             </div>
           </li>
@@ -580,7 +810,7 @@
               </h3>
               <div class="faq__panel" id="faq-a3" role="region" aria-labelledby="faq-q3">
                 <div class="faq__panel-inner">
-                  <p class="faq__answer" data-i18n="faq.3.a">El precio por persona depende de cuántos viajan juntos: de 1 a 5, de 6 a 14 o de 15 a 50 personas. Mientras más grande el grupo, menos paga cada uno. El catamarán es distinto: se alquila completo por un precio fijo para hasta 15 personas.</p>
+                  <p class="faq__answer" data-i18n="faq.3.a">El precio por persona depende de cuántos viajan juntos: de 1 a 5, de 6 a 14 o de 15 a 50 personas. Mientras más grande el grupo, menos paga cada uno. Los catamaranes y yates son distintos: se alquila el barco completo por un precio fijo para hasta 10, 15 o 20 personas, según el barco.</p>
                 </div>
               </div>
             </div>
@@ -646,7 +876,20 @@
                 <option value="city" data-i18n="tours.city.title">City Tour Puerto Plata</option>
                 <option value="horse" data-i18n="tours.horse.title">Cabalgata</option>
                 <option value="buggy" data-i18n="tours.buggy.title">Buggies y ATV</option>
-                <option value="catamaran" data-i18n="tours.catamaran.title">Catamarán privado</option>
+                <option value="catamaran" data-i18n="tours.catamaran.title">Catamarán o yate privado</option>
+              </select>
+            </div>
+
+            <!-- Shown only for "Catamarán o yate privado": which boat (its price table is data-prices="boat-<value>"). -->
+            <div class="field" data-boat-field hidden>
+              <label class="field__label" for="booking-boat" data-i18n="booking.boat">Barco</label>
+              <select class="field__input field__input--select" id="booking-boat" name="boat">
+                <option value="viking">Viking 48'</option>
+                <option value="yacht-jacuzzi" data-i18n="boats.yacht-jacuzzi.name">Yate con jacuzzi</option>
+                <option value="fp43">Fountaine Pajot 43'</option>
+                <option value="ocean-king">The Ocean King IV</option>
+                <option value="libreterre">Libreterre · Privilege 52'</option>
+                <option value="cat-jacuzzi" data-i18n="boats.cat-jacuzzi.name">Catamarán con jacuzzi</option>
               </select>
             </div>
 
@@ -725,7 +968,7 @@
               <li><a class="footer__link" href="#tour-city" data-i18n="tours.city.title">City Tour Puerto Plata</a></li>
               <li><a class="footer__link" href="#tour-horse" data-i18n="tours.horse.title">Cabalgata</a></li>
               <li><a class="footer__link" href="#tour-buggy" data-i18n="tours.buggy.title">Buggies y ATV</a></li>
-              <li><a class="footer__link" href="#tour-catamaran" data-i18n="tours.catamaran.title">Catamarán privado</a></li>
+              <li><a class="footer__link" href="#tour-catamaran" data-i18n="tours.catamaran.title">Catamarán o yate privado</a></li>
             </ul>
           </nav>
           <nav class="footer__col" aria-labelledby="footer-company">
@@ -766,6 +1009,7 @@
   <script src="assets/js/menu.js" defer></script>
   <script src="assets/js/route.js" defer></script>
   <script src="assets/js/stack-cards.js" defer></script>
+  <script src="assets/js/boat-tabs.js" defer></script>
   <script src="assets/js/faq.js" defer></script>
   <script src="assets/js/reveal.js" defer></script>
   <script src="assets/js/whatsapp.js" defer></script>

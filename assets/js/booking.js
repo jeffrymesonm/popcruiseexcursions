@@ -1,14 +1,16 @@
 /**
  * booking.js — Booking form that ends in a WhatsApp chat.
  *
- * - The visitor picks a tour, zipline (only for tours whose table has a zipline column),
+ * - The visitor picks a tour, zipline (only for tours whose table has a zipline column), the boat
+ *   (only for the "catamaran or yacht" tour: each boat has its own table, data-prices="boat-<id>"),
  *   group size, date, name and optionally the ship. A live estimate shows the total and how it
- *   is made up (price per person × people, or boat price + extra people for the catamaran),
+ *   is made up (price per person × people, or boat price + extra people for a boat),
  *   read from the price tables through SitePrices (prices.js).
  * - On submit the fields are validated (bilingual messages) and WhatsApp opens with the booking
  *   already written in the visitor's language, ready to send. Nothing is sent to any server and
  *   nothing the visitor types is logged.
- * - "Book this tour" buttons ([data-book]) preselect their tour before jumping to the form.
+ * - "Book this tour" buttons ([data-book]) preselect their tour before jumping to the form;
+ *   "Book this boat" buttons also carry data-book-boat and preselect the boat.
  * Dates: the earliest allowed date is "today" in Puerto Plata (America/Santo_Domingo), because
  * the tour happens there, whatever the visitor's own time zone is.
  */
@@ -21,8 +23,12 @@
   var MIN_PEOPLE = 1;
   var MAX_PEOPLE = 50;
   var TOUR_TIME_ZONE = 'America/Santo_Domingo';
+  /** Tour whose price depends on the boat chosen in the "boat" field. */
+  var BOAT_TOUR = 'catamaran';
 
   var tourSelect = form.elements.tour;
+  var boatSelect = form.elements.boat;
+  var boatField = form.querySelector('[data-boat-field]');
   var ziplineInput = form.elements.zipline;
   var ziplineField = form.querySelector('[data-zipline-field]');
   var peopleInput = form.elements.people;
@@ -106,11 +112,20 @@
   }
 
   /**
+   * Price table that applies to the current selection: the chosen boat's table for the boat
+   * tour, otherwise the tour's own table.
+   * @returns {string} Table id (data-prices), e.g. "horse" or "boat-libreterre".
+   */
+  function priceTableId() {
+    return tourSelect.value === BOAT_TOUR ? 'boat-' + boatSelect.value : tourSelect.value;
+  }
+
+  /**
    * Price column for the selected tour: "zipline" when available and switched on, else "basic".
    * @returns {string} Option name.
    */
   function currentOption() {
-    var tourOptions = window.SitePrices.options(tourSelect.value);
+    var tourOptions = window.SitePrices.options(priceTableId());
     if (tourOptions.indexOf('zipline') > -1 && ziplineInput.checked) return 'zipline';
     return tourOptions.indexOf('basic') > -1 ? 'basic' : (tourOptions[0] || 'basic');
   }
@@ -198,9 +213,10 @@
   function currentQuote() {
     var count = people();
     if (!(count >= MIN_PEOPLE)) return { state: 'invalid' };
-    if (!window.SitePrices.options(tourSelect.value).length) return { state: 'quote' };
-    var price = window.SitePrices.quote(tourSelect.value, count, currentOption());
-    if (!price) return { state: 'large', max: window.SitePrices.maxPeople(tourSelect.value) };
+    var tableId = priceTableId();
+    if (!window.SitePrices.options(tableId).length) return { state: 'quote' };
+    var price = window.SitePrices.quote(tableId, count, currentOption());
+    if (!price) return { state: 'large', max: window.SitePrices.maxPeople(tableId) };
     return { state: 'priced', price: price, count: count };
   }
 
@@ -234,11 +250,12 @@
   }
 
   /**
-   * Refreshes the zipline switch and the live estimate.
+   * Refreshes the boat field, the zipline switch and the live estimate.
    * @returns {void}
    */
   function renderEstimate() {
-    ziplineField.hidden = window.SitePrices.options(tourSelect.value).indexOf('zipline') === -1;
+    boatField.hidden = tourSelect.value !== BOAT_TOUR;
+    ziplineField.hidden = window.SitePrices.options(priceTableId()).indexOf('zipline') === -1;
 
     var result = currentQuote();
     if (result.state === 'priced') {
@@ -262,6 +279,9 @@
    */
   function buildMessage() {
     var tourName = tourSelect.options[tourSelect.selectedIndex].textContent.trim();
+    if (!boatField.hidden) {
+      tourName += ' — ' + boatSelect.options[boatSelect.selectedIndex].textContent.trim();
+    }
     if (!ziplineField.hidden) {
       tourName += ' (' + t(ziplineInput.checked ? 'booking.msg.withZipline' : 'booking.msg.withoutZipline') + ')';
     }
@@ -329,13 +349,16 @@
     renderStatus('booking.sent', 'success');
   });
 
-  // "Book this tour" buttons preselect their tour; the link itself then scrolls to the form.
+  // "Book this tour" / "Book this boat" buttons preselect their tour (and boat); the link itself
+  // then scrolls to the form.
   document.addEventListener('click', function (event) {
     var button = event.target.closest('[data-book]');
     if (!button) return;
     var tourId = button.getAttribute('data-book');
+    var boatId = button.getAttribute('data-book-boat');
     if (tourSelect.querySelector('option[value="' + tourId + '"]')) {
       tourSelect.value = tourId;
+      if (boatId && boatSelect.querySelector('option[value="' + boatId + '"]')) boatSelect.value = boatId;
       renderEstimate();
     }
   });

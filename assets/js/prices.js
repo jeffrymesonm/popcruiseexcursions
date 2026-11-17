@@ -6,12 +6,13 @@
  * - each body row has data-min / data-max (group size, people) and one "US$…" cell per column.
  * Two pricing models:
  * - per person (default): the row covering the group size gives the price each person pays;
- * - charter (data-pricing="charter", the catamaran): the row with data-charge="flat" is the price
- *   of the whole boat for up to its data-max people, and the row with data-charge="extra" is what
- *   each person above that adds, up to the extra row's data-max.
- * This script fills every [data-price-from="tourId"] (or "all", per-person tours only) with the
- * lowest price, and exposes window.SitePrices for booking.js. Edit a price in its table and the
- * "from" labels, the hero card and the booking estimate all follow.
+ * - charter (data-pricing="charter", one table per boat): the row with data-charge="flat" is the
+ *   price of the whole boat for up to its data-max people, and the row with data-charge="extra" is
+ *   what each person above that adds, up to the extra row's data-max (no extra row: no extras).
+ * Boat tables are named data-prices="boat-<id>" and grouped with data-tour="catamaran".
+ * This script fills every [data-price-from="id"] (a table id, a data-tour group, or "all" for
+ * per-person tours only) with the lowest price, and exposes window.SitePrices for booking.js.
+ * Edit a price in its table and the "from" labels, the hero card and the booking estimate follow.
  */
 (function () {
   'use strict';
@@ -144,17 +145,21 @@
   }
 
   /**
-   * Lowest price of one tour, or the lowest price per person of every per-person tour.
+   * Lowest price of one table, of a tour that groups several tables (the boats share
+   * data-tour="catamaran"), or the lowest price per person of every per-person tour.
    * Extra-person rows are skipped: they are add-ons, not a price you can book on its own.
-   * @param {string} tourId - Tour id, or "all".
+   * @param {string} tourId - Table id (data-prices), group id (data-tour), or "all".
    * @returns {number|null} USD, or null when nothing is priced.
    */
   function minPrice(tourId) {
-    var scope = tourId === 'all'
-      ? 'table[data-prices]:not([data-pricing="charter"])'
-      : 'table[data-prices="' + tourId + '"]';
+    var scopes = tourId === 'all'
+      ? ['table[data-prices]:not([data-pricing="charter"])']
+      : ['table[data-prices="' + tourId + '"]', 'table[data-tour="' + tourId + '"]'];
+    var cells = scopes.map(function (scope) {
+      return scope + ' tbody tr:not([data-charge="extra"]) td';
+    }).join(', ');
     var lowest = null;
-    document.querySelectorAll(scope + ' tbody tr:not([data-charge="extra"]) td').forEach(function (cell) {
+    document.querySelectorAll(cells).forEach(function (cell) {
       var amount = parseCell(cell);
       if (amount !== null && (lowest === null || amount < lowest)) lowest = amount;
     });
