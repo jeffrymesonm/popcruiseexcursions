@@ -1,5 +1,5 @@
 /**
- * prices.js — Reads the tour prices from the price tables in index.html.
+ * prices.js — Reads the tour prices from the price tables on the page (source: src/index.html; the build applies the same rules).
  *
  * The tables (<table data-prices="tourId">) are the single source of prices:
  * - each <th data-option="…"> in the header names a price column ("zipline", "basic"…);

@@ -2,14 +2,14 @@
  * translations.js — Copy dictionary for Puerto Plata Cruise Excursions (Spanish base, English).
  *
  * How it works:
- * - Spanish is the base language: static Spanish copy lives in index.html and is read from there.
- * - `en` holds the English version of every key used in index.html (data-i18n, data-i18n-*).
+ * - Spanish is the base language: static Spanish copy lives in the templates of src/ (index, port pages).
+ * - `en` holds the English version of every key used in src/index.html (data-i18n, data-i18n-*); the build writes it into the static English page (port-page keys: src/i18n/ports.js).
  * - `es` only holds strings that JavaScript writes at runtime (menu labels, WhatsApp messages,
  *   booking form messages), because those do not exist in the markup.
- * To edit copy: Spanish → index.html (and `es` below for runtime strings), English → `en` below,
- * French → translations-fr.js, Italian → translations-it.js. Keep the keys identical in all four.
+ * To edit copy: Spanish → src/ (and `es` below for runtime strings), English → `en` below,
+ * French → translations-fr.js, Italian → translations-it.js. Keep the keys identical in all four, then run `node tools/build.mjs` (pages are generated).
  * WhatsApp message keys (booking.msg.*, wa.greeting) exist only in `es` and `en`: the team reads
- * those two, so French/Italian visitors send their messages in English. Prices are not here: they live in the price tables of index.html.
+ * those two, so French/Italian visitors send their messages in English. Prices are not here: they live in the price tables of src/index.html.
  * Runtime strings may contain {placeholders} that booking.js fills (e.g. {max}, {total}).
  */
 window.SITE_TRANSLATIONS = {

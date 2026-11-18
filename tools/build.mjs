@@ -200,7 +200,11 @@ function markerResolver({ page, lang, urlPath, seoHead, readPartial }) {
     if (name === 'root-redirect' && arg === null) return urlPath === '/' ? readPartial('root-redirect.html') : '';
     if (name === 'lang-url' && arg) {
       const target = page.versions[arg] || homePage().versions[arg];
-      return target ? relativeUrl(urlPath, target) || './' : undefined;
+      if (!target) return undefined;
+      const link = relativeUrl(urlPath, target) || './';
+      // "/" redirects by saved choice or browser language: the explicit ?lang keeps the visitor's pick
+      // even when localStorage is blocked or the click happens before i18n.js has loaded.
+      return target === '/' ? `${link}?lang=${arg}` : link;
     }
     if ((name === 'port-url' || name === 'port-lang') && arg) {
       const target = portPage(arg);

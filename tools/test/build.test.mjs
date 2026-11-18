@@ -41,6 +41,15 @@ before(async () => {
   result = await build({ root: ROOT, outDir });
 });
 
+test('templates keep their noindex inside <head> (they are reachable under /src/)', () => {
+  for (const template of ['src/index.html', 'src/amber-cove.html', 'src/taino-bay.html']) {
+    const html = fs.readFileSync(path.join(ROOT, template), 'utf8');
+    const noindex = html.indexOf('content="noindex" data-template-only');
+    assert.ok(noindex > -1, `${template} has a template-only noindex`);
+    assert.ok(noindex < html.indexOf('{{include:head.html}}'), `${template}: noindex comes before the head include`);
+  }
+});
+
 test('builds without errors', () => {
   assert.deepEqual(result.errors, []);
   for (const file of [...MAIN_PAGES, 'sitemap.xml', 'llms.txt']) {
@@ -88,7 +97,9 @@ test('French page loads only its dictionary', () => {
 
 test('language links point to the other versions', () => {
   const spanish = read('es/index.html');
-  assert.match(spanish, /<a [^>]*href="\.\.\/" hreflang="en"/);
+  // Links to the English root carry ?lang=en, so the choice holds even without localStorage.
+  assert.match(spanish, /<a [^>]*href="\.\.\/\?lang=en" hreflang="en"/);
+  assert.match(read('es/excursiones-amber-cove/index.html'), /<a [^>]*href="\.\.\/\.\.\/amber-cove-excursions\/" hreflang="en"/);
   assert.match(spanish, /<a [^>]*data-lang-option="es" aria-current="page"/);
   const english = read('index.html');
   assert.match(english, /<a [^>]*href="es\/" hreflang="es"/);

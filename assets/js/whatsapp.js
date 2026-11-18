@@ -6,7 +6,7 @@
  *   The static href in the HTML, without text, is the no-JS fallback.
  * - Exposes window.SiteWhatsApp = { url, open } for booking.js.
  * To change the number, edit PHONE (country code + number, digits only) and the visible
- * "+1 (829) 627-7733" texts in index.html.
+ * "+1 (829) 627-7733" texts in src/ (index.html, partials/footer.html) and the about.fact.4 key, then rebuild.
  */
 (function () {
   'use strict';
