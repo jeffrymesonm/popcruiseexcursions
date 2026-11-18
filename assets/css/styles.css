@@ -2469,6 +2469,85 @@ html:not(.js) .boat-photo__name {
   }
 }
 
+/* ============ About: who we are + key facts (under the quote) ============ */
+.about__figure {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.about__lead {
+  color: var(--color-muted-fg);
+  line-height: 1.45;
+}
+
+.about__facts {
+  font-size: 0.9375rem;
+}
+
+.about__link {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ============ Cruise ports block (home page → port pages) ============ */
+.ports__grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.port-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
+  padding: 1.75rem;
+  border-radius: var(--radius);
+  background: var(--color-fg);
+  color: var(--color-on-dark);
+  transition: background-color 0.3s ease, transform 0.3s var(--ease-out);
+}
+
+.port-card:hover {
+  background: var(--color-fg-hover);
+  transform: translateY(-2px);
+}
+
+.port-card__name {
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: var(--tracking-tight);
+}
+
+.port-card__desc {
+  color: rgba(248, 243, 234, 0.78);
+  line-height: 1.4;
+}
+
+.port-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 0.75rem;
+  color: var(--color-sun);
+  font-weight: 600;
+}
+
+.port-card__cta svg {
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  stroke-width: 2.4;
+}
+
+@media (min-width: 768px) {
+  .ports__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 /* ============ Port pages (Amber Cove, Taíno Bay) ============ */
 /* Same hero as the home page, shorter: no marquee or price card below it. */
 .hero--port {

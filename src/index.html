@@ -24,15 +24,15 @@
 <html lang="es">
 <head>
 {{include:head.html}}
-  <title data-i18n="meta.title">Puerto Plata Cruise Excursions — Excursiones en Puerto Plata para cruceristas</title>
-  <meta name="description" content="Excursiones en Puerto Plata para pasajeros de crucero: Charcos de Damajagua, City Tour, cabalgatas, buggies, beach day en Playa Dorada y catamarán o yate privado. Transporte desde el puerto. Reserva por WhatsApp." data-i18n-content="meta.description">
+  <title data-i18n="meta.title">Excursiones en Puerto Plata desde Amber Cove y Taíno Bay</title>
+  <meta name="description" content="Excursiones para cruceristas en Puerto Plata: Charcos de Damajagua, City Tour, Beach Day en Playa Dorada y barcos privados. Recogida en Amber Cove y Taíno Bay." data-i18n-content="meta.description">
   <meta name="robots" content="noindex" data-template-only>
   <!-- Link preview (WhatsApp, Facebook…) uses the same title and description. Canonical, hreflang
        alternates, og:url, og:locale and the JSON-LD are written per page by tools/build.mjs. -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Puerto Plata Cruise Excursions">
-  <meta property="og:title" content="Puerto Plata Cruise Excursions — Excursiones en Puerto Plata para cruceristas" data-i18n-content="meta.title">
-  <meta property="og:description" content="Excursiones en Puerto Plata para pasajeros de crucero: Charcos de Damajagua, City Tour, cabalgatas, buggies, beach day en Playa Dorada y catamarán o yate privado. Transporte desde el puerto. Reserva por WhatsApp." data-i18n-content="meta.description">
+  <meta property="og:title" content="Excursiones en Puerto Plata desde Amber Cove y Taíno Bay" data-i18n-content="meta.title">
+  <meta property="og:description" content="Excursiones para cruceristas en Puerto Plata: Charcos de Damajagua, City Tour, Beach Day en Playa Dorada y barcos privados. Recogida en Amber Cove y Taíno Bay." data-i18n-content="meta.description">
   <meta property="og:image" content="https://popcruiseexcursions.com/assets/img/og-image.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -56,12 +56,12 @@
       <div class="hero__veil" aria-hidden="true"></div>
       <div class="hero__inner container">
         <div class="hero__content">
-          <p class="hero__badge" data-hero-item style="--delay: 0ms"><span class="hero__pulse" aria-hidden="true"></span><span data-i18n="hero.badge">Excursiones para cruceristas en Puerto Plata</span></p>
+          <p class="hero__badge" data-hero-item style="--delay: 0ms"><span class="hero__pulse" aria-hidden="true"></span><span data-i18n="hero.badge">Excursiones desde Amber Cove y Taíno Bay</span></p>
           <h1 class="hero__title" id="hero-title" data-hero-item style="--delay: 80ms">
-            <span data-i18n="hero.title.1">Tu día en tierra,</span>
+            <span data-i18n="hero.title.1">Tu día en tierra en Puerto Plata,</span>
             <span class="hero__accent" data-i18n="hero.title.2">convertido en aventura.</span>
           </h1>
-          <p class="hero__lead" data-hero-item style="--delay: 160ms" data-i18n="hero.lead">Cascadas, historia, playa y adrenalina. Te recogemos en el puerto de cruceros y te llevamos de vuelta al terminar.</p>
+          <p class="hero__lead" data-hero-item style="--delay: 160ms" data-i18n="hero.lead">Cascadas, historia, playa y adrenalina. Te recogemos en Amber Cove o Taíno Bay y organizamos el día según la hora de tu barco.</p>
           <div class="hero__actions" data-hero-item style="--delay: 240ms">
             <a class="btn btn--sun" href="#booking" data-i18n="hero.primary">Reservar ahora</a>
             <a class="btn btn--glass" href="#adventures" data-i18n="hero.secondary">Ver excursiones</a>
@@ -107,20 +107,31 @@
     <!-- ============ About ============ -->
     <section class="section about" id="about" aria-labelledby="about-title">
       <div class="container about__grid">
-        <figure class="about__card" data-reveal>
+        <!-- The quote, then who we are in plain words (the sentence search engines and AI assistants
+             quote when they describe the business) and the key facts. -->
+        <div class="about__card" data-reveal>
           <span class="about__badge" aria-hidden="true"><svg><use href="#icon-quote"/></svg></span>
           <div class="about__body">
             <h2 class="tag tag--light" id="about-title" data-i18n="about.tag">Sobre nosotros</h2>
-            <blockquote class="about__quote">
-              <p data-i18n="about.quote">Somos de Puerto Plata y conocemos cada cascada, cada calle y cada playa. Queremos que tu día en tierra sea el mejor recuerdo de tu crucero.</p>
-            </blockquote>
-            <figcaption class="about__author">
-              <span data-i18n="about.author">Nuestro equipo</span>
-              <span class="about__dot" aria-hidden="true"></span>
-              <span data-i18n="about.role">Guías locales</span>
-            </figcaption>
+            <figure class="about__figure">
+              <blockquote class="about__quote">
+                <p data-i18n="about.quote">Somos de Puerto Plata y conocemos cada cascada, cada calle y cada playa. Queremos que tu día en tierra sea el mejor recuerdo de tu crucero.</p>
+              </blockquote>
+              <figcaption class="about__author">
+                <span data-i18n="about.author">Nuestro equipo</span>
+                <span class="about__dot" aria-hidden="true"></span>
+                <span data-i18n="about.role">Guías locales</span>
+              </figcaption>
+            </figure>
+            <p class="about__lead" data-i18n="about.lead">Puerto Plata Cruise Excursions es un operador local de excursiones en Puerto Plata, República Dominicana. Recogemos a los pasajeros de crucero en Amber Cove y Taíno Bay, organizamos el día según la hora del barco y atendemos en español e inglés.</p>
+            <ul class="checks about__facts">
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="about.fact.1">Recogida en Amber Cove y Taíno Bay</span></li>
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span><span data-i18n="about.fact.2">6 excursiones desde</span> <span data-price-from="all">US$12</span> <span data-i18n="price.perPerson">por persona</span></span></li>
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="hero.card.2">Servicio en español e inglés</span></li>
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg><a class="about__link" href="https://wa.me/18296277733" target="_blank" rel="noopener" data-wa-link data-i18n="about.fact.4">Reservas por WhatsApp: +1 (829) 627-7733</a></li>
+            </ul>
           </div>
-        </figure>
+        </div>
         <div class="about__media" data-reveal style="--delay: 120ms">
           <img src="assets/img/about.webp" alt="Amigos riendo juntos en la playa" data-i18n-alt="about.alt" width="1400" height="934" loading="lazy" decoding="async">
         </div>
@@ -233,7 +244,7 @@
               </div>
               <div>
                 <h3 class="tour-card__title" data-i18n="tours.damajagua.title">Charcos de Damajagua</h3>
-                <p class="tour-card__desc" data-i18n="tours.damajagua.desc">Salta, nada y deslízate por las cascadas naturales más famosas del norte de la isla. Súmale el zipline y vuela sobre la selva.</p>
+                <p class="tour-card__desc" data-i18n="tours.damajagua.desc">Salta, nada y deslízate en los 27 Charcos de Damajagua, las cascadas naturales más famosas del norte de la isla. Súmale el zipline y vuela sobre la selva.</p>
               </div>
               <table class="prices" data-prices="damajagua">
                 <caption class="visually-hidden" data-i18n="tours.damajagua.caption">Precios por persona de Charcos de Damajagua según el tamaño del grupo</caption>
@@ -812,6 +823,34 @@
       </div>
     </section>
 
+    <!-- ============ Cruise ports: links to the port landing pages (built from src/amber-cove.html,
+         src/taino-bay.html; the FR/IT pages link to the English versions) ============ -->
+    <section class="section ports" id="ports" aria-labelledby="ports-title">
+      <div class="container">
+        <header class="section-head" data-reveal>
+          <p class="tag" data-i18n="ports.tag">Puertos de cruceros</p>
+          <h2 class="section-head__title" id="ports-title" data-i18n="ports.title">¿Tu barco llega a Amber Cove o a Taíno Bay?</h2>
+          <p class="section-head__lead" data-i18n="ports.lead">Te recogemos en los dos puertos de cruceros de Puerto Plata. Mira qué puedes hacer desde el tuyo y cuánto se tarda a cada excursión.</p>
+        </header>
+        <ul class="ports__grid">
+          <li data-reveal>
+            <a class="port-card" href="{{port-url:amber-cove}}" hreflang="{{port-lang:amber-cove}}">
+              <span class="port-card__name">Amber Cove</span>
+              <span class="port-card__desc" data-i18n="ports.ac.desc">En la bahía de Maimón, a unos 15–20 minutos del centro. Recibe sobre todo barcos de Carnival Corporation.</span>
+              <span class="port-card__cta"><span data-i18n="ports.ac.cta">Excursiones desde Amber Cove</span><svg aria-hidden="true"><use href="#icon-arrow-up-right"/></svg></span>
+            </a>
+          </li>
+          <li data-reveal style="--delay: 100ms">
+            <a class="port-card" href="{{port-url:taino-bay}}" hreflang="{{port-lang:taino-bay}}">
+              <span class="port-card__name">Taíno Bay</span>
+              <span class="port-card__desc" data-i18n="ports.tb.desc">En pleno centro de Puerto Plata, junto a la Fortaleza San Felipe. Recibe Royal Caribbean, Celebrity, Norwegian, MSC y otras navieras.</span>
+              <span class="port-card__cta"><span data-i18n="ports.tb.cta">Excursiones desde Taíno Bay</span><svg aria-hidden="true"><use href="#icon-arrow-up-right"/></svg></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
     <!-- ============ FAQ ============ -->
     <section class="section" id="faq" aria-labelledby="faq-title">
       <div class="container">
@@ -832,6 +871,32 @@
               <div class="faq__panel" id="faq-a1" role="region" aria-labelledby="faq-q1">
                 <div class="faq__panel-inner">
                   <p class="faq__answer" data-i18n="faq.1.a">Te recogemos en el puerto de cruceros de Puerto Plata y te llevamos de vuelta al terminar. El transporte ida y vuelta está incluido, menos en los catamaranes y yates: salen de la playa de Sosúa, a 45 minutos del puerto de Amber Cove y a 30 minutos de Taíno Bay, y ese transporte te lo cotizamos aparte por WhatsApp o correo.</p>
+                </div>
+              </div>
+            </div>
+            <div class="faq__item" data-faq-item>
+              <h3 class="faq__question">
+                <button class="faq__trigger" type="button" id="faq-q8" aria-expanded="false" aria-controls="faq-a8" data-faq-trigger>
+                  <span data-i18n="faq.8.q">¿Recogen en Amber Cove y en Taíno Bay?</span>
+                  <span class="faq__icon" aria-hidden="true"><svg><use href="#icon-plus"/></svg></span>
+                </button>
+              </h3>
+              <div class="faq__panel" id="faq-a8" role="region" aria-labelledby="faq-q8">
+                <div class="faq__panel-inner">
+                  <p class="faq__answer" data-i18n="faq.8.a">Sí. Te recogemos en el puerto donde atraca tu crucero, Amber Cove o Taíno Bay, y te llevamos de vuelta al terminar. El punto exacto de encuentro te lo confirmamos por WhatsApp al reservar. En los catamaranes y yates, el transporte a Sosúa se cotiza aparte.</p>
+                </div>
+              </div>
+            </div>
+            <div class="faq__item" data-faq-item>
+              <h3 class="faq__question">
+                <button class="faq__trigger" type="button" id="faq-q9" aria-expanded="false" aria-controls="faq-a9" data-faq-trigger>
+                  <span data-i18n="faq.9.q">¿En qué puerto va a atracar mi crucero?</span>
+                  <span class="faq__icon" aria-hidden="true"><svg><use href="#icon-plus"/></svg></span>
+                </button>
+              </h3>
+              <div class="faq__panel" id="faq-a9" role="region" aria-labelledby="faq-q9">
+                <div class="faq__panel-inner">
+                  <p class="faq__answer" data-i18n="faq.9.a">Lo dice el itinerario de tu crucero. En general, Amber Cove recibe los barcos de Carnival Corporation (Carnival, Princess, Holland America…) y Taíno Bay los de Royal Caribbean, Celebrity, Norwegian, MSC y otras navieras. Dinos el nombre de tu barco al reservar y lo verificamos.</p>
                 </div>
               </div>
             </div>
@@ -899,6 +964,19 @@
               <div class="faq__panel" id="faq-a6" role="region" aria-labelledby="faq-q6">
                 <div class="faq__panel-inner">
                   <p class="faq__answer" data-i18n="faq.6.a">En español e inglés. Escríbenos por WhatsApp en el idioma que prefieras.</p>
+                </div>
+              </div>
+            </div>
+            <div class="faq__item" data-faq-item>
+              <h3 class="faq__question">
+                <button class="faq__trigger" type="button" id="faq-q10" aria-expanded="false" aria-controls="faq-a10" data-faq-trigger>
+                  <span data-i18n="faq.10.q">¿Qué debo llevar a la excursión?</span>
+                  <span class="faq__icon" aria-hidden="true"><svg><use href="#icon-plus"/></svg></span>
+                </button>
+              </h3>
+              <div class="faq__panel" id="faq-a10" role="region" aria-labelledby="faq-q10">
+                <div class="faq__panel-inner">
+                  <p class="faq__answer" data-i18n="faq.10.a">Traje de baño, toalla y protector solar; zapatos que se puedan mojar si vas a Damajagua; algo de efectivo en dólares para propinas y compras; y tu tarjeta del crucero con una identificación con foto para volver a bordo.</p>
                 </div>
               </div>
             </div>

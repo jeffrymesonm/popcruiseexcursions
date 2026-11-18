@@ -118,7 +118,32 @@ test('JSON-LD describes the business, six tours and the FAQ', () => {
   const falls = trips.find((trip) => trip['@id'].endsWith('#tour-damajagua'));
   assert.equal(falls.offers.lowPrice, 50);
   assert.equal(falls.offers.highPrice, 100);
-  assert.equal(graph.find((node) => node['@type'] === 'FAQPage').mainEntity.length, 7);
+  assert.equal(graph.find((node) => node['@type'] === 'FAQPage').mainEntity.length, 10);
+});
+
+test('title targets both ports', () => {
+  const html = read('index.html');
+  const title = html.match(/<title[^>]*>([^<]*)<\/title>/)[1].replace(/&amp;/g, '&');
+  assert.ok(title.includes('Amber Cove') && title.includes('Taíno Bay'), title);
+  assert.ok(title.length <= 60, `${title.length} characters`);
+  assert.match(html.match(/<h1[\s\S]*?<\/h1>/)[0], /Puerto Plata/);
+});
+
+test('ten FAQs in every main version', () => {
+  for (const file of MAIN_PAGES) {
+    const faq = graphOf(read(file)).find((node) => node['@type'] === 'FAQPage');
+    assert.equal(faq.mainEntity.length, 10, file);
+  }
+});
+
+test('main pages link the port pages', () => {
+  assert.ok(read('index.html').includes('href="amber-cove-excursions/"'));
+  assert.ok(read('es/index.html').includes('href="excursiones-amber-cove/"'));
+  assert.ok(read('fr/index.html').includes('href="../amber-cove-excursions/" hreflang="en"'));
+});
+
+test('Spanish page names the place', () => {
+  assert.ok(read('es/index.html').includes('27 Charcos de Damajagua'));
 });
 
 test('builds the four port pages', () => {

@@ -9,8 +9,8 @@
 window.SITE_TRANSLATIONS = window.SITE_TRANSLATIONS || {};
 window.SITE_TRANSLATIONS.fr = {
   // Meta and navigation
-  'meta.title': 'Puerto Plata Cruise Excursions — Excursions à Puerto Plata pour croisiéristes',
-  'meta.description': 'Excursions en escale à Puerto Plata pour croisiéristes : cascades de Damajagua, City Tour, balade à cheval, buggies, journée plage à Playa Dorada et catamaran ou yacht privé. Transport depuis le port. Réservation sur WhatsApp.',
+  'meta.title': 'Excursions à Puerto Plata depuis Amber Cove et Taíno Bay',
+  'meta.description': 'Excursions pour croisiéristes à Puerto Plata : cascades de Damajagua, City Tour, journée à Playa Dorada et bateaux privés. Départ d’Amber Cove et de Taíno Bay.',
   'nav.skip': 'Aller au contenu',
   'nav.home': 'Puerto Plata Cruise Excursions, retour en haut',
   'nav.language': 'Langue',
@@ -24,10 +24,10 @@ window.SITE_TRANSLATIONS.fr = {
   'nav.faq': 'FAQ',
 
   // Hero
-  'hero.badge': 'Excursions en escale à Puerto Plata',
-  'hero.title.1': 'Votre journée à terre,',
+  'hero.badge': 'Excursions depuis Amber Cove et Taíno Bay',
+  'hero.title.1': 'Votre journée à terre à Puerto Plata,',
   'hero.title.2': 'transformée en aventure.',
-  'hero.lead': 'Cascades, histoire, plages et sensations fortes. Nous venons vous chercher au port de croisière et vous y ramenons à la fin de l’excursion.',
+  'hero.lead': 'Cascades, histoire, plages et sensations fortes. Nous venons vous chercher à Amber Cove ou à Taíno Bay et organisons la journée selon l’horaire de votre navire.',
   'hero.primary': 'Réserver',
   'hero.secondary': 'Voir les excursions',
   'hero.card.label': 'Excursions dès',
@@ -51,6 +51,10 @@ window.SITE_TRANSLATIONS.fr = {
   'about.author': 'Notre équipe',
   'about.role': 'Guides locaux',
   'about.alt': 'Des amis qui rient ensemble sur la plage',
+  'about.lead': 'Puerto Plata Cruise Excursions est un organisateur local d’excursions à Puerto Plata, en République dominicaine. Nous prenons en charge les croisiéristes à Amber Cove et à Taíno Bay, organisons la journée selon l’horaire du navire et vous accueillons en espagnol et en anglais.',
+  'about.fact.1': 'Prise en charge à Amber Cove et à Taíno Bay',
+  'about.fact.2': '6 excursions dès',
+  'about.fact.4': 'Réservation sur WhatsApp : +1 (829) 627-7733',
 
   // Adventure route
   'adventures.tag': '6 aventures',
@@ -90,7 +94,7 @@ window.SITE_TRANSLATIONS.fr = {
   'price.extra': 'Personne supplémentaire',
 
   'tours.damajagua.title': 'Cascades de Damajagua',
-  'tours.damajagua.desc': 'Sautez, nagez et glissez dans les cascades naturelles les plus célèbres de la côte nord. Ajoutez la tyrolienne et survolez la jungle.',
+  'tours.damajagua.desc': 'Sautez, nagez et glissez aux 27 Charcos de Damajagua, les cascades naturelles les plus célèbres de la côte nord. Ajoutez la tyrolienne et survolez la jungle.',
   'tours.damajagua.caption': 'Prix par personne des cascades de Damajagua selon la taille du groupe',
   'tours.damajagua.inc1': 'Transport aller-retour',
   'tours.damajagua.inc2': 'Eau pendant le parcours',
@@ -244,6 +248,19 @@ window.SITE_TRANSLATIONS.fr = {
   'faq.6.a': 'En espagnol et en anglais. Écrivez-nous sur WhatsApp en anglais ou en espagnol.',
   'faq.7.q': 'Quelle est votre politique d’annulation ?',
   'faq.7.a': 'Si vous annulez 10 jours ou plus avant la date, nous vous remboursons 100\u00a0% du montant payé. Moins de 10 jours avant, nous remboursons 50\u00a0%. Si votre navire de croisière n’arrive pas à Puerto Plata, nous vous remboursons 90\u00a0%.',
+  'faq.8.q': 'Venez-vous nous chercher à Amber Cove et à Taíno Bay ?',
+  'faq.8.a': 'Oui. Nous venons vous chercher au port où accoste votre navire, Amber Cove ou Taíno Bay, et vous y ramenons à la fin de l’excursion. Nous vous confirmons le point de rendez-vous exact sur WhatsApp lors de la réservation. Pour les catamarans et les yachts, le transport jusqu’à Sosúa est chiffré à part.',
+  'faq.9.q': 'Dans quel port mon navire va-t-il accoster ?',
+  'faq.9.a': 'C’est indiqué dans l’itinéraire de votre croisière. En général, Amber Cove accueille les navires de Carnival Corporation (Carnival, Princess, Holland America…) et Taíno Bay ceux de Royal Caribbean, Celebrity, Norwegian, MSC et d’autres compagnies. Indiquez-nous le nom de votre navire lors de la réservation et nous vérifions.',
+  'faq.10.q': 'Que dois-je apporter ?',
+  'faq.10.a': 'Un maillot de bain, une serviette et de la crème solaire ; des chaussures qui peuvent être mouillées si vous allez à Damajagua ; un peu d’argent liquide en dollars pour les pourboires et les achats ; et votre carte de croisière avec une pièce d’identité avec photo pour remonter à bord.',
+  'ports.tag': 'Ports de croisière',
+  'ports.title': 'Votre navire accoste à Amber Cove ou à Taíno Bay ?',
+  'ports.lead': 'Nous venons vous chercher dans les deux ports de croisière de Puerto Plata. Découvrez que faire depuis le vôtre et le temps de trajet jusqu’à chaque excursion (pages en anglais).',
+  'ports.ac.desc': 'Dans la baie de Maimón, à environ 15–20 minutes du centre. Surtout des navires de Carnival Corporation.',
+  'ports.ac.cta': 'Excursions depuis Amber Cove',
+  'ports.tb.desc': 'En plein centre de Puerto Plata, à côté de la forteresse San Felipe. Royal Caribbean, Celebrity, Norwegian, MSC et d’autres compagnies.',
+  'ports.tb.cta': 'Excursions depuis Taíno Bay',
 
   // Booking
   'booking.tag': 'Réservations',
@@ -282,5 +299,6 @@ window.SITE_TRANSLATIONS.fr = {
   'footer.tours': 'Excursions',
   'footer.company': 'Entreprise',
   'footer.contact': 'Contact',
+  'footer.ports': 'Ports',
   'footer.place': 'Puerto Plata, République dominicaine'
 };

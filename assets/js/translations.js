@@ -48,8 +48,8 @@ window.SITE_TRANSLATIONS = {
 
   en: {
     // Meta and navigation
-    'meta.title': 'Puerto Plata Cruise Excursions — Puerto Plata shore excursions for cruise passengers',
-    'meta.description': 'Puerto Plata shore excursions for cruise passengers: Damajagua waterfalls, City Tour, horseback riding, buggies, a Playa Dorada beach day and a private catamaran or yacht. Pickup at the port. Book on WhatsApp.',
+    'meta.title': 'Puerto Plata Shore Excursions from Amber Cove & Taíno Bay',
+    'meta.description': 'Puerto Plata shore excursions for cruise passengers: Damajagua waterfalls, city tour, Playa Dorada beach day and private boats. Pickup at Amber Cove and Taíno Bay.',
     'nav.skip': 'Skip to content',
     'nav.home': 'Puerto Plata Cruise Excursions, back to top',
     'nav.language': 'Language',
@@ -63,10 +63,10 @@ window.SITE_TRANSLATIONS = {
     'nav.faq': 'FAQ',
 
     // Hero
-    'hero.badge': 'Shore excursions in Puerto Plata',
-    'hero.title.1': 'Your day ashore,',
+    'hero.badge': 'Shore excursions from Amber Cove & Taíno Bay',
+    'hero.title.1': 'Your day ashore in Puerto Plata,',
     'hero.title.2': 'turned into an adventure.',
-    'hero.lead': 'Waterfalls, history, beaches and thrills. We pick you up at the cruise port and bring you back when the tour ends.',
+    'hero.lead': 'Waterfalls, history, beaches and thrills. We pick you up at Amber Cove or Taíno Bay and plan the day around your ship’s schedule.',
     'hero.primary': 'Book now',
     'hero.secondary': 'See the tours',
     'hero.card.label': 'Tours from',
@@ -90,6 +90,10 @@ window.SITE_TRANSLATIONS = {
     'about.author': 'Our team',
     'about.role': 'Local guides',
     'about.alt': 'Friends laughing together on the beach',
+    'about.lead': 'Puerto Plata Cruise Excursions is a local tour operator in Puerto Plata, Dominican Republic. We pick up cruise passengers at Amber Cove and Taíno Bay, plan the day around the ship’s schedule and look after you in English and Spanish.',
+    'about.fact.1': 'Pickup at Amber Cove and Taíno Bay',
+    'about.fact.2': '6 tours from',
+    'about.fact.4': 'Book on WhatsApp: +1 (829) 627-7733',
 
     // Adventure route
     'adventures.tag': '6 adventures',
@@ -129,7 +133,7 @@ window.SITE_TRANSLATIONS = {
     'price.extra': 'Each extra person',
 
     'tours.damajagua.title': 'Damajagua Waterfalls',
-    'tours.damajagua.desc': 'Jump, swim and slide down the most famous natural waterfalls on the north coast. Add the zipline and fly over the jungle.',
+    'tours.damajagua.desc': 'Jump, swim and slide at the 27 Charcos de Damajagua, the most famous natural waterfalls on the north coast. Add the zipline and fly over the jungle.',
     'tours.damajagua.caption': 'Damajagua Waterfalls prices per person by group size',
     'tours.damajagua.inc1': 'Round-trip transport',
     'tours.damajagua.inc2': 'Water along the way',
@@ -283,6 +287,19 @@ window.SITE_TRANSLATIONS = {
     'faq.6.a': 'English and Spanish. Message us on WhatsApp in whichever you prefer.',
     'faq.7.q': 'What is your cancellation policy?',
     'faq.7.a': 'Cancel 10 or more days before your tour and we refund 100% of what you paid; with less than 10 days’ notice, we refund 50%. If your cruise ship doesn’t reach Puerto Plata, we refund 90%.',
+    'faq.8.q': 'Do you pick up at Amber Cove and Taíno Bay?',
+    'faq.8.a': 'Yes. We pick you up at whichever port your ship docks at, Amber Cove or Taíno Bay, and bring you back when the tour ends. We confirm the exact meeting point on WhatsApp when you book. For catamarans and yachts, transport to Sosúa is quoted separately.',
+    'faq.9.q': 'Which port will my cruise ship dock at?',
+    'faq.9.a': 'Your cruise itinerary says so. In general, Amber Cove receives Carnival Corporation ships (Carnival, Princess, Holland America…) and Taíno Bay receives Royal Caribbean, Celebrity, Norwegian, MSC and other lines. Tell us your ship’s name when you book and we’ll check.',
+    'faq.10.q': 'What should I bring on the tour?',
+    'faq.10.a': 'A swimsuit, a towel and sunscreen; shoes that can get wet if you’re going to Damajagua; some cash in US dollars for tips and shopping; and your cruise card plus a photo ID to get back on board.',
+    'ports.tag': 'Cruise ports',
+    'ports.title': 'Is your ship docking at Amber Cove or Taíno Bay?',
+    'ports.lead': 'We pick you up at both Puerto Plata cruise ports. See what you can do from yours and how long it takes to reach each tour.',
+    'ports.ac.desc': 'On Maimón Bay, about 15–20 minutes from downtown. Mostly Carnival Corporation ships.',
+    'ports.ac.cta': 'Amber Cove shore excursions',
+    'ports.tb.desc': 'Right in downtown Puerto Plata, next to the San Felipe Fortress. Royal Caribbean, Celebrity, Norwegian, MSC and other lines.',
+    'ports.tb.cta': 'Taíno Bay shore excursions',
 
     // Booking
     'booking.tag': 'Bookings',
@@ -339,6 +356,7 @@ window.SITE_TRANSLATIONS = {
     'footer.tours': 'Tours',
     'footer.company': 'Company',
     'footer.contact': 'Contact',
+    'footer.ports': 'Ports',
     'footer.place': 'Puerto Plata, Dominican Republic'
   }
 };
