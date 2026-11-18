@@ -2223,6 +2223,17 @@ html:not(.js) .boat-photo__name {
   display: none;
 }
 
+/* Deposit that books a boat, set apart under the breakdown (hidden for other tours). */
+.estimate__deposit {
+  margin-top: 0.4rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(248, 243, 234, 0.18);
+  color: var(--color-on-dark);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
 .form__status {
   font-size: 0.875rem;
   line-height: 1.4;

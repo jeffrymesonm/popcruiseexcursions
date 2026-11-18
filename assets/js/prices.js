@@ -10,7 +10,8 @@
  *   price of the whole boat for up to its data-max people, and the row with data-charge="extra" is
  *   what each person above that adds, with no upper limit unless the extra row has a data-max
  *   (no extra row: no extras).
- * Boat tables are named data-prices="boat-<id>" and grouped with data-tour="catamaran".
+ * Boat tables are named data-prices="boat-<id>" and grouped with data-tour="catamaran"; their
+ * data-deposit attribute is the deposit (USD) that books the boat.
  * This script fills every [data-price-from="id"] (a table id, a data-tour group, or "all" for
  * per-person tours only) with the lowest price, and exposes window.SitePrices for booking.js.
  * Edit a price in its table and the "from" labels, the hero card and the booking estimate follow.
@@ -170,6 +171,18 @@
   }
 
   /**
+   * Deposit that books a tour, from its table's data-deposit attribute (boats only).
+   * @param {string} tourId - Table id (data-prices), e.g. "boat-viking".
+   * @returns {number|null} USD, or null when the tour has no table or no deposit.
+   */
+  function deposit(tourId) {
+    var element = table(tourId);
+    if (!element) return null;
+    var amount = parseFloat(element.getAttribute('data-deposit'));
+    return isFinite(amount) && amount > 0 ? amount : null;
+  }
+
+  /**
    * Formats a USD amount the same way the tables do ("US$1,250").
    * @param {number} amount - Amount in USD.
    * @returns {string} Formatted amount.
@@ -183,5 +196,7 @@
     if (amount !== null) element.textContent = format(amount);
   });
 
-  window.SitePrices = { options: options, quote: quote, maxPeople: maxPeople, minPrice: minPrice, format: format };
+  window.SitePrices = {
+    options: options, quote: quote, maxPeople: maxPeople, minPrice: minPrice, deposit: deposit, format: format
+  };
 })();

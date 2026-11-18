@@ -5,7 +5,8 @@
  *   (only for the "catamaran or yacht" tour: each boat has its own table, data-prices="boat-<id>"),
  *   group size, date, name and optionally the ship. A live estimate shows the total and how it
  *   is made up (price per person × people, or boat price + extra people for a boat),
- *   read from the price tables through SitePrices (prices.js).
+ *   read from the price tables through SitePrices (prices.js). Boats also show the deposit
+ *   that books them, which the WhatsApp message repeats.
  * - On submit the fields are validated (bilingual messages) and WhatsApp opens with the booking
  *   already written in the visitor's language, ready to send. Nothing is sent to any server and
  *   nothing the visitor types is logged.
@@ -35,6 +36,7 @@
   var dateInput = form.elements.date;
   var estimateValue = form.querySelector('[data-estimate-value]');
   var estimateDetail = form.querySelector('[data-estimate-detail]');
+  var estimateDeposit = form.querySelector('[data-estimate-deposit]');
   var statusElement = form.querySelector('[data-form-status]');
   var hasTriedSubmit = false;
 
@@ -302,6 +304,13 @@
       estimateValue.textContent = '—';
       estimateDetail.textContent = '';
     }
+
+    // Deposit line: only for tours that have one (the boats) and a valid group size.
+    var depositAmount = result.state === 'invalid' ? null : window.SitePrices.deposit(priceTableId());
+    estimateDeposit.hidden = depositAmount === null;
+    estimateDeposit.textContent = depositAmount === null
+      ? ''
+      : fill(t('booking.estimate.deposit'), { deposit: window.SitePrices.format(depositAmount) });
   }
 
   /**
@@ -337,6 +346,8 @@
       '• ' + tm('booking.msg.price') + ': ' + priceLine,
       '• ' + tm('booking.msg.name') + ': ' + form.elements.name.value.trim()
     ];
+    var depositAmount = window.SitePrices.deposit(priceTableId());
+    if (depositAmount !== null) lines.splice(lines.length - 1, 0, '• ' + tm('booking.msg.deposit') + ': ' + format(depositAmount));
     if (ship) lines.push('• ' + tm('booking.msg.ship') + ': ' + ship);
     if (messageLanguage() !== language()) {
       lines.push('• ' + tm('booking.msg.clientLanguage') + ': ' + tm('lang.' + language()));

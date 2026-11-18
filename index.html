@@ -12,7 +12,8 @@
   Two kinds of table: per person (default) and data-pricing="charter" (one per boat in the
   "catamaran or yacht" card: a flat price for the whole boat up to the "flat" row's data-max, plus
   a price per extra person; the extra row has no data-max, so there is no group limit).
-  Boat tables are data-prices="boat-<id>", grouped by data-tour="catamaran".
+  Boat tables are data-prices="boat-<id>", grouped by data-tour="catamaran", with the booking
+  deposit in data-deposit (USD; keep it equal to the amount in that boat's note).
   Styles: assets/css/styles.css · Behaviour: assets/js/*.js · Icons adapted from Lucide (ISC License).
 -->
 <html lang="es">
@@ -144,7 +145,7 @@
     <!-- ============ Hero ============ -->
     <section class="hero" id="top" aria-labelledby="hero-title" data-hero>
       <div class="hero__media">
-        <img class="hero__image" src="assets/img/hero.webp" alt="" width="2400" height="1350" fetchpriority="high" decoding="async">
+        <img class="hero__image" src="assets/img/hero.webp" alt="" width="1600" height="1065" fetchpriority="high" decoding="async">
       </div>
       <div class="hero__veil" aria-hidden="true"></div>
       <div class="hero__inner container">
@@ -349,7 +350,7 @@
               </div>
             </div>
             <div class="tour-card__media">
-              <img src="assets/img/tour-damajagua.webp" alt="Cascadas y pozas naturales en la selva" data-i18n-alt="tours.damajagua.alt" width="1400" height="934" loading="lazy" decoding="async">
+              <img src="assets/img/tour-damajagua.webp" alt="Grupo con cascos nadando en una poza bajo una cascada de Damajagua" data-i18n-alt="tours.damajagua.alt" width="1024" height="1024" loading="lazy" decoding="async">
               <span class="tour-card__kicker" data-i18n="tours.damajagua.kicker">Aventura · Naturaleza</span>
             </div>
           </li>
@@ -566,7 +567,7 @@
                   <li>48 <span data-i18n="boats.ft">pies</span></li>
                   <li>3–4 <span data-i18n="boats.hours">horas</span></li>
                 </ul>
-                <table class="prices" data-prices="boat-viking" data-tour="catamaran" data-pricing="charter">
+                <table class="prices" data-prices="boat-viking" data-tour="catamaran" data-pricing="charter" data-deposit="400">
                   <caption class="visually-hidden" data-i18n="boats.caption">Precio del alquiler del barco según el tamaño del grupo</caption>
                   <thead>
                     <tr><th scope="col" data-i18n="price.group">Grupo</th><th scope="col" data-option="basic" data-i18n="price.boat">Precio del barco</th></tr>
@@ -594,7 +595,7 @@
                   <h4 class="boat-panel__name"><span data-i18n="boats.yacht-jacuzzi.name">Yate con jacuzzi</span> <span class="boat-panel__type" data-i18n="boats.type.yacht">Yate</span></h4>
                   <p class="boat-panel__desc" data-i18n="boats.yacht-jacuzzi.desc">Yate con jacuzzi en la proa para relajarte mientras navegas. Barbacoa, frutas y barra libre incluidas.</p>
                 </div>
-                <table class="prices" data-prices="boat-yacht-jacuzzi" data-tour="catamaran" data-pricing="charter">
+                <table class="prices" data-prices="boat-yacht-jacuzzi" data-tour="catamaran" data-pricing="charter" data-deposit="400">
                   <caption class="visually-hidden" data-i18n="boats.caption">Precio del alquiler del barco según el tamaño del grupo</caption>
                   <thead>
                     <tr><th scope="col" data-i18n="price.group">Grupo</th><th scope="col" data-option="basic" data-i18n="price.boat">Precio del barco</th></tr>
@@ -625,7 +626,7 @@
                   <li>43 <span data-i18n="boats.ft">pies</span></li>
                   <li>4 <span data-i18n="boats.hours">horas</span></li>
                 </ul>
-                <table class="prices" data-prices="boat-fp43" data-tour="catamaran" data-pricing="charter">
+                <table class="prices" data-prices="boat-fp43" data-tour="catamaran" data-pricing="charter" data-deposit="400">
                   <caption class="visually-hidden" data-i18n="boats.caption">Precio del alquiler del barco según el tamaño del grupo</caption>
                   <thead>
                     <tr><th scope="col" data-i18n="price.group">Grupo</th><th scope="col" data-option="basic" data-i18n="price.boat">Precio del barco</th></tr>
@@ -652,7 +653,7 @@
                   <h4 class="boat-panel__name">The Ocean King IV <span class="boat-panel__type" data-i18n="boats.type.catamaran">Catamarán</span></h4>
                   <p class="boat-panel__desc" data-i18n="boats.ocean-king.desc">Catamarán de motor de dos pisos con terraza arriba: espacio de sobra para grupos grandes, barbacoa y paradas para nadar en aguas turquesa.</p>
                 </div>
-                <table class="prices" data-prices="boat-ocean-king" data-tour="catamaran" data-pricing="charter">
+                <table class="prices" data-prices="boat-ocean-king" data-tour="catamaran" data-pricing="charter" data-deposit="400">
                   <caption class="visually-hidden" data-i18n="boats.caption">Precio del alquiler del barco según el tamaño del grupo</caption>
                   <thead>
                     <tr><th scope="col" data-i18n="price.group">Grupo</th><th scope="col" data-option="basic" data-i18n="price.boat">Precio del barco</th></tr>
@@ -683,7 +684,7 @@
                   <li>52 <span data-i18n="boats.ft">pies</span></li>
                   <li>4 <span data-i18n="boats.hours">horas</span></li>
                 </ul>
-                <table class="prices" data-prices="boat-libreterre" data-tour="catamaran" data-pricing="charter">
+                <table class="prices" data-prices="boat-libreterre" data-tour="catamaran" data-pricing="charter" data-deposit="550">
                   <caption class="visually-hidden" data-i18n="boats.caption">Precio del alquiler del barco según el tamaño del grupo</caption>
                   <thead>
                     <tr><th scope="col" data-i18n="price.group">Grupo</th><th scope="col" data-option="basic" data-i18n="price.boat">Precio del barco</th></tr>
@@ -711,7 +712,7 @@
                   <h4 class="boat-panel__name"><span data-i18n="boats.cat-jacuzzi.name">Catamarán con jacuzzi</span> <span class="boat-panel__type" data-i18n="boats.type.catamaran">Catamarán</span></h4>
                   <p class="boat-panel__desc" data-i18n="boats.cat-jacuzzi.desc">Catamarán amplio con jacuzzi en la proa, tobogán al agua y terraza arriba. Mucho espacio para celebrar con tu grupo.</p>
                 </div>
-                <table class="prices" data-prices="boat-cat-jacuzzi" data-tour="catamaran" data-pricing="charter">
+                <table class="prices" data-prices="boat-cat-jacuzzi" data-tour="catamaran" data-pricing="charter" data-deposit="700">
                   <caption class="visually-hidden" data-i18n="boats.caption">Precio del alquiler del barco según el tamaño del grupo</caption>
                   <thead>
                     <tr><th scope="col" data-i18n="price.group">Grupo</th><th scope="col" data-option="basic" data-i18n="price.boat">Precio del barco</th></tr>
@@ -1045,6 +1046,7 @@
               <p class="estimate__label" data-i18n="booking.estimate">Precio estimado</p>
               <p class="estimate__value" data-estimate-value>—</p>
               <p class="estimate__detail" data-estimate-detail></p>
+              <p class="estimate__deposit" data-estimate-deposit hidden></p>
             </div>
 
             <button class="btn btn--whatsapp btn--block" type="submit">

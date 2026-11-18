@@ -94,7 +94,7 @@ window.SITE_TRANSLATIONS.it = {
   'tours.damajagua.inc1': 'Trasporto andata e ritorno',
   'tours.damajagua.inc2': 'Acqua durante il percorso',
   'tours.damajagua.inc3': 'Pranzo a buffet alle cascate',
-  'tours.damajagua.alt': 'Cascate e piscine naturali nella giungla',
+  'tours.damajagua.alt': 'Gruppo con il casco che nuota in una pozza sotto una cascata di Damajagua',
   'tours.damajagua.kicker': 'Avventura · Natura',
 
   'tours.city.title': 'City Tour di Puerto Plata',
@@ -263,6 +263,7 @@ window.SITE_TRANSLATIONS.it = {
   'booking.estimate.large': 'Per più di {max} persone, scrivici e ti prepariamo una proposta.',
   'booking.estimate.charter': 'Barca privata intera, fino a {max} persone · trasporto non incluso',
   'booking.estimate.charterExtra': '{base} per la barca + {count} × {extra} per persona in più · trasporto non incluso',
+  'booking.estimate.deposit': 'Acconto per prenotare: {deposit}',
   'booking.error.people': 'Indica quante persone siete (da 1 a 50).',
   'booking.error.date': 'Scegli la data della tua escursione.',
   'booking.error.datePast': 'Questa data è già passata. Scegli oggi o una data futura.',
