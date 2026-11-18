@@ -2469,6 +2469,179 @@ html:not(.js) .boat-photo__name {
   }
 }
 
+/* ============ Port pages (Amber Cove, Taíno Bay) ============ */
+/* Same hero as the home page, shorter: no marquee or price card below it. */
+.hero--port {
+  height: 78vh;
+  height: 78svh;
+  min-height: 34rem;
+}
+
+.hero--port .hero__inner {
+  padding-bottom: 3.5rem;
+}
+
+.hero--port .hero__lead {
+  max-width: 34rem;
+}
+
+/* Breadcrumbs above the port title, on the hero photo. */
+.crumbs__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.5rem;
+  margin-bottom: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+}
+
+.crumbs__list li + li::before {
+  content: "›";
+  margin-right: 0.5rem;
+  opacity: 0.7;
+}
+
+.crumbs__list a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* One row per tour: photo, name and travel time, "from" price, actions. */
+.port-tours {
+  display: grid;
+  gap: 1rem;
+}
+
+.port-tour {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  align-items: center;
+  gap: 0.875rem 1rem;
+  padding: 1rem;
+  border-radius: var(--radius);
+  background: var(--color-card);
+}
+
+.port-tour__img {
+  width: 5.5rem;
+  height: 4.125rem;
+  border-radius: var(--radius-inner);
+  object-fit: cover;
+}
+
+.port-tour__name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: var(--tracking-tight);
+}
+
+.port-tour__desc {
+  margin-top: 0.125rem;
+  color: var(--color-muted-fg);
+  font-size: 0.9375rem;
+  line-height: 1.35;
+}
+
+.port-tour__time {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  margin-top: 0.375rem;
+  font-size: 0.875rem;
+  line-height: 1.35;
+}
+
+.port-tour__time svg {
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0.1rem;
+  color: var(--color-accent);
+}
+
+.port-tour__price {
+  grid-column: 1 / -1;
+  font-size: 0.9375rem;
+}
+
+.port-tour__price strong {
+  font-size: 1.125rem;
+}
+
+.port-tour__actions {
+  display: flex;
+  flex-wrap: wrap;
+  grid-column: 1 / -1;
+  gap: 0.5rem;
+}
+
+@media (min-width: 900px) {
+  .port-tour {
+    grid-template-columns: 8rem 1fr auto auto;
+    gap: 1.5rem;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .port-tour__img {
+    width: 8rem;
+    height: 6rem;
+  }
+
+  .port-tour__price,
+  .port-tour__actions {
+    grid-column: auto;
+  }
+
+  .port-tour__price {
+    text-align: right;
+  }
+}
+
+/* "How pickup works": numbered steps. */
+.port-steps {
+  display: grid;
+  gap: 0.75rem;
+  max-width: 44rem;
+  margin-inline: auto;
+  counter-reset: step;
+}
+
+.port-steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-inner);
+  background: var(--color-card);
+  line-height: 1.4;
+  counter-increment: step;
+}
+
+.port-steps li::before {
+  content: counter(step);
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: var(--color-sun);
+  color: var(--color-fg);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+/* Link to the other port, under the WhatsApp button of the closing band. */
+.trust__link {
+  margin-top: 0.25rem;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 /* ============ Motion: hero intro ============ */
 /*
  * With JS: the photo starts as a blurred, inset window and opens to full bleed; the nav and

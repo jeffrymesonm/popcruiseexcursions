@@ -121,8 +121,47 @@ test('JSON-LD describes the business, six tours and the FAQ', () => {
   assert.equal(graph.find((node) => node['@type'] === 'FAQPage').mainEntity.length, 7);
 });
 
+test('builds the four port pages', () => {
+  for (const file of [
+    'amber-cove-excursions/index.html',
+    'es/excursiones-amber-cove/index.html',
+    'taino-bay-excursions/index.html',
+    'es/excursiones-taino-bay/index.html'
+  ]) {
+    assert.ok(result.files.includes(file), `${file} was built`);
+  }
+});
+
+test('English Amber Cove page', () => {
+  const html = read('amber-cove-excursions/index.html');
+  assert.ok(html.includes('<html lang="en">'));
+  assert.ok(html.includes('<link rel="canonical" href="https://popcruiseexcursions.com/amber-cove-excursions/">'));
+  assert.ok(html.includes('hreflang="es" href="https://popcruiseexcursions.com/es/excursiones-amber-cove/"'));
+  assert.ok(html.includes('hreflang="x-default" href="https://popcruiseexcursions.com/amber-cove-excursions/"'));
+  assert.match(html, /<h1[^>]*>[^<]*Amber Cove[^<]*<\/h1>/);
+  assert.ok(html.includes('src="../assets/'));
+  assert.ok(html.includes('href="../#tour-damajagua"'));
+  assert.ok(html.includes('href="../?tour=damajagua#booking"'));
+  assert.ok(!html.includes('location.replace'));
+  const graph = graphOf(html);
+  const terminal = graph.find((node) => node['@type'] === 'BoatTerminal');
+  assert.equal(terminal.geo.latitude, 19.8326);
+  assert.equal(graph.find((node) => node['@type'] === 'BreadcrumbList').itemListElement.length, 2);
+  assert.equal(graph.find((node) => node['@type'] === 'FAQPage').mainEntity.length, 5);
+});
+
+test('Spanish Taíno Bay page', () => {
+  const html = read('es/excursiones-taino-bay/index.html');
+  assert.ok(html.includes('<html lang="es">'));
+  assert.ok(html.includes('src="../../assets/'));
+  assert.ok(html.includes('href="../#tour-city"'));
+  assert.ok(html.includes('data-price-from="damajagua">US$50<'));
+  assert.ok(!('geo' in graphOf(html).find((node) => node['@type'] === 'BoatTerminal')));
+  assert.doesNotMatch(html, /<script [^>]*translations-fr\.js/);
+});
+
 test('sitemap and llms.txt', () => {
-  assert.equal((read('sitemap.xml').match(/<loc>/g) || []).length, 4);
+  assert.equal((read('sitemap.xml').match(/<loc>/g) || []).length, 8);
   const llms = read('llms.txt');
   for (const text of ['Puerto Plata Cruise Excursions', '+1 (829) 627-7733', 'Damajagua', 'US$12']) {
     assert.ok(llms.includes(text), `llms.txt mentions ${text}`);

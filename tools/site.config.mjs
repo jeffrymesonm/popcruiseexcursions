@@ -42,12 +42,25 @@ export const AUDIENCE = { en: 'Cruise passengers', es: 'Pasajeros de crucero', f
 export const DICTIONARY_FILES = [
   'assets/js/translations.js',
   'assets/js/translations-fr.js',
-  'assets/js/translations-it.js'
+  'assets/js/translations-it.js',
+  'src/i18n/ports.js'
 ];
 
 /** Pages and their language versions (URL paths end in "/"; the file is <path>index.html). */
 export const PAGES = [
-  { id: 'home', template: 'src/index.html', versions: { en: '/', es: '/es/', fr: '/fr/', it: '/it/' } }
+  { id: 'home', template: 'src/index.html', versions: { en: '/', es: '/es/', fr: '/fr/', it: '/it/' } },
+  {
+    id: 'amber-cove',
+    template: 'src/amber-cove.html',
+    port: 'amber-cove',
+    versions: { en: '/amber-cove-excursions/', es: '/es/excursiones-amber-cove/' }
+  },
+  {
+    id: 'taino-bay',
+    template: 'src/taino-bay.html',
+    port: 'taino-bay',
+    versions: { en: '/taino-bay-excursions/', es: '/es/excursiones-taino-bay/' }
+  }
 ];
 
 /**
@@ -63,5 +76,12 @@ export const TOURS = [
   { id: 'catamaran', scope: 'catamaran', image: 'assets/img/boat-libreterre.webp' }
 ];
 
-/** Cruise terminals with a landing page (filled when the port pages exist). */
-export const PORTS = {};
+/**
+ * Cruise terminals with a landing page. key = prefix of their dictionary keys (port.<key>.*).
+ * Amber Cove coordinates: Wikipedia (19°49′57″N 70°46′26″W), consistent with MarineLink to ~0.002°.
+ * Taíno Bay: no reliable published coordinates found, so none are claimed.
+ */
+export const PORTS = {
+  'amber-cove': { key: 'ac', name: 'Amber Cove Cruise Port', geo: { latitude: 19.8326, longitude: -70.7739 } },
+  'taino-bay': { key: 'tb', name: 'Taíno Bay Cruise Port', geo: null }
+};

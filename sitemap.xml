@@ -32,4 +32,28 @@
     <xhtml:link rel="alternate" hreflang="it" href="https://popcruiseexcursions.com/it/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://popcruiseexcursions.com/"/>
   </url>
+  <url>
+    <loc>https://popcruiseexcursions.com/amber-cove-excursions/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://popcruiseexcursions.com/amber-cove-excursions/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://popcruiseexcursions.com/es/excursiones-amber-cove/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://popcruiseexcursions.com/amber-cove-excursions/"/>
+  </url>
+  <url>
+    <loc>https://popcruiseexcursions.com/es/excursiones-amber-cove/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://popcruiseexcursions.com/amber-cove-excursions/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://popcruiseexcursions.com/es/excursiones-amber-cove/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://popcruiseexcursions.com/amber-cove-excursions/"/>
+  </url>
+  <url>
+    <loc>https://popcruiseexcursions.com/taino-bay-excursions/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://popcruiseexcursions.com/taino-bay-excursions/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://popcruiseexcursions.com/es/excursiones-taino-bay/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://popcruiseexcursions.com/taino-bay-excursions/"/>
+  </url>
+  <url>
+    <loc>https://popcruiseexcursions.com/es/excursiones-taino-bay/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://popcruiseexcursions.com/taino-bay-excursions/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://popcruiseexcursions.com/es/excursiones-taino-bay/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://popcruiseexcursions.com/taino-bay-excursions/"/>
+  </url>
 </urlset>
