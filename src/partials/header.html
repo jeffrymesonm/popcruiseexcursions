@@ -1,0 +1,42 @@
+  <a class="skip-link" href="#main" data-menu-inert data-i18n="nav.skip">Saltar al contenido</a>
+
+  <!-- ============ Navigation ============ -->
+  <header class="nav" data-nav>
+    <div class="nav__inner container">
+      <a class="nav__logo" href="{{home}}#top" aria-label="Puerto Plata Cruise Excursions, volver al inicio" data-i18n-aria-label="nav.home">
+        <img class="logo-badge" src="assets/img/logo.webp" alt="" width="797" height="540" decoding="async">
+      </a>
+      <div class="nav__actions">
+        <div class="lang-switch lang-switch--nav" role="group" aria-label="Idioma" data-i18n-aria-label="nav.language">
+          <a class="lang-switch__option" href="{{lang-url:es}}" hreflang="es" lang="es" data-lang-option="es"{{current:es}} title="Español">ES</a>
+          <a class="lang-switch__option" href="{{lang-url:en}}" hreflang="en" lang="en" data-lang-option="en"{{current:en}} title="English">EN</a>
+          <a class="lang-switch__option" href="{{lang-url:fr}}" hreflang="fr" lang="fr" data-lang-option="fr"{{current:fr}} title="Français">FR</a>
+          <a class="lang-switch__option" href="{{lang-url:it}}" hreflang="it" lang="it" data-lang-option="it"{{current:it}} title="Italiano">IT</a>
+        </div>
+        <a class="btn btn--sun nav__cta" href="{{home}}#booking" data-i18n="nav.book">Reservar</a>
+        <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Abrir menú" data-i18n-aria-label="nav.openMenu" data-menu-toggle>
+          <span class="nav__toggle-line"></span>
+          <span class="nav__toggle-line"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ Full-screen menu ============ -->
+  <div class="menu" id="site-menu" data-menu inert>
+    <nav class="menu__nav" aria-label="Menú principal" data-i18n-aria-label="nav.main">
+      <ul class="menu__list">
+        <li><a class="menu__link" href="{{home}}#tours" data-menu-link><span class="menu__label" data-i18n="nav.tours">Excursiones</span><svg class="menu__arrow" aria-hidden="true"><use href="#icon-arrow-up-right"/></svg></a></li>
+        <li><a class="menu__link" href="{{home}}#about" data-menu-link><span class="menu__label" data-i18n="nav.about">Nosotros</span><svg class="menu__arrow" aria-hidden="true"><use href="#icon-arrow-up-right"/></svg></a></li>
+        <li><a class="menu__link" href="{{home}}#why" data-menu-link><span class="menu__label" data-i18n="nav.why">Por qué</span><svg class="menu__arrow" aria-hidden="true"><use href="#icon-arrow-up-right"/></svg></a></li>
+        <li><a class="menu__link" href="{{home}}#faq" data-menu-link><span class="menu__label" data-i18n="nav.faq">Preguntas</span><svg class="menu__arrow" aria-hidden="true"><use href="#icon-arrow-up-right"/></svg></a></li>
+        <li><a class="menu__link" href="{{home}}#booking" data-menu-link><span class="menu__label" data-i18n="nav.book">Reservar</span><svg class="menu__arrow" aria-hidden="true"><use href="#icon-arrow-up-right"/></svg></a></li>
+      </ul>
+    </nav>
+    <div class="lang-switch lang-switch--menu" role="group" aria-label="Idioma" data-i18n-aria-label="nav.language">
+      <a class="lang-switch__option" href="{{lang-url:es}}" hreflang="es" lang="es" data-lang-option="es"{{current:es}}>Español</a>
+      <a class="lang-switch__option" href="{{lang-url:en}}" hreflang="en" lang="en" data-lang-option="en"{{current:en}}>English</a>
+      <a class="lang-switch__option" href="{{lang-url:fr}}" hreflang="fr" lang="fr" data-lang-option="fr"{{current:fr}}>Français</a>
+      <a class="lang-switch__option" href="{{lang-url:it}}" hreflang="it" lang="it" data-lang-option="it"{{current:it}}>Italiano</a>
+    </div>
+  </div>
