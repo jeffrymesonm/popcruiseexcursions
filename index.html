@@ -349,9 +349,19 @@
                 <a class="btn btn--sun" href="#booking" data-book="damajagua" data-i18n="tours.book">Reservar este tour</a>
               </div>
             </div>
-            <div class="tour-card__media">
-              <img src="assets/img/tour-damajagua.webp" alt="Grupo con cascos nadando en una poza bajo una cascada de Damajagua" data-i18n-alt="tours.damajagua.alt" width="1024" height="1024" loading="lazy" decoding="async">
-              <span class="tour-card__kicker" data-i18n="tours.damajagua.kicker">Aventura · Naturaleza</span>
+            <!-- Photo column, same in every tour card: tapping a thumbnail shows that photo
+                 (gallery.js; the thumbnails are hidden without JS). Add a photo as one more
+                 img[data-photo] plus its thumbnail button. -->
+            <div class="tour-card__visual">
+              <div class="tour-card__media" data-photos="damajagua">
+                <img data-photo="1" src="assets/img/tour-damajagua.webp" alt="Grupo con cascos nadando en una poza bajo una cascada de Damajagua" data-i18n-alt="tours.damajagua.alt" width="1024" height="1024" loading="lazy" decoding="async">
+                <img data-photo="2" src="assets/img/hero.webp" alt="Agua turquesa bajando por el cañón de roca de Damajagua" data-i18n-alt="tours.damajagua.alt2" width="1600" height="1065" loading="lazy" decoding="async" hidden>
+                <span class="tour-card__kicker" data-i18n="tours.damajagua.kicker">Aventura · Naturaleza</span>
+              </div>
+              <div class="thumbs" role="group" aria-label="Fotos de la excursión" data-i18n-aria-label="tours.photos" data-shots="damajagua">
+                <button class="thumb" type="button" aria-pressed="true" data-shot="1"><img src="assets/img/tour-damajagua-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 1</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="2"><img src="assets/img/tour-damajagua-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 2</span></button>
+              </div>
             </div>
           </li>
 
@@ -396,9 +406,16 @@
                 <p class="tour-card__note" data-i18n="tours.city.note">Almuerzo y bebidas no incluidos.</p>
               </div>
             </div>
-            <div class="tour-card__media">
-              <img src="assets/img/tour-city.webp" alt="Glorieta del Parque Central de Puerto Plata" data-i18n-alt="tours.city.alt" width="1400" height="934" loading="lazy" decoding="async">
-              <span class="tour-card__kicker" data-i18n="tours.city.kicker">Cultura · Playa</span>
+            <div class="tour-card__visual">
+              <div class="tour-card__media" data-photos="city">
+                <img data-photo="1" src="assets/img/tour-city.webp" alt="Glorieta del Parque Central de Puerto Plata" data-i18n-alt="tours.city.alt" width="1400" height="934" loading="lazy" decoding="async">
+                <img data-photo="2" src="assets/img/spot-city.webp" alt="Paraguas de colores colgados sobre una calle" data-i18n-alt="tours.city.alt2" width="800" height="1000" loading="lazy" decoding="async" hidden>
+                <span class="tour-card__kicker" data-i18n="tours.city.kicker">Cultura · Playa</span>
+              </div>
+              <div class="thumbs" role="group" aria-label="Fotos de la excursión" data-i18n-aria-label="tours.photos" data-shots="city">
+                <button class="thumb" type="button" aria-pressed="true" data-shot="1"><img src="assets/img/tour-city-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 1</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="2"><img src="assets/img/tour-city-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 2</span></button>
+              </div>
             </div>
           </li>
 
@@ -433,9 +450,16 @@
                 <a class="btn btn--sun" href="#booking" data-book="horse" data-i18n="tours.book">Reservar este tour</a>
               </div>
             </div>
-            <div class="tour-card__media">
-              <img src="assets/img/tour-horse.webp" alt="Grupo de turistas a caballo en la playa, con cruceros al fondo" data-i18n-alt="tours.horse.alt" width="1400" height="1050" loading="lazy" decoding="async">
-              <span class="tour-card__kicker" data-i18n="tours.horse.kicker">Playa · Campo</span>
+            <div class="tour-card__visual">
+              <div class="tour-card__media" data-photos="horse">
+                <img data-photo="1" src="assets/img/tour-horse.webp" alt="Grupo de turistas a caballo en la playa, con cruceros al fondo" data-i18n-alt="tours.horse.alt" width="1400" height="1050" loading="lazy" decoding="async">
+                <img data-photo="2" src="assets/img/spot-horse.webp" alt="Jinetes entrando al mar, con un crucero al fondo" data-i18n-alt="tours.horse.alt2" width="800" height="1000" loading="lazy" decoding="async" hidden>
+                <span class="tour-card__kicker" data-i18n="tours.horse.kicker">Playa · Campo</span>
+              </div>
+              <div class="thumbs" role="group" aria-label="Fotos de la excursión" data-i18n-aria-label="tours.photos" data-shots="horse">
+                <button class="thumb" type="button" aria-pressed="true" data-shot="1"><img src="assets/img/tour-horse-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 1</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="2"><img src="assets/img/tour-horse-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 2</span></button>
+              </div>
             </div>
           </li>
 
@@ -457,9 +481,16 @@
                 <a class="btn btn--sun" href="#booking" data-book="buggy" data-i18n="tours.ask">Consultar precio</a>
               </div>
             </div>
-            <div class="tour-card__media">
-              <img src="assets/img/tour-buggy.webp" alt="Buggy cruzando un arroyo de lodo en la selva" data-i18n-alt="tours.buggy.alt" width="1400" height="934" loading="lazy" decoding="async">
-              <span class="tour-card__kicker" data-i18n="tours.buggy.kicker">Adrenalina</span>
+            <div class="tour-card__visual">
+              <div class="tour-card__media" data-photos="buggy">
+                <img data-photo="1" src="assets/img/tour-buggy.webp" alt="Buggy cruzando un arroyo de lodo en la selva" data-i18n-alt="tours.buggy.alt" width="1400" height="934" loading="lazy" decoding="async">
+                <img data-photo="2" src="assets/img/spot-buggy.webp" alt="Buggy cubierto de lodo en la playa" data-i18n-alt="tours.buggy.alt2" width="800" height="1000" loading="lazy" decoding="async" hidden>
+                <span class="tour-card__kicker" data-i18n="tours.buggy.kicker">Adrenalina</span>
+              </div>
+              <div class="thumbs" role="group" aria-label="Fotos de la excursión" data-i18n-aria-label="tours.photos" data-shots="buggy">
+                <button class="thumb" type="button" aria-pressed="true" data-shot="1"><img src="assets/img/tour-buggy-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 1</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="2"><img src="assets/img/tour-buggy-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 2</span></button>
+              </div>
             </div>
           </li>
 
@@ -497,9 +528,16 @@
                 <a class="btn btn--sun" href="#booking" data-book="beach" data-i18n="tours.book">Reservar este tour</a>
               </div>
             </div>
-            <div class="tour-card__media">
-              <img src="assets/img/tour-beach.webp" alt="Tumbonas blancas y sombrillas verdes frente al mar en Playa Dorada" data-i18n-alt="tours.beach.alt" width="1030" height="786" loading="lazy" decoding="async">
-              <span class="tour-card__kicker" data-i18n="tours.beach.kicker">Playa · Relax</span>
+            <div class="tour-card__visual">
+              <div class="tour-card__media" data-photos="beach">
+                <img data-photo="1" src="assets/img/tour-beach.webp" alt="Tumbonas blancas y sombrillas verdes frente al mar en Playa Dorada" data-i18n-alt="tours.beach.alt" width="1030" height="786" loading="lazy" decoding="async">
+                <img data-photo="2" src="assets/img/tour-beach-2.webp" alt="Playa de arena blanca con palmeras y agua turquesa en Playa Dorada" data-i18n-alt="tours.beach.alt2" width="800" height="530" loading="lazy" decoding="async" hidden>
+                <span class="tour-card__kicker" data-i18n="tours.beach.kicker">Playa · Relax</span>
+              </div>
+              <div class="thumbs" role="group" aria-label="Fotos de la excursión" data-i18n-aria-label="tours.photos" data-shots="beach">
+                <button class="thumb" type="button" aria-pressed="true" data-shot="1"><img src="assets/img/tour-beach-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 1</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="2"><img src="assets/img/tour-beach-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 2</span></button>
+              </div>
             </div>
           </li>
 
@@ -732,80 +770,80 @@
               </div>
             </div>
             <!-- Photo column: the chosen boat's photo and its thumbnails (sticky on desktop). -->
-            <div class="boat-visual">
+            <div class="tour-card__visual">
               <div class="tour-card__media">
-                <figure class="boat-photo" data-boat-photo="viking">
-                  <img data-boat-shot="1" src="assets/img/boat-viking.webp" alt="Yate Viking blanco anclado en aguas turquesa" data-i18n-alt="boats.viking.alt" width="1000" height="750" loading="lazy" decoding="async" style="--focus: 62% 50%">
-                    <img data-boat-shot="2" src="assets/img/boat-viking-2.webp" alt="El yate Viking visto desde un dron, con un grupo en la popa" data-i18n-alt="boats.viking.alt2" width="1000" height="696" loading="lazy" decoding="async" hidden>
-                    <img data-boat-shot="3" src="assets/img/boat-viking-3.webp" alt="Pareja mostrando dos peces grandes a bordo del yate" data-i18n-alt="boats.viking.alt3" width="750" height="1000" loading="lazy" decoding="async" style="--focus: 50% 30%" hidden>
+                <figure class="boat-photo" data-photos="viking">
+                  <img data-photo="1" src="assets/img/boat-viking.webp" alt="Yate Viking blanco anclado en aguas turquesa" data-i18n-alt="boats.viking.alt" width="1000" height="750" loading="lazy" decoding="async" style="--focus: 62% 50%">
+                    <img data-photo="2" src="assets/img/boat-viking-2.webp" alt="El yate Viking visto desde un dron, con un grupo en la popa" data-i18n-alt="boats.viking.alt2" width="1000" height="696" loading="lazy" decoding="async" hidden>
+                    <img data-photo="3" src="assets/img/boat-viking-3.webp" alt="Pareja mostrando dos peces grandes a bordo del yate" data-i18n-alt="boats.viking.alt3" width="750" height="1000" loading="lazy" decoding="async" style="--focus: 50% 30%" hidden>
                   <figcaption class="boat-photo__name">Viking 48'</figcaption>
                 </figure>
-                <figure class="boat-photo" data-boat-photo="yacht-jacuzzi" hidden>
-                  <img data-boat-shot="1" src="assets/img/boat-yacht-jacuzzi.webp" alt="Yate de casco azul anclado frente a la costa" data-i18n-alt="boats.yacht-jacuzzi.alt" width="722" height="1000" loading="lazy" decoding="async">
-                    <img data-boat-shot="2" src="assets/img/boat-yacht-jacuzzi-2.webp" alt="Jacuzzi en la proa del yate, con tablas de paddle" data-i18n-alt="boats.yacht-jacuzzi.alt2" width="562" height="1000" loading="lazy" decoding="async" hidden>
-                    <img data-boat-shot="3" src="assets/img/boat-yacht-jacuzzi-3.webp" alt="Pareja dentro del jacuzzi del yate" data-i18n-alt="boats.yacht-jacuzzi.alt3" width="749" height="1000" loading="lazy" decoding="async" hidden>
+                <figure class="boat-photo" data-photos="yacht-jacuzzi" hidden>
+                  <img data-photo="1" src="assets/img/boat-yacht-jacuzzi.webp" alt="Yate de casco azul anclado frente a la costa" data-i18n-alt="boats.yacht-jacuzzi.alt" width="722" height="1000" loading="lazy" decoding="async">
+                    <img data-photo="2" src="assets/img/boat-yacht-jacuzzi-2.webp" alt="Jacuzzi en la proa del yate, con tablas de paddle" data-i18n-alt="boats.yacht-jacuzzi.alt2" width="562" height="1000" loading="lazy" decoding="async" hidden>
+                    <img data-photo="3" src="assets/img/boat-yacht-jacuzzi-3.webp" alt="Pareja dentro del jacuzzi del yate" data-i18n-alt="boats.yacht-jacuzzi.alt3" width="749" height="1000" loading="lazy" decoding="async" hidden>
                   <figcaption class="boat-photo__name" data-i18n="boats.yacht-jacuzzi.name">Yate con jacuzzi</figcaption>
                 </figure>
-                <figure class="boat-photo" data-boat-photo="fp43" hidden>
-                  <img data-boat-shot="1" src="assets/img/boat-fp43.webp" alt="Catamarán blanco navegando frente a la costa de Puerto Plata, visto desde el aire" data-i18n-alt="boats.fp43.alt" width="720" height="960" loading="lazy" decoding="async">
-                    <img data-boat-shot="2" src="assets/img/boat-fp43-2.webp" alt="El catamarán visto desde arriba, en diagonal" data-i18n-alt="boats.fp43.alt2" width="562" height="1000" loading="lazy" decoding="async" hidden>
-                    <img data-boat-shot="3" src="assets/img/boat-fp43-3.webp" alt="El catamarán con un grupo a bordo, visto desde una lancha" data-i18n-alt="boats.fp43.alt3" width="562" height="1000" loading="lazy" decoding="async" hidden>
+                <figure class="boat-photo" data-photos="fp43" hidden>
+                  <img data-photo="1" src="assets/img/boat-fp43.webp" alt="Catamarán blanco navegando frente a la costa de Puerto Plata, visto desde el aire" data-i18n-alt="boats.fp43.alt" width="720" height="960" loading="lazy" decoding="async">
+                    <img data-photo="2" src="assets/img/boat-fp43-2.webp" alt="El catamarán visto desde arriba, en diagonal" data-i18n-alt="boats.fp43.alt2" width="562" height="1000" loading="lazy" decoding="async" hidden>
+                    <img data-photo="3" src="assets/img/boat-fp43-3.webp" alt="El catamarán con un grupo a bordo, visto desde una lancha" data-i18n-alt="boats.fp43.alt3" width="562" height="1000" loading="lazy" decoding="async" hidden>
                   <figcaption class="boat-photo__name">Fountaine Pajot 43'</figcaption>
                 </figure>
-                <figure class="boat-photo" data-boat-photo="ocean-king" hidden>
-                  <img data-boat-shot="1" src="assets/img/boat-ocean-king.webp" alt="Catamarán de motor The Ocean King IV anclado en agua turquesa" data-i18n-alt="boats.ocean-king.alt" width="720" height="523" loading="lazy" decoding="async" style="--focus: 45% 50%">
-                    <img data-boat-shot="2" src="assets/img/boat-ocean-king-2.webp" alt="Gente nadando junto al Ocean King IV en aguas turquesa" data-i18n-alt="boats.ocean-king.alt2" width="720" height="543" loading="lazy" decoding="async" hidden>
+                <figure class="boat-photo" data-photos="ocean-king" hidden>
+                  <img data-photo="1" src="assets/img/boat-ocean-king.webp" alt="Catamarán de motor The Ocean King IV anclado en agua turquesa" data-i18n-alt="boats.ocean-king.alt" width="720" height="523" loading="lazy" decoding="async" style="--focus: 45% 50%">
+                    <img data-photo="2" src="assets/img/boat-ocean-king-2.webp" alt="Gente nadando junto al Ocean King IV en aguas turquesa" data-i18n-alt="boats.ocean-king.alt2" width="720" height="543" loading="lazy" decoding="async" hidden>
                   <figcaption class="boat-photo__name">The Ocean King IV</figcaption>
                 </figure>
-                <figure class="boat-photo" data-boat-photo="libreterre" hidden>
-                  <img data-boat-shot="1" src="assets/img/boat-libreterre.webp" alt="Catamarán Libreterre con tobogán, visto desde el aire en aguas cristalinas" data-i18n-alt="boats.libreterre.alt" width="828" height="824" loading="lazy" decoding="async">
-                    <img data-boat-shot="2" src="assets/img/boat-libreterre-2.webp" alt="El Libreterre de costado, con su nombre en el casco" data-i18n-alt="boats.libreterre.alt2" width="1000" height="563" loading="lazy" decoding="async" hidden>
-                    <img data-boat-shot="3" src="assets/img/boat-libreterre-3.webp" alt="Popa del Libreterre con el tobogán al agua" data-i18n-alt="boats.libreterre.alt3" width="1000" height="563" loading="lazy" decoding="async" hidden>
-                    <img data-boat-shot="4" src="assets/img/boat-libreterre-4.webp" alt="Pollo y brochetas a la parrilla a bordo" data-i18n-alt="boats.libreterre.alt4" width="750" height="1000" loading="lazy" decoding="async" hidden>
+                <figure class="boat-photo" data-photos="libreterre" hidden>
+                  <img data-photo="1" src="assets/img/boat-libreterre.webp" alt="Catamarán Libreterre con tobogán, visto desde el aire en aguas cristalinas" data-i18n-alt="boats.libreterre.alt" width="828" height="824" loading="lazy" decoding="async">
+                    <img data-photo="2" src="assets/img/boat-libreterre-2.webp" alt="El Libreterre de costado, con su nombre en el casco" data-i18n-alt="boats.libreterre.alt2" width="1000" height="563" loading="lazy" decoding="async" hidden>
+                    <img data-photo="3" src="assets/img/boat-libreterre-3.webp" alt="Popa del Libreterre con el tobogán al agua" data-i18n-alt="boats.libreterre.alt3" width="1000" height="563" loading="lazy" decoding="async" hidden>
+                    <img data-photo="4" src="assets/img/boat-libreterre-4.webp" alt="Pollo y brochetas a la parrilla a bordo" data-i18n-alt="boats.libreterre.alt4" width="750" height="1000" loading="lazy" decoding="async" hidden>
                   <figcaption class="boat-photo__name">Libreterre · Privilege 52'</figcaption>
                 </figure>
-                <figure class="boat-photo" data-boat-photo="cat-jacuzzi" hidden>
-                  <img data-boat-shot="1" src="assets/img/boat-cat-jacuzzi.webp" alt="Jacuzzi en la proa del catamarán, frente al salón" data-i18n-alt="boats.cat-jacuzzi.alt" width="960" height="740" loading="lazy" decoding="async">
-                    <img data-boat-shot="2" src="assets/img/boat-cat-jacuzzi-2.webp" alt="Grupo en la terraza superior, con el jacuzzi de proa delante" data-i18n-alt="boats.cat-jacuzzi.alt2" width="750" height="1000" loading="lazy" decoding="async" style="--focus: 50% 30%" hidden>
-                    <img data-boat-shot="3" src="assets/img/boat-cat-jacuzzi-3.webp" alt="Bajando por el tobogán al mar" data-i18n-alt="boats.cat-jacuzzi.alt3" width="1000" height="750" loading="lazy" decoding="async" hidden>
-                    <img data-boat-shot="4" src="assets/img/boat-cat-jacuzzi-4.webp" alt="Boda pequeña en la proa del catamarán" data-i18n-alt="boats.cat-jacuzzi.alt4" width="1000" height="562" loading="lazy" decoding="async" hidden>
-                    <img data-boat-shot="5" src="assets/img/boat-cat-jacuzzi-5.webp" alt="Grupo comiendo a bordo durante una fiesta" data-i18n-alt="boats.cat-jacuzzi.alt5" width="1000" height="664" loading="lazy" decoding="async" hidden>
+                <figure class="boat-photo" data-photos="cat-jacuzzi" hidden>
+                  <img data-photo="1" src="assets/img/boat-cat-jacuzzi.webp" alt="Jacuzzi en la proa del catamarán, frente al salón" data-i18n-alt="boats.cat-jacuzzi.alt" width="960" height="740" loading="lazy" decoding="async">
+                    <img data-photo="2" src="assets/img/boat-cat-jacuzzi-2.webp" alt="Grupo en la terraza superior, con el jacuzzi de proa delante" data-i18n-alt="boats.cat-jacuzzi.alt2" width="750" height="1000" loading="lazy" decoding="async" style="--focus: 50% 30%" hidden>
+                    <img data-photo="3" src="assets/img/boat-cat-jacuzzi-3.webp" alt="Bajando por el tobogán al mar" data-i18n-alt="boats.cat-jacuzzi.alt3" width="1000" height="750" loading="lazy" decoding="async" hidden>
+                    <img data-photo="4" src="assets/img/boat-cat-jacuzzi-4.webp" alt="Boda pequeña en la proa del catamarán" data-i18n-alt="boats.cat-jacuzzi.alt4" width="1000" height="562" loading="lazy" decoding="async" hidden>
+                    <img data-photo="5" src="assets/img/boat-cat-jacuzzi-5.webp" alt="Grupo comiendo a bordo durante una fiesta" data-i18n-alt="boats.cat-jacuzzi.alt5" width="1000" height="664" loading="lazy" decoding="async" hidden>
                   <figcaption class="boat-photo__name" data-i18n="boats.cat-jacuzzi.name">Catamarán con jacuzzi</figcaption>
                 </figure>
                 <span class="tour-card__kicker" data-i18n="tours.catamaran.kicker">Privado · Mar</span>
               </div>
-              <!-- Photos of the chosen boat (boat-gallery.js): tapping a thumbnail shows it above. Hidden without JS. -->
-              <div class="boat-shots" role="group" aria-label="Fotos del barco" data-i18n-aria-label="boats.photos" data-boat-shots="viking">
-                <button class="boat-shot" type="button" aria-pressed="true" data-shot="1"><img src="assets/img/boat-viking-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="boats.photo">Foto</span> 1</span></button>
-                <button class="boat-shot" type="button" aria-pressed="false" data-shot="2"><img src="assets/img/boat-viking-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="boats.photo">Foto</span> 2</span></button>
-                <button class="boat-shot" type="button" aria-pressed="false" data-shot="3"><img src="assets/img/boat-viking-3-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="boats.photo">Foto</span> 3</span></button>
+              <!-- Photos of the chosen boat (gallery.js): tapping a thumbnail shows it above. Hidden without JS. -->
+              <div class="thumbs" role="group" aria-label="Fotos del barco" data-i18n-aria-label="boats.photos" data-shots="viking">
+                <button class="thumb" type="button" aria-pressed="true" data-shot="1"><img src="assets/img/boat-viking-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 1</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="2"><img src="assets/img/boat-viking-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 2</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="3"><img src="assets/img/boat-viking-3-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 3</span></button>
               </div>
-              <div class="boat-shots" role="group" aria-label="Fotos del barco" data-i18n-aria-label="boats.photos" data-boat-shots="yacht-jacuzzi" hidden>
-                <button class="boat-shot" type="button" aria-pressed="true" data-shot="1"><img src="assets/img/boat-yacht-jacuzzi-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="boats.photo">Foto</span> 1</span></button>
-                <button class="boat-shot" type="button" aria-pressed="false" data-shot="2"><img src="assets/img/boat-yacht-jacuzzi-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="boats.photo">Foto</span> 2</span></button>
-                <button class="boat-shot" type="button" aria-pressed="false" data-shot="3"><img src="assets/img/boat-yacht-jacuzzi-3-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="boats.photo">Foto</span> 3</span></button>
+              <div class="thumbs" role="group" aria-label="Fotos del barco" data-i18n-aria-label="boats.photos" data-shots="yacht-jacuzzi" hidden>
+                <button class="thumb" type="button" aria-pressed="true" data-shot="1"><img src="assets/img/boat-yacht-jacuzzi-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 1</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="2"><img src="assets/img/boat-yacht-jacuzzi-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 2</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="3"><img src="assets/img/boat-yacht-jacuzzi-3-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 3</span></button>
               </div>
-              <div class="boat-shots" role="group" aria-label="Fotos del barco" data-i18n-aria-label="boats.photos" data-boat-shots="fp43" hidden>
-                <button class="boat-shot" type="button" aria-pressed="true" data-shot="1"><img src="assets/img/boat-fp43-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="boats.photo">Foto</span> 1</span></button>
-                <button class="boat-shot" type="button" aria-pressed="false" data-shot="2"><img src="assets/img/boat-fp43-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="boats.photo">Foto</span> 2</span></button>
-                <button class="boat-shot" type="button" aria-pressed="false" data-shot="3"><img src="assets/img/boat-fp43-3-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="boats.photo">Foto</span> 3</span></button>
+              <div class="thumbs" role="group" aria-label="Fotos del barco" data-i18n-aria-label="boats.photos" data-shots="fp43" hidden>
+                <button class="thumb" type="button" aria-pressed="true" data-shot="1"><img src="assets/img/boat-fp43-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 1</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="2"><img src="assets/img/boat-fp43-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 2</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="3"><img src="assets/img/boat-fp43-3-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 3</span></button>
               </div>
-              <div class="boat-shots" role="group" aria-label="Fotos del barco" data-i18n-aria-label="boats.photos" data-boat-shots="ocean-king" hidden>
-                <button class="boat-shot" type="button" aria-pressed="true" data-shot="1"><img src="assets/img/boat-ocean-king-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="boats.photo">Foto</span> 1</span></button>
-                <button class="boat-shot" type="button" aria-pressed="false" data-shot="2"><img src="assets/img/boat-ocean-king-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="boats.photo">Foto</span> 2</span></button>
+              <div class="thumbs" role="group" aria-label="Fotos del barco" data-i18n-aria-label="boats.photos" data-shots="ocean-king" hidden>
+                <button class="thumb" type="button" aria-pressed="true" data-shot="1"><img src="assets/img/boat-ocean-king-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 1</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="2"><img src="assets/img/boat-ocean-king-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 2</span></button>
               </div>
-              <div class="boat-shots" role="group" aria-label="Fotos del barco" data-i18n-aria-label="boats.photos" data-boat-shots="libreterre" hidden>
-                <button class="boat-shot" type="button" aria-pressed="true" data-shot="1"><img src="assets/img/boat-libreterre-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="boats.photo">Foto</span> 1</span></button>
-                <button class="boat-shot" type="button" aria-pressed="false" data-shot="2"><img src="assets/img/boat-libreterre-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="boats.photo">Foto</span> 2</span></button>
-                <button class="boat-shot" type="button" aria-pressed="false" data-shot="3"><img src="assets/img/boat-libreterre-3-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="boats.photo">Foto</span> 3</span></button>
-                <button class="boat-shot" type="button" aria-pressed="false" data-shot="4"><img src="assets/img/boat-libreterre-4-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="boats.photo">Foto</span> 4</span></button>
+              <div class="thumbs" role="group" aria-label="Fotos del barco" data-i18n-aria-label="boats.photos" data-shots="libreterre" hidden>
+                <button class="thumb" type="button" aria-pressed="true" data-shot="1"><img src="assets/img/boat-libreterre-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 1</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="2"><img src="assets/img/boat-libreterre-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 2</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="3"><img src="assets/img/boat-libreterre-3-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 3</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="4"><img src="assets/img/boat-libreterre-4-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 4</span></button>
               </div>
-              <div class="boat-shots" role="group" aria-label="Fotos del barco" data-i18n-aria-label="boats.photos" data-boat-shots="cat-jacuzzi" hidden>
-                <button class="boat-shot" type="button" aria-pressed="true" data-shot="1"><img src="assets/img/boat-cat-jacuzzi-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="boats.photo">Foto</span> 1</span></button>
-                <button class="boat-shot" type="button" aria-pressed="false" data-shot="2"><img src="assets/img/boat-cat-jacuzzi-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="boats.photo">Foto</span> 2</span></button>
-                <button class="boat-shot" type="button" aria-pressed="false" data-shot="3"><img src="assets/img/boat-cat-jacuzzi-3-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="boats.photo">Foto</span> 3</span></button>
-                <button class="boat-shot" type="button" aria-pressed="false" data-shot="4"><img src="assets/img/boat-cat-jacuzzi-4-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="boats.photo">Foto</span> 4</span></button>
-                <button class="boat-shot" type="button" aria-pressed="false" data-shot="5"><img src="assets/img/boat-cat-jacuzzi-5-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="boats.photo">Foto</span> 5</span></button>
+              <div class="thumbs" role="group" aria-label="Fotos del barco" data-i18n-aria-label="boats.photos" data-shots="cat-jacuzzi" hidden>
+                <button class="thumb" type="button" aria-pressed="true" data-shot="1"><img src="assets/img/boat-cat-jacuzzi-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 1</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="2"><img src="assets/img/boat-cat-jacuzzi-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 2</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="3"><img src="assets/img/boat-cat-jacuzzi-3-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 3</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="4"><img src="assets/img/boat-cat-jacuzzi-4-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 4</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="5"><img src="assets/img/boat-cat-jacuzzi-5-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 5</span></button>
               </div>
             </div>
           </li>
@@ -1127,7 +1165,7 @@
   <script src="assets/js/route.js" defer></script>
   <script src="assets/js/stack-cards.js" defer></script>
   <script src="assets/js/boat-tabs.js" defer></script>
-  <script src="assets/js/boat-gallery.js" defer></script>
+  <script src="assets/js/gallery.js" defer></script>
   <script src="assets/js/faq.js" defer></script>
   <script src="assets/js/reveal.js" defer></script>
   <script src="assets/js/whatsapp.js" defer></script>

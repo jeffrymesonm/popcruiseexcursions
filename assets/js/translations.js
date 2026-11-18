@@ -114,6 +114,7 @@ window.SITE_TRANSLATIONS = {
     'tours.title': 'Clear prices, real adventures',
     'tours.lead': 'Prices per person in US dollars. The bigger your group, the lower the price.',
     'tours.includes': 'Included',
+    'tours.photos': 'Tour photos',
     'tours.book': 'Book this tour',
     'tours.ask': 'Ask for a price',
     'price.group': 'Group',
@@ -134,6 +135,7 @@ window.SITE_TRANSLATIONS = {
     'tours.damajagua.inc2': 'Water along the way',
     'tours.damajagua.inc3': 'Buffet lunch at the falls',
     'tours.damajagua.alt': 'Group in helmets swimming in a pool below a Damajagua waterfall',
+    'tours.damajagua.alt2': 'Turquoise water rushing through the Damajagua rock canyon',
     'tours.damajagua.kicker': 'Adventure · Nature',
 
     'tours.city.title': 'Puerto Plata City Tour',
@@ -152,6 +154,7 @@ window.SITE_TRANSLATIONS = {
     'tours.city.inc3': 'Free time at the beach',
     'tours.city.note': 'Lunch and drinks not included.',
     'tours.city.alt': 'The bandstand in Puerto Plata’s Central Park',
+    'tours.city.alt2': 'Colorful umbrellas hanging over a street',
     'tours.city.kicker': 'Culture · Beach',
 
     'tours.horse.title': 'Horseback riding',
@@ -161,11 +164,13 @@ window.SITE_TRANSLATIONS = {
     'tours.horse.inc2': 'Water along the way',
     'tours.horse.inc3': '1 h 30 min ride',
     'tours.horse.alt': 'Group of tourists on horseback on the beach, with cruise ships behind',
+    'tours.horse.alt2': 'Riders wading into the sea on horseback, with a cruise ship behind',
     'tours.horse.kicker': 'Beach · Countryside',
 
     'tours.buggy.title': 'Buggies & ATVs',
     'tours.buggy.desc': 'Drive down dirt roads, through mud puddles and plantations. Get ready to get dirty — it’s part of the fun.',
     'tours.buggy.alt': 'Buggy splashing through a muddy jungle stream',
+    'tours.buggy.alt2': 'Mud-covered buggy on the beach',
     'tours.buggy.kicker': 'Adrenaline',
 
     'tours.beach.title': 'Playa Dorada Beach Day',
@@ -178,6 +183,7 @@ window.SITE_TRANSLATIONS = {
     'tours.beach.inc5': '4 hours of free time at the beach',
     'tours.beach.inc6': 'Back at the port with plenty of time before all-aboard',
     'tours.beach.alt': 'White loungers and green umbrellas facing the sea at Playa Dorada',
+    'tours.beach.alt2': 'White-sand beach with palm trees and turquoise water at Playa Dorada',
     'tours.beach.kicker': 'Beach · Relax',
 
     'tours.catamaran.title': 'Private catamaran or yacht',
@@ -221,7 +227,7 @@ window.SITE_TRANSLATIONS = {
     'boats.cat-jacuzzi.desc': 'Spacious catamaran with a bow jacuzzi, water slide and upper deck. Plenty of room to celebrate with your group.',
     'boats.cat-jacuzzi.alt': 'Jacuzzi on the catamaran’s bow, in front of the saloon',
     // Gallery: thumbnail label, strip label and the alt text of each extra photo
-    'boats.photo': 'Photo',
+    'gallery.photo': 'Photo',
     'boats.photos': 'Boat photos',
     'boats.viking.alt2': 'The Viking yacht seen from a drone, with a group on the aft deck',
     'boats.viking.alt3': 'Couple holding two big fish on board the yacht',

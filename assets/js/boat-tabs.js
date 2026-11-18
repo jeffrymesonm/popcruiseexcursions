@@ -2,8 +2,8 @@
  * boat-tabs.js — Boat picker of tour card 06 ("Catamarán o yate privado").
  *
  * ARIA tabs pattern with automatic activation: one tab per boat ([data-boat-tab="id"]).
- * Selecting a tab shows that boat's panel ([data-boat-panel="id"]), photo ([data-boat-photo="id"])
- * and thumbnail strip ([data-boat-shots="id"], see boat-gallery.js) and hides the others. Keyboard: ← / → (wrapping), Home and End.
+ * Selecting a tab shows that boat's panel ([data-boat-panel="id"]), photo ([data-photos="id"])
+ * and thumbnail strip ([data-shots="id"], see gallery.js) and hides the others. Keyboard: ← / → (wrapping), Home and End.
  * The markup already shows the first boat, so nothing jumps while the page loads; without JS the
  * CSS hides the tabs and lists every panel, so the tabpanel roles are only added here. The booking
  * form is not touched here: the "Reservar este barco" links preselect the boat (booking.js).
@@ -14,10 +14,12 @@
   var tablist = document.querySelector('[data-boat-tabs]');
   if (!tablist) return;
 
+  // Only the boats card: the tour cards use the same gallery hooks (data-photos / data-shots).
+  var card = tablist.closest('.tour-card') || document;
   var tabs = Array.prototype.slice.call(tablist.querySelectorAll('[data-boat-tab]'));
-  var panels = document.querySelectorAll('[data-boat-panel]');
-  var photos = document.querySelectorAll('[data-boat-photo]');
-  var strips = document.querySelectorAll('[data-boat-shots]');
+  var panels = card.querySelectorAll('[data-boat-panel]');
+  var photos = card.querySelectorAll('[data-photos]');
+  var strips = card.querySelectorAll('[data-shots]');
 
   /** Index change for each navigation key (Home/End are handled as absolute positions). */
   var STEP = { ArrowRight: 1, ArrowLeft: -1 };
@@ -49,8 +51,8 @@
       other.tabIndex = active ? 0 : -1;
     });
     showOnly(panels, 'data-boat-panel', id);
-    showOnly(photos, 'data-boat-photo', id);
-    showOnly(strips, 'data-boat-shots', id);
+    showOnly(photos, 'data-photos', id);
+    showOnly(strips, 'data-shots', id);
     if (moveFocus) tab.focus();
   }
 

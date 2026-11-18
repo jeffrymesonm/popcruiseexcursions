@@ -75,6 +75,7 @@ window.SITE_TRANSLATIONS.it = {
   'tours.title': 'Prezzi chiari, avventure vere',
   'tours.lead': 'Prezzi a persona in dollari USA. Più grande è il gruppo, più basso è il prezzo.',
   'tours.includes': 'Incluso',
+  'tours.photos': 'Foto dell’escursione',
   'tours.book': 'Prenota questa escursione',
   'tours.ask': 'Chiedi il prezzo',
   'price.group': 'Gruppo',
@@ -95,6 +96,7 @@ window.SITE_TRANSLATIONS.it = {
   'tours.damajagua.inc2': 'Acqua durante il percorso',
   'tours.damajagua.inc3': 'Pranzo a buffet alle cascate',
   'tours.damajagua.alt': 'Gruppo con il casco che nuota in una pozza sotto una cascata di Damajagua',
+  'tours.damajagua.alt2': 'Acqua turchese che scorre nel canyon di roccia di Damajagua',
   'tours.damajagua.kicker': 'Avventura · Natura',
 
   'tours.city.title': 'City Tour di Puerto Plata',
@@ -113,6 +115,7 @@ window.SITE_TRANSLATIONS.it = {
   'tours.city.inc3': 'Tempo libero in spiaggia',
   'tours.city.note': 'Pranzo e bevande non inclusi.',
   'tours.city.alt': 'Il gazebo del Parco Centrale di Puerto Plata',
+  'tours.city.alt2': 'Ombrelli colorati appesi sopra una strada',
   'tours.city.kicker': 'Cultura · Spiaggia',
 
   'tours.horse.title': 'Passeggiata a cavallo',
@@ -122,11 +125,13 @@ window.SITE_TRANSLATIONS.it = {
   'tours.horse.inc2': 'Acqua durante il percorso',
   'tours.horse.inc3': '1 h 30 min a cavallo',
   'tours.horse.alt': 'Gruppo di turisti a cavallo sulla spiaggia, con le navi da crociera dietro',
+  'tours.horse.alt2': 'Cavalieri che entrano in mare, con una nave da crociera sullo sfondo',
   'tours.horse.kicker': 'Spiaggia · Campagna',
 
   'tours.buggy.title': 'Buggy e quad',
   'tours.buggy.desc': 'Guida su strade sterrate, tra pozzanghere di fango e piantagioni. Preparati a sporcarti: fa parte del divertimento.',
   'tours.buggy.alt': 'Buggy che attraversa un ruscello fangoso nella giungla',
+  'tours.buggy.alt2': 'Buggy coperto di fango sulla spiaggia',
   'tours.buggy.kicker': 'Adrenalina',
 
   'tours.beach.title': 'Giornata al mare a Playa Dorada',
@@ -139,6 +144,7 @@ window.SITE_TRANSLATIONS.it = {
   'tours.beach.inc5': '4 ore libere in spiaggia',
   'tours.beach.inc6': 'Rientro al porto con largo anticipo sull’imbarco',
   'tours.beach.alt': 'Lettini bianchi e ombrelloni verdi davanti al mare a Playa Dorada',
+  'tours.beach.alt2': 'Spiaggia di sabbia bianca con palme e acqua turchese a Playa Dorada',
   'tours.beach.kicker': 'Spiaggia · Relax',
 
   'tours.catamaran.title': 'Catamarano o yacht privato',
@@ -182,7 +188,7 @@ window.SITE_TRANSLATIONS.it = {
   'boats.cat-jacuzzi.desc': 'Catamarano spazioso con jacuzzi a prua, scivolo in acqua e ponte superiore. Tanto spazio per festeggiare con il tuo gruppo.',
   'boats.cat-jacuzzi.alt': 'Jacuzzi a prua del catamarano, davanti al salone',
   // Gallery: thumbnail label, strip label and the alt text of each extra photo
-  'boats.photo': 'Foto',
+  'gallery.photo': 'Foto',
   'boats.photos': 'Foto della barca',
   'boats.viking.alt2': 'Lo yacht Viking visto da un drone, con un gruppo a poppa',
   'boats.viking.alt3': 'Coppia che mostra due grossi pesci a bordo dello yacht',
