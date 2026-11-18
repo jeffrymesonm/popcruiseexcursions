@@ -1,5 +1,5 @@
 /**
- * boat-gallery.js — Photo thumbnails of each boat in tour card 05.
+ * boat-gallery.js — Photo thumbnails of each boat in tour card 06.
  *
  * Every boat has one figure ([data-boat-photo="id"]) holding all its photos
  * (img[data-boat-shot="n"], one visible) and one strip of thumbnail buttons

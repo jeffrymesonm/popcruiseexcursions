@@ -8,7 +8,8 @@
  * - per person (default): the row covering the group size gives the price each person pays;
  * - charter (data-pricing="charter", one table per boat): the row with data-charge="flat" is the
  *   price of the whole boat for up to its data-max people, and the row with data-charge="extra" is
- *   what each person above that adds, up to the extra row's data-max (no extra row: no extras).
+ *   what each person above that adds, with no upper limit unless the extra row has a data-max
+ *   (no extra row: no extras).
  * Boat tables are named data-prices="boat-<id>" and grouped with data-tour="catamaran".
  * This script fills every [data-price-from="id"] (a table id, a data-tour group, or "all" for
  * per-person tours only) with the lowest price, and exposes window.SitePrices for booking.js.
@@ -80,7 +81,7 @@
 
   /**
    * Total for a group on a charter table: the boat price, plus the extra-person price for
-   * everyone above the people the boat price covers.
+   * everyone above the people the boat price covers. An extra row without data-max has no limit.
    * @param {HTMLTableElement} element - Price table with data-pricing="charter".
    * @param {number} people - Group size.
    * @returns {{total: number, perPerson: null, base: number, included: number, extraCount: number, extraPrice: number}|null}
@@ -97,7 +98,9 @@
     }
 
     var extraRow = element.querySelector('tbody tr[data-charge="extra"]');
-    if (!extraRow || people > rowNumber(extraRow, 'data-max')) return null;
+    if (!extraRow) return null;
+    var extraMax = rowNumber(extraRow, 'data-max');
+    if (!isNaN(extraMax) && people > extraMax) return null;
     var extraPrice = parseCell(extraRow.querySelector('td'));
     if (extraPrice === null) return null;
     var extraCount = people - included;

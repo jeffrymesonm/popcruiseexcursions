@@ -1082,6 +1082,7 @@ button {
 .spot--3 { --rot: -3deg; }
 .spot--4 { --rot: 5deg; }
 .spot--5 { --rot: -4deg; }
+.spot--6 { --rot: 3deg; }
 
 .spot__card {
   position: relative;
@@ -1133,7 +1134,7 @@ button {
 
 @media (min-width: 768px) {
   .route {
-    aspect-ratio: 1280 / 1850; /* one extra stop of the zig-zag per 370 units of height */
+    aspect-ratio: 1280 / 2220; /* six stops: one stop of the zig-zag per 370 units of height */
   }
 
   .route__path path {
@@ -1154,11 +1155,12 @@ button {
     translate: -50% -40%;
   }
 
-  .spot--1 { left: 74%; top: 8.8%; }
-  .spot--2 { left: 27%; top: 28.8%; }
-  .spot--3 { left: 71%; top: 48%; }
-  .spot--4 { left: 30%; top: 67.2%; }
-  .spot--5 { left: 72%; top: 87.2%; }
+  .spot--1 { left: 74%; top: 7.3%; }
+  .spot--2 { left: 27%; top: 24%; }
+  .spot--3 { left: 71%; top: 40%; }
+  .spot--4 { left: 30%; top: 56%; }
+  .spot--5 { left: 72%; top: 72.7%; }
+  .spot--6 { left: 28%; top: 89.3%; }
 
   .spot__info {
     font-size: 1.0625rem;
@@ -1280,6 +1282,25 @@ button {
 .tour-card__note {
   color: var(--color-muted-fg);
   font-size: 0.875rem;
+}
+
+/* Where a tour leaves from (boats: Sosúa beach), with a map pin. */
+.tour-card__place {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  margin-top: 0.625rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.tour-card__place svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex: none;
+  margin-top: 0.05rem;
+  color: var(--color-accent);
 }
 
 /* Price table (the only place prices are written; prices.js and booking.js read it). */
@@ -1462,7 +1483,7 @@ button {
 }
 
 /*
- * ============ Boats (tour card 05: boat picker + one panel per boat) ============
+ * ============ Boats (tour card 06: boat picker + one panel per boat) ============
  * boat-tabs.js shows one .boat-panel and one .boat-photo at a time ([hidden] on the rest).
  * Phones and tablets: the tabs are a strip that scrolls sideways. Desktop: a 3 × 2 grid.
  * Without JS (no .js class on <html>) the tabs are hidden and every panel is listed.

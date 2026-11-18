@@ -1,5 +1,5 @@
 /**
- * boat-tabs.js — Boat picker of tour card 05 ("Catamarán o yate privado").
+ * boat-tabs.js — Boat picker of tour card 06 ("Catamarán o yate privado").
  *
  * ARIA tabs pattern with automatic activation: one tab per boat ([data-boat-tab="id"]).
  * Selecting a tab shows that boat's panel ([data-boat-panel="id"]), photo ([data-boat-photo="id"])
