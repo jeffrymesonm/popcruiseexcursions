@@ -78,6 +78,5 @@
     if (event.key === 'Escape' && isOpen) setOpen(false, true);
   });
 
-  window.addEventListener('i18n:change', syncToggleLabel);
   syncToggleLabel();
 })();

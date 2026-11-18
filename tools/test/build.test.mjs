@@ -95,6 +95,13 @@ test('language links point to the other versions', () => {
   assert.ok(english.includes('aria-label="Open menu"'));
 });
 
+test('only the root carries the redirect', () => {
+  assert.ok(read('index.html').includes('location.replace'));
+  for (const file of ['es/index.html', 'fr/index.html', 'it/index.html']) {
+    assert.ok(!read(file).includes('location.replace'), `${file} has no redirect`);
+  }
+});
+
 test('from prices are filled without JavaScript', () => {
   const html = read('index.html');
   assert.ok(html.includes('data-price-from="all">US$12<'));

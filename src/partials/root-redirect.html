@@ -1,0 +1,27 @@
+  <!--
+    Root page only (tools/build.mjs adds it to "/"): sends visitors to their language before first paint.
+    Order: ?lang= from old links (saved as the visitor's choice) → saved choice → browser language.
+    English stays here. Keeps ?tour= / &boat= and the #anchor, so "Book" links from the port pages
+    still preselect the tour. Does nothing for a file opened from disk (file:), where folders have no
+    index page. Search engines render in English with no saved choice, so they always see this page.
+  -->
+  <script>
+    (function () {
+      var targets = { es: 'es/', fr: 'fr/', it: 'it/' };
+      var known = { en: true, es: true, fr: true, it: true };
+      if (window.location.protocol === 'file:') return;
+      var params = new URLSearchParams(window.location.search);
+      var lang = params.get('lang');
+      if (known[lang]) {
+        try { window.localStorage.setItem('site-lang', lang); } catch (error) { /* no storage: the choice lasts this visit */ }
+      } else {
+        lang = null;
+        try { lang = window.localStorage.getItem('site-lang'); } catch (error) { lang = null; }
+        if (!known[lang]) lang = ((navigator.languages && navigator.languages[0]) || navigator.language || '').slice(0, 2).toLowerCase();
+      }
+      if (!targets[lang]) return;
+      params.delete('lang');
+      var query = params.toString();
+      window.location.replace(targets[lang] + (query ? '?' + query : '') + window.location.hash);
+    })();
+  </script>

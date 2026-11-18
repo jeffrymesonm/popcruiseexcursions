@@ -68,11 +68,6 @@ body {
   overflow-x: clip;
 }
 
-/* Hidden only for the instant between first paint and the language swap (see the <head> script). */
-.i18n-pending body {
-  visibility: hidden;
-}
-
 /* While the full-screen menu is open the page behind it must not scroll. */
 html.menu-open {
   overflow: hidden;
@@ -328,9 +323,14 @@ button {
   backdrop-filter: blur(6px);
 }
 
+/* Each option is a link to the same page in that language (one static page per language). */
 .lang-switch__option {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-width: 2.5rem;
   height: 2.5rem;
+  text-decoration: none;
   padding-inline: 0.75rem;
   border-radius: var(--radius-pill);
   color: #fff;
@@ -344,7 +344,7 @@ button {
   opacity: 1;
 }
 
-.lang-switch__option[aria-pressed="true"] {
+.lang-switch__option[aria-current="page"] {
   background: var(--color-on-dark);
   color: var(--color-fg);
   opacity: 1;

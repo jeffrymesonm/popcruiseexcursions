@@ -60,7 +60,6 @@
     });
   }
 
-  window.addEventListener('i18n:change', syncLinks);
   syncLinks();
 
   window.SiteWhatsApp = { url: url, open: open };

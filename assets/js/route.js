@@ -169,7 +169,6 @@
 
   window.addEventListener('scroll', requestUpdate, { passive: true });
   window.addEventListener('resize', scheduleBuild);
-  window.addEventListener('i18n:change', scheduleBuild);
   window.addEventListener('load', scheduleBuild);
   if (typeof reducedMotion.addEventListener === 'function') {
     reducedMotion.addEventListener('change', requestUpdate);

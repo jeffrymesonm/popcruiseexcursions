@@ -11,7 +11,8 @@
  *   already written in the visitor's language, ready to send. Nothing is sent to any server and
  *   nothing the visitor types is logged.
  * - "Book this tour" buttons ([data-book]) preselect their tour before jumping to the form;
- *   "Book this boat" buttons also carry data-book-boat and preselect the boat.
+ *   "Book this boat" buttons also carry data-book-boat and preselect the boat. Links from other
+ *   pages (the port pages) do the same with ?tour=<id>&boat=<id> in the URL.
  * Dates: the earliest allowed date is "today" in Puerto Plata (America/Santo_Domingo), because
  * the tour happens there, whatever the visitor's own time zone is.
  */
@@ -40,9 +41,7 @@
   var statusElement = form.querySelector('[data-form-status]');
   var hasTriedSubmit = false;
 
-  /** Current error key per field name ('' when valid), re-translated on language change. */
-  var errors = {};
-  /** Key of the status message on screen, or null. */
+  /** Key of the status message on screen, or null (cleared as soon as the visitor edits the form). */
   var statusKey = null;
 
   /**
@@ -190,7 +189,6 @@
   function renderFieldError(name, errorKey) {
     var input = form.elements[name];
     var message = form.querySelector('[data-error-for="' + name + '"]');
-    errors[name] = errorKey;
     if (!input || !message) return;
     if (errorKey) {
       input.setAttribute('aria-invalid', 'true');
@@ -396,29 +394,54 @@
     renderStatus('booking.sent', 'success');
   });
 
+  /**
+   * Checks whether a select offers a value (compared as text, so URL input never reaches a selector).
+   * @param {HTMLSelectElement} select - Field to look in.
+   * @param {string|null} value - Option value.
+   * @returns {boolean} True when an option has exactly that value.
+   */
+  function hasOption(select, value) {
+    return Boolean(value) && Array.prototype.some.call(select.options, function (option) {
+      return option.value === value;
+    });
+  }
+
+  /**
+   * Preselects a tour (and, for the catamaran or yacht, a boat) and refreshes the estimate.
+   * Ids the form does not offer are ignored.
+   * @param {string|null} tourId - Tour option value, e.g. "damajagua".
+   * @param {string|null} boatId - Boat option value, e.g. "libreterre".
+   * @returns {void}
+   */
+  function preselect(tourId, boatId) {
+    if (!hasOption(tourSelect, tourId)) return;
+    tourSelect.value = tourId;
+    if (hasOption(boatSelect, boatId)) boatSelect.value = boatId;
+    renderEstimate();
+  }
+
+  /**
+   * Preselects the tour named in the URL (?tour=<id>&boat=<id>), as the port pages link here.
+   * @returns {void}
+   */
+  function preselectFromUrl() {
+    var params;
+    try {
+      params = new URLSearchParams(window.location.search);
+    } catch (error) {
+      return;
+    }
+    preselect(params.get('tour'), params.get('boat'));
+  }
+
   // "Book this tour" / "Book this boat" buttons preselect their tour (and boat); the link itself
   // then scrolls to the form.
   document.addEventListener('click', function (event) {
     var button = event.target.closest('[data-book]');
-    if (!button) return;
-    var tourId = button.getAttribute('data-book');
-    var boatId = button.getAttribute('data-book-boat');
-    if (tourSelect.querySelector('option[value="' + tourId + '"]')) {
-      tourSelect.value = tourId;
-      if (boatId && boatSelect.querySelector('option[value="' + boatId + '"]')) boatSelect.value = boatId;
-      renderEstimate();
-    }
-  });
-
-  // Keep visible messages in the selected language.
-  window.addEventListener('i18n:change', function () {
-    Object.keys(errors).forEach(function (name) {
-      if (errors[name]) renderFieldError(name, errors[name]);
-    });
-    if (statusKey) statusElement.textContent = t(statusKey);
-    renderEstimate();
+    if (button) preselect(button.getAttribute('data-book'), button.getAttribute('data-book-boat'));
   });
 
   dateInput.min = todayInPuertoPlata();
+  preselectFromUrl();
   renderEstimate();
 })();
