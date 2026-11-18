@@ -97,6 +97,8 @@ window.SITE_TRANSLATIONS.fr = {
   'tours.damajagua.inc3': 'Déjeuner buffet aux cascades',
   'tours.damajagua.alt': 'Groupe casqué nageant dans un bassin sous une cascade de Damajagua',
   'tours.damajagua.alt2': 'Eau turquoise qui dévale le canyon rocheux de Damajagua',
+  'tours.damajagua.alt3': 'Touriste casqué et en gilet sur la tyrolienne au-dessus de la jungle',
+  'tours.damajagua.alt4': 'Collage : tyrolienne, descente d’un toboggan naturel et groupe dans l’eau',
   'tours.damajagua.kicker': 'Aventure · Nature',
 
   'tours.city.title': 'City Tour de Puerto Plata',

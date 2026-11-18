@@ -97,6 +97,8 @@ window.SITE_TRANSLATIONS.it = {
   'tours.damajagua.inc3': 'Pranzo a buffet alle cascate',
   'tours.damajagua.alt': 'Gruppo con il casco che nuota in una pozza sotto una cascata di Damajagua',
   'tours.damajagua.alt2': 'Acqua turchese che scorre nel canyon di roccia di Damajagua',
+  'tours.damajagua.alt3': 'Turista con casco e giubbotto sulla zipline sopra la giungla',
+  'tours.damajagua.alt4': 'Collage: zipline, discesa da uno scivolo naturale e un gruppo in acqua',
   'tours.damajagua.kicker': 'Avventura · Natura',
 
   'tours.city.title': 'City Tour di Puerto Plata',

@@ -136,6 +136,8 @@ window.SITE_TRANSLATIONS = {
     'tours.damajagua.inc3': 'Buffet lunch at the falls',
     'tours.damajagua.alt': 'Group in helmets swimming in a pool below a Damajagua waterfall',
     'tours.damajagua.alt2': 'Turquoise water rushing through the Damajagua rock canyon',
+    'tours.damajagua.alt3': 'Tourist in a helmet and life jacket flying on the zipline over the jungle',
+    'tours.damajagua.alt4': 'Collage: zipline, a ride down a natural rock slide and a group in the water',
     'tours.damajagua.kicker': 'Adventure · Nature',
 
     'tours.city.title': 'Puerto Plata City Tour',
