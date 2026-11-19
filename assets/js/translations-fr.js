@@ -77,7 +77,7 @@ window.SITE_TRANSLATIONS.fr = {
   // Tours
   'tours.tag': 'Excursions et prix',
   'tours.title': 'Des prix clairs, de vraies aventures',
-  'tours.lead': 'Prix par personne en dollars américains. Plus votre groupe est grand, plus le prix baisse.',
+  'tours.lead': 'Prix en dollars américains, par personne ; les bateaux se louent entiers. Plus votre groupe est grand, plus le prix baisse.',
   'tours.includes': 'Inclus',
   'tours.photos': 'Photos de l’excursion',
   'tours.book': 'Réserver cette excursion',
@@ -165,6 +165,8 @@ window.SITE_TRANSLATIONS.fr = {
   'boats.type.yacht': 'Yacht',
   'boats.ft': 'pieds',
   'boats.hours': 'heures',
+  'boats.per-boat': 'par bateau',
+  'boats.private': 'Prix pour le bateau entier, pas par personne : seul votre groupe à bord, pendant 4 heures.',
   'boats.caption': 'Prix de location du bateau selon la taille du groupe',
   'boats.book': 'Réserver ce bateau',
   'boats.inc.crew': 'Équipage à bord',

@@ -154,6 +154,19 @@ test('main pages link the port pages', () => {
   assert.ok(read('fr/index.html').includes('href="../amber-cove-excursions/" hreflang="en"'));
 });
 
+test('boats block says private boat, per boat and 4 hours', () => {
+  for (const file of MAIN_PAGES) {
+    const html = read(file);
+    assert.ok(html.includes('class="boat-private"'), `${file}: private-boat note`);
+    assert.ok(html.includes('data-i18n="boats.per-boat"'), `${file}: per boat next to the from price`);
+  }
+  const es = read('es/index.html');
+  assert.ok(es.includes('no por persona'));
+  assert.equal((es.match(/<li>4 <span data-i18n="boats.hours">horas<\/span><\/li>/g) || []).length, 6);
+  assert.ok(!es.includes('3–4 <span data-i18n="boats.hours">'));
+  assert.ok(read('index.html').includes('not per person'));
+});
+
 test('Spanish page names the place', () => {
   assert.ok(read('es/index.html').includes('27 Charcos de Damajagua'));
 });

@@ -1346,6 +1346,18 @@ button {
   color: var(--color-accent);
 }
 
+/* Boats card: the price is for the whole private boat, not per person (other operators sell seats). */
+.boat-private {
+  margin-top: 0.75rem;
+  padding: 0.6rem 0.85rem;
+  border-left: 4px solid var(--color-sun);
+  border-radius: 0 var(--radius-inner) var(--radius-inner) 0;
+  background: var(--color-tag);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
 /* Price table (the only place prices are written; prices.js and booking.js read it). */
 .prices {
   width: 100%;

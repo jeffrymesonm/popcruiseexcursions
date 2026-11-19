@@ -77,7 +77,7 @@ window.SITE_TRANSLATIONS.it = {
   // Tours
   'tours.tag': 'Escursioni e prezzi',
   'tours.title': 'Prezzi chiari, avventure vere',
-  'tours.lead': 'Prezzi a persona in dollari USA. Più grande è il gruppo, più basso è il prezzo.',
+  'tours.lead': 'Prezzi in dollari USA, a persona; le barche si noleggiano intere. Più grande è il gruppo, più basso è il prezzo.',
   'tours.includes': 'Incluso',
   'tours.photos': 'Foto dell’escursione',
   'tours.book': 'Prenota questa escursione',
@@ -165,6 +165,8 @@ window.SITE_TRANSLATIONS.it = {
   'boats.type.yacht': 'Yacht',
   'boats.ft': 'piedi',
   'boats.hours': 'ore',
+  'boats.per-boat': 'a barca',
+  'boats.private': 'Prezzo per l’intera barca, non a persona: a bordo solo il vostro gruppo, per 4 ore.',
   'boats.caption': 'Prezzo del noleggio della barca in base al gruppo',
   'boats.book': 'Prenota questa barca',
   'boats.inc.crew': 'Equipaggio a bordo',

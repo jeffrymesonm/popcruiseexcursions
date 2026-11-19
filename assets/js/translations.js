@@ -117,7 +117,7 @@ window.SITE_TRANSLATIONS = {
     // Tours
     'tours.tag': 'Tours & prices',
     'tours.title': 'Clear prices, real adventures',
-    'tours.lead': 'Prices per person in US dollars. The bigger your group, the lower the price.',
+    'tours.lead': 'Prices in US dollars, per person; boats are rented whole. The bigger your group, the lower the price.',
     'tours.includes': 'Included',
     'tours.photos': 'Tour photos',
     'tours.book': 'Book this tour',
@@ -205,6 +205,8 @@ window.SITE_TRANSLATIONS = {
     'boats.type.yacht': 'Yacht',
     'boats.ft': 'ft',
     'boats.hours': 'hours',
+    'boats.per-boat': 'per boat',
+    'boats.private': 'Price for the whole boat, not per person: only your group on board, for 4 hours.',
     'boats.caption': 'Boat charter price by group size',
     'boats.book': 'Book this boat',
     'boats.inc.crew': 'Crew on board',
