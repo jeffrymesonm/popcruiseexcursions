@@ -11,7 +11,8 @@
  *   what each person above that adds, with no upper limit unless the extra row has a data-max
  *   (no extra row: no extras).
  * Boat tables are named data-prices="boat-<id>" and grouped with data-tour="catamaran"; their
- * data-deposit attribute is the deposit (USD) that books the boat.
+ * data-deposit attribute is the deposit (USD) that books the boat. Per-person tables carry
+ * data-deposit-percent instead: the share of the group's total that books the tour.
  * This script fills every [data-price-from="id"] (a table id, a data-tour group, or "all" for
  * per-person tours only) with the lowest price, and exposes window.SitePrices for booking.js.
  * Edit a price in its table and the "from" labels, the hero card and the booking estimate follow.
@@ -171,24 +172,43 @@
   }
 
   /**
-   * Deposit that books a tour, from its table's data-deposit attribute (boats only).
-   * @param {string} tourId - Table id (data-prices), e.g. "boat-viking".
-   * @returns {number|null} USD, or null when the tour has no table or no deposit.
+   * Share of the total that books a per-person tour, from its table's data-deposit-percent.
+   * @param {string} tourId - Table id (data-prices), e.g. "damajagua".
+   * @returns {number|null} Percent (e.g. 50), or null when the tour has no table or no percent.
    */
-  function deposit(tourId) {
+  function depositPercent(tourId) {
     var element = table(tourId);
     if (!element) return null;
-    var amount = parseFloat(element.getAttribute('data-deposit'));
-    return isFinite(amount) && amount > 0 ? amount : null;
+    var percent = parseFloat(element.getAttribute('data-deposit-percent'));
+    return isFinite(percent) && percent > 0 ? percent : null;
   }
 
   /**
-   * Formats a USD amount the same way the tables do ("US$1,250").
+   * Deposit that books a tour: a boat's fixed data-deposit, or data-deposit-percent of the
+   * group's total for a per-person tour.
+   * @param {string} tourId - Table id (data-prices), e.g. "boat-viking" or "damajagua".
+   * @param {number|null} [total] - Group total in USD (needed for a percent deposit).
+   * @returns {number|null} USD (cents kept), or null when there is no deposit or no total to take it from.
+   */
+  function deposit(tourId, total) {
+    var element = table(tourId);
+    if (!element) return null;
+    var amount = parseFloat(element.getAttribute('data-deposit'));
+    if (isFinite(amount) && amount > 0) return amount;
+    var percent = depositPercent(tourId);
+    if (percent === null || typeof total !== 'number' || !isFinite(total)) return null;
+    return Math.round(total * percent) / 100;
+  }
+
+  /**
+   * Formats a USD amount the same way the tables do ("US$1,250"); an amount with cents (half of
+   * an odd total) keeps two decimals ("US$17.50").
    * @param {number} amount - Amount in USD.
    * @returns {string} Formatted amount.
    */
   function format(amount) {
-    return 'US$' + amount.toLocaleString('en-US', { maximumFractionDigits: 2 });
+    var decimals = amount % 1 === 0 ? 0 : 2;
+    return 'US$' + amount.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
   }
 
   document.querySelectorAll('[data-price-from]').forEach(function (element) {
@@ -197,6 +217,7 @@
   });
 
   window.SitePrices = {
-    options: options, quote: quote, maxPeople: maxPeople, minPrice: minPrice, deposit: deposit, format: format
+    options: options, quote: quote, maxPeople: maxPeople, minPrice: minPrice,
+    deposit: deposit, depositPercent: depositPercent, format: format
   };
 })();

@@ -311,12 +311,14 @@ function priceLines(scope, tables, dict, boatNames) {
       if (table.deposit) line += `; ${formatUsd(table.deposit)} deposit to book`;
       return [line];
     }
-    return table.rows.filter((row) => row.min !== null && row.max !== null).map((row) => {
+    const lines = table.rows.filter((row) => row.min !== null && row.max !== null).map((row) => {
       const prices = row.cells
         .map((cell, index) => (cell === null ? null : `${formatUsd(cell)} ${(dict[table.optionKeys[index]] || table.options[index]).toLowerCase()}`))
         .filter(Boolean);
       return `${row.min} to ${row.max} people: ${prices.join(', ')}`;
     });
+    if (table.depositPercent) lines.push(`${table.depositPercent}% of the total to book`);
+    return lines;
   });
 }
 

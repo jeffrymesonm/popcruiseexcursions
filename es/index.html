@@ -20,6 +20,8 @@
   a price per extra person; the extra row has no data-max, so there is no group limit).
   Boat tables are data-prices="boat-<id>", grouped by data-tour="catamaran", with the booking
   deposit in data-deposit (USD; keep it equal to the amount in that boat's note).
+  Per-person tours are booked with a share of the total: data-deposit-percent on their table (keep it
+  equal to the "tours.deposit" note under each card, in the 4 languages).
   Styles: assets/css/styles.css · Behaviour: assets/js/*.js · Icons adapted from Lucide (ISC License).
 -->
 <html lang="es">
@@ -356,7 +358,7 @@
                 <h3 class="tour-card__title" data-i18n="tours.damajagua.title">Charcos de Damajagua</h3>
                 <p class="tour-card__desc" data-i18n="tours.damajagua.desc">Salta, nada y deslízate en los 27 Charcos de Damajagua, las cascadas naturales más famosas del norte de la isla. Súmale el zipline y vuela sobre la selva.</p>
               </div>
-              <table class="prices" data-prices="damajagua">
+              <table class="prices" data-prices="damajagua" data-deposit-percent="50">
                 <caption class="visually-hidden" data-i18n="tours.damajagua.caption">Precios por persona de Charcos de Damajagua según el tamaño del grupo</caption>
                 <thead>
                   <tr><th scope="col" data-i18n="price.group">Grupo</th><th scope="col" data-option="zipline" data-i18n="price.zipline">Con zipline</th><th scope="col" data-option="basic" data-i18n="price.noZipline">Sin zipline</th></tr>
@@ -375,6 +377,7 @@
               </ul>
               <div class="tour-card__actions">
                 <a class="btn btn--sun" href="#booking" data-book="damajagua" data-i18n="tours.book">Reservar este tour</a>
+                <p class="tour-card__note" data-i18n="tours.deposit">Se reserva con el 50% del total.</p>
               </div>
             </div>
             <!-- Photo column, same in every tour card: tapping a thumbnail shows that photo
@@ -417,7 +420,7 @@
                 <li data-i18n="tours.city.stop6">Fortaleza San Felipe</li>
                 <li data-i18n="tours.city.stop7">Playa Dorada</li>
               </ol>
-              <table class="prices" data-prices="city">
+              <table class="prices" data-prices="city" data-deposit-percent="50">
                 <caption class="visually-hidden" data-i18n="tours.city.caption">Precios por persona del City Tour según el tamaño del grupo</caption>
                 <thead>
                   <tr><th scope="col" data-i18n="price.group">Grupo</th><th scope="col" data-option="basic" data-i18n="price.perPersonCol">Por persona</th></tr>
@@ -436,7 +439,7 @@
               </ul>
               <div class="tour-card__actions">
                 <a class="btn btn--sun" href="#booking" data-book="city" data-i18n="tours.book">Reservar este tour</a>
-                <p class="tour-card__note" data-i18n="tours.city.note">Almuerzo y bebidas no incluidos.</p>
+                <p class="tour-card__note"><span data-i18n="tours.deposit">Se reserva con el 50% del total.</span> <span data-i18n="tours.city.note">Almuerzo y bebidas no incluidos.</span></p>
               </div>
             </div>
             <div class="tour-card__visual">
@@ -463,7 +466,7 @@
                 <h3 class="tour-card__title" data-i18n="tours.horse.title">Cabalgata</h3>
                 <p class="tour-card__desc" data-i18n="tours.horse.desc">Hora y media a caballo por la playa y el campo de Puerto Plata.</p>
               </div>
-              <table class="prices" data-prices="horse">
+              <table class="prices" data-prices="horse" data-deposit-percent="50">
                 <caption class="visually-hidden" data-i18n="tours.horse.caption">Precios por persona de la Cabalgata según el tamaño del grupo</caption>
                 <thead>
                   <tr><th scope="col" data-i18n="price.group">Grupo</th><th scope="col" data-option="basic" data-i18n="price.perPersonCol">Por persona</th></tr>
@@ -482,6 +485,7 @@
               </ul>
               <div class="tour-card__actions">
                 <a class="btn btn--sun" href="#booking" data-book="horse" data-i18n="tours.book">Reservar este tour</a>
+                <p class="tour-card__note" data-i18n="tours.deposit">Se reserva con el 50% del total.</p>
               </div>
             </div>
             <div class="tour-card__visual">
@@ -513,6 +517,7 @@
               </div>
               <div class="tour-card__actions">
                 <a class="btn btn--sun" href="#booking" data-book="buggy" data-i18n="tours.ask">Consultar precio</a>
+                <p class="tour-card__note" data-i18n="tours.deposit">Se reserva con el 50% del total.</p>
               </div>
             </div>
             <div class="tour-card__visual">
@@ -539,7 +544,7 @@
                 <h3 class="tour-card__title" data-i18n="tours.beach.title">Beach Day en Playa Dorada</h3>
                 <p class="tour-card__desc" data-i18n="tours.beach.desc">Un día de playa sin preocuparte de nada: te llevamos directo a Playa Dorada, con sombrillas y tumbonas reservadas para tu grupo, y te traemos de vuelta al puerto con tiempo de sobra.</p>
               </div>
-              <table class="prices" data-prices="beach">
+              <table class="prices" data-prices="beach" data-deposit-percent="50">
                 <caption class="visually-hidden" data-i18n="tours.beach.caption">Precio por persona del Beach Day en Playa Dorada según el tamaño del grupo</caption>
                 <thead>
                   <tr><th scope="col" data-i18n="price.group">Grupo</th><th scope="col" data-option="basic" data-i18n="price.perPersonCol">Por persona</th></tr>
@@ -561,6 +566,7 @@
               </ul>
               <div class="tour-card__actions">
                 <a class="btn btn--sun" href="#booking" data-book="beach" data-i18n="tours.book">Reservar este tour</a>
+                <p class="tour-card__note" data-i18n="tours.deposit">Se reserva con el 50% del total.</p>
               </div>
             </div>
             <div class="tour-card__visual">

@@ -15,7 +15,7 @@
 /**
  * @typedef {{min: number|null, max: number|null, charge: 'flat'|'extra'|null, cells: Array<number|null>}} PriceRow
  * @typedef {{id: string, tour: string|null, pricing: 'person'|'charter', deposit: number|null,
- *   options: string[], optionKeys: Array<string|null>, rows: PriceRow[]}} PriceTable
+ *   depositPercent: number|null, options: string[], optionKeys: Array<string|null>, rows: PriceRow[]}} PriceTable
  */
 
 /** <table … class="prices" …>…</table> — 1 = opening tag attributes, 2 = contents. */
@@ -67,11 +67,13 @@ export function parsePriceTables(html) {
     const rowsHtml = (body.match(/<tbody\b[^>]*>([\s\S]*?)<\/tbody>/) || [, ''])[1];
     const optionCells = [...head.matchAll(/<th\b([^>]*\sdata-option="[^"]+"[^>]*)>/g)].map((match) => match[1]);
     const deposit = parseFloat(attribute(attrs, 'data-deposit'));
+    const depositPercent = parseFloat(attribute(attrs, 'data-deposit-percent'));
     return {
       id: attribute(attrs, 'data-prices'),
       tour: attribute(attrs, 'data-tour'),
       pricing: attribute(attrs, 'data-pricing') === 'charter' ? 'charter' : 'person',
       deposit: Number.isFinite(deposit) && deposit > 0 ? deposit : null,
+      depositPercent: Number.isFinite(depositPercent) && depositPercent > 0 ? depositPercent : null,
       options: optionCells.map((cellAttrs) => attribute(cellAttrs, 'data-option')),
       optionKeys: optionCells.map((cellAttrs) => attribute(cellAttrs, 'data-i18n')),
       rows: [...rowsHtml.matchAll(/<tr\b([^>]*)>([\s\S]*?)<\/tr>/g)].map(([, rowAttrs, rowHtml]) => ({
@@ -132,12 +134,13 @@ export function priceCount(tables, scope) {
 }
 
 /**
- * Formats a USD amount the way the tables do.
+ * Formats a USD amount the way the tables do (same rule as format() in assets/js/prices.js).
  * @param {number} amount - Amount in USD.
- * @returns {string} E.g. "US$1,250".
+ * @returns {string} E.g. "US$1,250", or "US$17.50" when there are cents.
  */
 export function formatUsd(amount) {
-  return `US$${amount.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
+  const decimals = amount % 1 === 0 ? 0 : 2;
+  return `US$${amount.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}`;
 }
 
 /**

@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import { parsePriceTables, minPrice, maxPrice, priceCount, formatUsd, fillPriceFrom } from '../lib/prices.mjs';
 
 const FIXTURE = `
-<table class="prices" data-prices="falls">
+<table class="prices" data-prices="falls" data-deposit-percent="50">
   <thead><tr><th scope="col" data-i18n="price.group">Grupo</th><th scope="col" data-option="zipline" data-i18n="price.zipline">Con zipline</th><th scope="col" data-option="basic" data-i18n="price.noZipline">Sin zipline</th></tr></thead>
   <tbody>
     <tr data-min="1" data-max="5"><th scope="row">1 a 5</th><td>US$100</td><td>US$75</td></tr>
@@ -36,8 +36,11 @@ test('parsePriceTables reads ids, options, rows and deposits', () => {
   assert.deepEqual(falls.optionKeys, ['price.zipline', 'price.noZipline']);
   assert.equal(falls.pricing, 'person');
   assert.deepEqual(falls.rows[1].cells, [70, 50]);
+  assert.equal(falls.depositPercent, 50);
+  assert.equal(falls.deposit, null);
   const boat = tables.find((table) => table.id === 'boat-a');
   assert.equal(boat.deposit, 400);
+  assert.equal(boat.depositPercent, null);
   assert.equal(boat.pricing, 'charter');
   assert.equal(boat.tour, 'boats');
   assert.equal(boat.rows[1].charge, 'extra');
@@ -63,6 +66,7 @@ test('maxPrice and priceCount', () => {
 test('formatUsd', () => {
   assert.equal(formatUsd(1250), 'US$1,250');
   assert.equal(formatUsd(12), 'US$12');
+  assert.equal(formatUsd(17.5), 'US$17.50');
 });
 
 test('fillPriceFrom writes the lowest price and reports unknown scopes', () => {

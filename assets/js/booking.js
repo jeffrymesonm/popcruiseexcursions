@@ -5,8 +5,9 @@
  *   (only for the "catamaran or yacht" tour: each boat has its own table, data-prices="boat-<id>"),
  *   group size, date, name and optionally the ship. A live estimate shows the total and how it
  *   is made up (price per person × people, or boat price + extra people for a boat),
- *   read from the price tables through SitePrices (prices.js). Boats also show the deposit
- *   that books them, which the WhatsApp message repeats.
+ *   read from the price tables through SitePrices (prices.js). It also shows the deposit that
+ *   books the tour (a boat's fixed amount, or a share of the total for the other tours), which
+ *   the WhatsApp message repeats.
  * - On submit the fields are validated (bilingual messages) and WhatsApp opens with the booking
  *   already written in the visitor's language, ready to send. Nothing is sent to any server and
  *   nothing the visitor types is logged.
@@ -303,12 +304,24 @@
       estimateDetail.textContent = '';
     }
 
-    // Deposit line: only for tours that have one (the boats) and a valid group size.
-    var depositAmount = result.state === 'invalid' ? null : window.SitePrices.deposit(priceTableId());
+    // Deposit line: a valid group size and a deposit (a boat's fixed one, or a share of a known total).
+    var depositAmount = result.state === 'invalid' ? null : window.SitePrices.deposit(priceTableId(), quotedTotal(result));
+    var percent = window.SitePrices.depositPercent(priceTableId());
     estimateDeposit.hidden = depositAmount === null;
     estimateDeposit.textContent = depositAmount === null
       ? ''
-      : fill(t('booking.estimate.deposit'), { deposit: window.SitePrices.format(depositAmount) });
+      : fill(t(percent === null ? 'booking.estimate.deposit' : 'booking.estimate.depositPercent'), {
+        deposit: window.SitePrices.format(depositAmount), percent: percent
+      });
+  }
+
+  /**
+   * Group total of a quote, which a percent deposit is taken from.
+   * @param {Object} result - currentQuote() result.
+   * @returns {number|null} USD, or null when the quote has no price.
+   */
+  function quotedTotal(result) {
+    return result.state === 'priced' ? result.price.total : null;
   }
 
   /**
@@ -344,8 +357,12 @@
       '• ' + tm('booking.msg.price') + ': ' + priceLine,
       '• ' + tm('booking.msg.name') + ': ' + form.elements.name.value.trim()
     ];
-    var depositAmount = window.SitePrices.deposit(priceTableId());
-    if (depositAmount !== null) lines.splice(lines.length - 1, 0, '• ' + tm('booking.msg.deposit') + ': ' + format(depositAmount));
+    var depositAmount = window.SitePrices.deposit(priceTableId(), quotedTotal(result));
+    var percent = window.SitePrices.depositPercent(priceTableId());
+    if (depositAmount !== null) {
+      var depositText = format(depositAmount) + (percent === null ? '' : ' (' + percent + '%)');
+      lines.splice(lines.length - 1, 0, '• ' + tm('booking.msg.deposit') + ': ' + depositText);
+    }
     if (ship) lines.push('• ' + tm('booking.msg.ship') + ': ' + ship);
     if (messageLanguage() !== language()) {
       lines.push('• ' + tm('booking.msg.clientLanguage') + ': ' + tm('lang.' + language()));

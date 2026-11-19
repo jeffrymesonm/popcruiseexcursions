@@ -20,6 +20,8 @@
   a price per extra person; the extra row has no data-max, so there is no group limit).
   Boat tables are data-prices="boat-<id>", grouped by data-tour="catamaran", with the booking
   deposit in data-deposit (USD; keep it equal to the amount in that boat's note).
+  Per-person tours are booked with a share of the total: data-deposit-percent on their table (keep it
+  equal to the "tours.deposit" note under each card, in the 4 languages).
   Styles: assets/css/styles.css · Behaviour: assets/js/*.js · Icons adapted from Lucide (ISC License).
 -->
 <html lang="fr">
@@ -356,7 +358,7 @@
                 <h3 class="tour-card__title" data-i18n="tours.damajagua.title">Cascades de Damajagua</h3>
                 <p class="tour-card__desc" data-i18n="tours.damajagua.desc">Sautez, nagez et glissez aux 27 Charcos de Damajagua, les cascades naturelles les plus célèbres de la côte nord. Ajoutez la tyrolienne et survolez la jungle.</p>
               </div>
-              <table class="prices" data-prices="damajagua">
+              <table class="prices" data-prices="damajagua" data-deposit-percent="50">
                 <caption class="visually-hidden" data-i18n="tours.damajagua.caption">Prix par personne des cascades de Damajagua selon la taille du groupe</caption>
                 <thead>
                   <tr><th scope="col" data-i18n="price.group">Groupe</th><th scope="col" data-option="zipline" data-i18n="price.zipline">Avec tyrolienne</th><th scope="col" data-option="basic" data-i18n="price.noZipline">Sans tyrolienne</th></tr>
@@ -375,6 +377,7 @@
               </ul>
               <div class="tour-card__actions">
                 <a class="btn btn--sun" href="#booking" data-book="damajagua" data-i18n="tours.book">Réserver cette excursion</a>
+                <p class="tour-card__note" data-i18n="tours.deposit">Réservation avec un acompte de 50 %.</p>
               </div>
             </div>
             <!-- Photo column, same in every tour card: tapping a thumbnail shows that photo
@@ -417,7 +420,7 @@
                 <li data-i18n="tours.city.stop6">Forteresse San Felipe</li>
                 <li data-i18n="tours.city.stop7">Playa Dorada</li>
               </ol>
-              <table class="prices" data-prices="city">
+              <table class="prices" data-prices="city" data-deposit-percent="50">
                 <caption class="visually-hidden" data-i18n="tours.city.caption">Prix par personne du City Tour selon la taille du groupe</caption>
                 <thead>
                   <tr><th scope="col" data-i18n="price.group">Groupe</th><th scope="col" data-option="basic" data-i18n="price.perPersonCol">Par personne</th></tr>
@@ -436,7 +439,7 @@
               </ul>
               <div class="tour-card__actions">
                 <a class="btn btn--sun" href="#booking" data-book="city" data-i18n="tours.book">Réserver cette excursion</a>
-                <p class="tour-card__note" data-i18n="tours.city.note">Déjeuner et boissons non inclus.</p>
+                <p class="tour-card__note"><span data-i18n="tours.deposit">Réservation avec un acompte de 50 %.</span> <span data-i18n="tours.city.note">Déjeuner et boissons non inclus.</span></p>
               </div>
             </div>
             <div class="tour-card__visual">
@@ -463,7 +466,7 @@
                 <h3 class="tour-card__title" data-i18n="tours.horse.title">Balade à cheval</h3>
                 <p class="tour-card__desc" data-i18n="tours.horse.desc">Une heure et demie à cheval sur la plage et dans la campagne de Puerto Plata.</p>
               </div>
-              <table class="prices" data-prices="horse">
+              <table class="prices" data-prices="horse" data-deposit-percent="50">
                 <caption class="visually-hidden" data-i18n="tours.horse.caption">Prix par personne de la balade à cheval selon la taille du groupe</caption>
                 <thead>
                   <tr><th scope="col" data-i18n="price.group">Groupe</th><th scope="col" data-option="basic" data-i18n="price.perPersonCol">Par personne</th></tr>
@@ -482,6 +485,7 @@
               </ul>
               <div class="tour-card__actions">
                 <a class="btn btn--sun" href="#booking" data-book="horse" data-i18n="tours.book">Réserver cette excursion</a>
+                <p class="tour-card__note" data-i18n="tours.deposit">Réservation avec un acompte de 50 %.</p>
               </div>
             </div>
             <div class="tour-card__visual">
@@ -513,6 +517,7 @@
               </div>
               <div class="tour-card__actions">
                 <a class="btn btn--sun" href="#booking" data-book="buggy" data-i18n="tours.ask">Demander le prix</a>
+                <p class="tour-card__note" data-i18n="tours.deposit">Réservation avec un acompte de 50 %.</p>
               </div>
             </div>
             <div class="tour-card__visual">
@@ -539,7 +544,7 @@
                 <h3 class="tour-card__title" data-i18n="tours.beach.title">Journée plage à Playa Dorada</h3>
                 <p class="tour-card__desc" data-i18n="tours.beach.desc">Une journée à la plage sans souci : nous vous emmenons directement à Playa Dorada, avec parasols et transats réservés pour votre groupe, et nous vous ramenons au port avec une bonne marge.</p>
               </div>
-              <table class="prices" data-prices="beach">
+              <table class="prices" data-prices="beach" data-deposit-percent="50">
                 <caption class="visually-hidden" data-i18n="tours.beach.caption">Prix par personne de la journée plage à Playa Dorada selon la taille du groupe</caption>
                 <thead>
                   <tr><th scope="col" data-i18n="price.group">Groupe</th><th scope="col" data-option="basic" data-i18n="price.perPersonCol">Par personne</th></tr>
@@ -561,6 +566,7 @@
               </ul>
               <div class="tour-card__actions">
                 <a class="btn btn--sun" href="#booking" data-book="beach" data-i18n="tours.book">Réserver cette excursion</a>
+                <p class="tour-card__note" data-i18n="tours.deposit">Réservation avec un acompte de 50 %.</p>
               </div>
             </div>
             <div class="tour-card__visual">
