@@ -62,12 +62,25 @@ function homePath(lang) {
 }
 
 /**
- * Page definition of a cruise port.
- * @param {string} portId - "amber-cove" or "taino-bay".
- * @returns {object|undefined} PageDef, or undefined when the port has no page.
+ * Page definition by id.
+ * @param {string} pageId - "home", "amber-cove", "catamaran"…
+ * @returns {object|undefined} PageDef, or undefined when there is no such page.
  */
-function portPage(portId) {
-  return config.PAGES.find((page) => page.port === portId);
+function pageById(pageId) {
+  return config.PAGES.find((page) => page.id === pageId);
+}
+
+/**
+ * Absolute URL of a tour: its own landing page in that language when there is one (the catamaran
+ * page), else its card on the home page.
+ * @param {string} tourId - TOURS id.
+ * @param {string} lang - Language code.
+ * @returns {string} Absolute URL.
+ */
+function tourUrl(tourId, lang) {
+  const landing = config.PAGES.find((page) => page.tour === tourId && page.versions[lang]);
+  if (landing) return absoluteUrl(config.SITE.origin, landing.versions[lang]);
+  return `${absoluteUrl(config.SITE.origin, homePath(lang))}#tour-${tourId}`;
 }
 
 /**
@@ -144,7 +157,6 @@ function pageMeta(html) {
  * @returns {Array<object>} TourData list (see tools/lib/schema.mjs).
  */
 function toursOf(dict, lang, tables, errors, where) {
-  const homeUrl = absoluteUrl(config.SITE.origin, homePath(lang));
   return config.TOURS.map((tour) => {
     const low = tour.scope ? minPrice(tables, tour.scope) : null;
     return {
@@ -152,7 +164,7 @@ function toursOf(dict, lang, tables, errors, where) {
       name: textOf(dict, `tours.${tour.id}.title`, errors, where),
       description: textOf(dict, `tours.${tour.id}.desc`, errors, where),
       image: tour.image,
-      url: `${homeUrl}#tour-${tour.id}`,
+      url: tourUrl(tour.id, lang),
       offer: low === null ? null : { low, high: maxPrice(tables, tour.scope), count: priceCount(tables, tour.scope) },
       stops: tour.stops
         ? Array.from({ length: tour.stops }, (unused, index) => textOf(dict, `tours.${tour.id}.stop${index + 1}`, errors, where))
@@ -188,6 +200,39 @@ function portOf(page, lang, dict, errors, where) {
 }
 
 /**
+ * Kind of page, for its JSON-LD.
+ * @param {object} page - PageDef.
+ * @returns {'home'|'port'|'tour'} "port" for cruise-port pages, "tour" for one-tour pages, else "home".
+ */
+function pageTypeOf(page) {
+  if (page.port) return 'port';
+  return page.tour ? 'tour' : 'home';
+}
+
+/**
+ * Data of the tour a tour page is about (e.g. the catamaran page), for its JSON-LD.
+ * @param {object} page - PageDef with a tour and a textKey (its H1 is "<textKey>.h1").
+ * @param {string} lang - Language code.
+ * @param {Record<string, string>} dict - Dictionary of the language.
+ * @param {string[]} errors - Collects build errors.
+ * @param {string} where - Page label.
+ * @returns {object|undefined} TourPageData (see tools/lib/schema.mjs), or undefined for other pages.
+ */
+function tourPageOf(page, lang, dict, errors, where) {
+  if (!page.tour) return undefined;
+  if (!config.TOURS.some((tour) => tour.id === page.tour)) {
+    errors.push(`${where}: tools/site.config.mjs has no TOURS entry for "${page.tour}"`);
+    return undefined;
+  }
+  return {
+    id: page.tour,
+    homeUrl: absoluteUrl(config.SITE.origin, homePath(lang)),
+    homeName: textOf(dict, 'port.home', errors, where),
+    pageName: textOf(dict, `${page.textKey}.h1`, errors, where)
+  };
+}
+
+/**
  * Value of a template marker for one page version.
  * @param {{page: object, lang: string, urlPath: string, seoHead: string, readPartial: Function}} context
  * @returns {(name: string, arg: string|null) => string|undefined} Resolver for fillPlaceholders.
@@ -206,11 +251,13 @@ function markerResolver({ page, lang, urlPath, seoHead, readPartial }) {
       // even when localStorage is blocked or the click happens before i18n.js has loaded.
       return target === '/' ? `${link}?lang=${arg}` : link;
     }
-    if ((name === 'port-url' || name === 'port-lang') && arg) {
-      const target = portPage(arg);
+    // {{page-url:<page id>}} / {{page-lang:<page id>}}: link to another page in this language, or in
+    // the default language when that page has no version in it (FR/IT link to the English port pages).
+    if ((name === 'page-url' || name === 'page-lang') && arg) {
+      const target = pageById(arg);
       if (!target) return undefined;
       const targetLang = target.versions[lang] ? lang : config.DEFAULT_LANG;
-      return name === 'port-lang' ? targetLang : relativeUrl(urlPath, target.versions[targetLang]) || './';
+      return name === 'page-lang' ? targetLang : relativeUrl(urlPath, target.versions[targetLang]) || './';
     }
     return undefined;
   };
@@ -269,13 +316,14 @@ function renderVersion({ page, lang, urlPath, template, data, tables, site, read
     site,
     lang,
     url: absoluteUrl(site.origin, urlPath),
-    pageType: page.port ? 'port' : 'home',
+    pageType: pageTypeOf(page),
     title,
     description,
     audience: config.AUDIENCE[lang] || config.AUDIENCE[config.DEFAULT_LANG],
     tours: toursOf(data, lang, tables, errors, where),
     faq: faqOf(template, data, errors, where),
-    port: portOf(page, lang, data, errors, where)
+    port: portOf(page, lang, data, errors, where),
+    tourPage: tourPageOf(page, lang, data, errors, where)
   });
   const seoHead = `${seoHeadTags({ origin: site.origin, page, lang, locales: config.LOCALES, defaultLang: config.DEFAULT_LANG })}\n  ${jsonLdScript(graph)}`;
 

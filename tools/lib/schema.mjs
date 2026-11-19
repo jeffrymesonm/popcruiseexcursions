@@ -1,7 +1,8 @@
 /**
  * schema.mjs — JSON-LD (schema.org) graph for each page version, built from the same data the page
  * shows: the business, the site, the page, the tours with their "from" prices, the FAQ and, on the
- * port pages, the cruise terminal, breadcrumbs and the list of tours from that port.
+ * port pages, the cruise terminal, breadcrumbs and the list of tours from that port; on a tour page
+ * (the catamaran page), only that tour, breadcrumbs and the FAQ.
  * Never emits ratings or reviews: the business has no published reviews yet.
  */
 
@@ -13,6 +14,8 @@
  *   offer: {low: number, high: number, count: number}|null, stops?: string[]}} TourData
  * @typedef {{id: string, name: string, geo: {latitude: number, longitude: number}|null,
  *   homeUrl: string, homeName: string, pageName: string}} PortData
+ * @typedef {{id: string, homeUrl: string, homeName: string, pageName: string}} TourPageData
+ *   A page about one tour: id = its TOURS id; the other fields feed the breadcrumbs.
  */
 
 /**
@@ -118,6 +121,25 @@ function faqNode(url, faq) {
 }
 
 /**
+ * Two-step breadcrumbs: the home page, then this page.
+ * @param {string} url - Page URL.
+ * @param {string} homeName - Name of the home page in the page language.
+ * @param {string} homeUrl - Home page URL in the page language.
+ * @param {string} pageName - Name of this page (its H1).
+ * @returns {object} BreadcrumbList node.
+ */
+function breadcrumbNode(url, homeName, homeUrl, pageName) {
+  return {
+    '@type': 'BreadcrumbList',
+    '@id': `${url}#breadcrumb`,
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: homeName, item: homeUrl },
+      { '@type': 'ListItem', position: 2, name: pageName, item: url }
+    ]
+  };
+}
+
+/**
  * Nodes that only port pages have: the terminal, the breadcrumbs and the list of tours.
  * @param {string} origin - Site origin.
  * @param {string} url - Page URL.
@@ -135,14 +157,7 @@ function portNodes(origin, url, port, tours) {
   if (port.geo) terminal.geo = { '@type': 'GeoCoordinates', latitude: port.geo.latitude, longitude: port.geo.longitude };
   return [
     terminal,
-    {
-      '@type': 'BreadcrumbList',
-      '@id': `${url}#breadcrumb`,
-      itemListElement: [
-        { '@type': 'ListItem', position: 1, name: port.homeName, item: port.homeUrl },
-        { '@type': 'ListItem', position: 2, name: port.pageName, item: url }
-      ]
-    },
+    breadcrumbNode(url, port.homeName, port.homeUrl, port.pageName),
     {
       '@type': 'ItemList',
       '@id': `${url}#tours`,
@@ -158,13 +173,20 @@ function portNodes(origin, url, port, tours) {
 
 /**
  * JSON-LD graph for one page version.
- * @param {{origin: string, site: SiteInfo, lang: string, url: string, pageType: 'home'|'port',
+ * Home: every tour as a TouristTrip. Port: terminal, breadcrumbs and tour list. Tour: only the tour
+ * named by tourPage.id (the page is about that trip) and breadcrumbs.
+ * @param {{origin: string, site: SiteInfo, lang: string, url: string, pageType: 'home'|'port'|'tour',
  *   title: string, description: string, audience: string, tours: TourData[],
- *   faq: Array<{q: string, a: string}>, port?: PortData}} input
+ *   faq: Array<{q: string, a: string}>, port?: PortData, tourPage?: TourPageData}} input
  * @returns {{'@context': string, '@graph': object[]}} The graph.
  */
-export function buildGraph({ origin, site, lang, url, pageType, title, description, audience, tours, faq, port }) {
+export function buildGraph({ origin, site, lang, url, pageType, title, description, audience, tours, faq, port, tourPage }) {
   const isPort = pageType === 'port' && port;
+  const isTour = pageType === 'tour' && tourPage;
+  const tripId = isTour ? `${origin}/#tour-${tourPage.id}` : null;
+  let about = `${origin}/#org`;
+  if (isPort) about = `${origin}/#port-${port.id}`;
+  if (isTour) about = tripId;
   const page = {
     '@type': 'WebPage',
     '@id': `${url}#webpage`,
@@ -173,17 +195,28 @@ export function buildGraph({ origin, site, lang, url, pageType, title, descripti
     description,
     inLanguage: lang,
     isPartOf: { '@id': `${origin}/#website` },
-    about: { '@id': isPort ? `${origin}/#port-${port.id}` : `${origin}/#org` }
+    about: { '@id': about }
   };
+  let pageNodes;
   if (isPort) {
     page.breadcrumb = { '@id': `${url}#breadcrumb` };
     page.mainEntity = { '@id': `${url}#tours` };
+    pageNodes = portNodes(origin, url, port, tours);
+  } else if (isTour) {
+    page.breadcrumb = { '@id': `${url}#breadcrumb` };
+    page.mainEntity = { '@id': tripId };
+    pageNodes = [
+      ...tours.filter((tour) => tour.id === tourPage.id).map((tour) => tripNode(origin, tour, audience)),
+      breadcrumbNode(url, tourPage.homeName, tourPage.homeUrl, tourPage.pageName)
+    ];
+  } else {
+    pageNodes = tours.map((tour) => tripNode(origin, tour, audience));
   }
   const graph = [
     businessNode(origin, site),
     { '@type': 'WebSite', '@id': `${origin}/#website`, url: `${origin}/`, name: site.name, inLanguage: lang, publisher: { '@id': `${origin}/#org` } },
     page,
-    ...(isPort ? portNodes(origin, url, port, tours) : tours.map((tour) => tripNode(origin, tour, audience)))
+    ...pageNodes
   ];
   if (faq.length) graph.push(faqNode(url, faq));
   return { '@context': 'https://schema.org', '@graph': graph };

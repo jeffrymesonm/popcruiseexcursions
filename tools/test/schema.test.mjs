@@ -125,3 +125,24 @@ test('port graph has the terminal, breadcrumbs and tour list', () => {
   assert.equal(nodes(graph, 'WebPage')[0].about['@id'], terminal['@id']);
   assert.equal(nodes(graph, 'TouristTrip').length, 0);
 });
+
+test('tour graph has one trip, breadcrumbs and the FAQ', () => {
+  const url = `${ORIGIN}/puerto-plata-catamaran/`;
+  const graph = buildGraph({
+    origin: ORIGIN, site: SITE, lang: 'en', url, pageType: 'tour',
+    title: 'Private Catamaran Charters', description: 'Six private boats.', audience: 'Cruise passengers',
+    tours: TOURS, faq: FAQ,
+    tourPage: { id: 'city', homeUrl: `${ORIGIN}/`, homeName: 'Home', pageName: 'Puerto Plata City Tour' }
+  });
+  const trips = nodes(graph, 'TouristTrip');
+  assert.equal(trips.length, 1);
+  assert.ok(trips[0]['@id'].endsWith('#tour-city'));
+  const [page] = nodes(graph, 'WebPage');
+  assert.equal(page.about['@id'], trips[0]['@id']);
+  assert.equal(page.mainEntity['@id'], trips[0]['@id']);
+  assert.equal(page.breadcrumb['@id'], `${url}#breadcrumb`);
+  const [crumbs] = nodes(graph, 'BreadcrumbList');
+  assert.deepEqual(crumbs.itemListElement.map((item) => item.item), [`${ORIGIN}/`, url]);
+  assert.equal(nodes(graph, 'FAQPage').length, 1);
+  assert.equal(nodes(graph, 'BoatTerminal').length, 0);
+});
