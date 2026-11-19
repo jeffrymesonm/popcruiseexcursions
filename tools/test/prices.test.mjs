@@ -4,7 +4,7 @@
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { parsePriceTables, minPrice, maxPrice, priceCount, formatUsd, fillPriceFrom } from '../lib/prices.mjs';
+import { parsePriceTables, minPrice, maxPrice, priceCount, formatUsd, fillPriceFrom, formTablesHtml } from '../lib/prices.mjs';
 
 const FIXTURE = `
 <table class="prices" data-prices="falls" data-deposit-percent="50">
@@ -26,11 +26,18 @@ const FIXTURE = `
   <tbody>
     <tr data-min="1" data-max="20" data-charge="flat"><th scope="row">1 a 20</th><td>US$900</td></tr>
   </tbody>
+</table>
+<table class="prices" data-prices="quads" data-pricing="vehicle" data-deposit-percent="50">
+  <thead><tr><th scope="col" data-i18n="price.vehicle">Vehículo</th><th scope="col" data-min="1" data-max="2" data-i18n="price.v1">1 a 2 vehículos</th><th scope="col" data-min="3" data-i18n="price.v2">3 o más</th></tr></thead>
+  <tbody>
+    <tr data-option="atv" data-seats="1"><th scope="row"><span data-i18n="tours.buggy.atv">ATV sencillo</span> <span class="prices__seats" data-i18n="price.seats1">1 persona</span></th><td>US$90</td><td>US$75</td></tr>
+    <tr data-option="buggy-family" data-seats="4"><th scope="row"><span data-i18n="tours.buggy.buggy-family">Buggy familiar</span> <span class="prices__seats" data-i18n="price.seats4">4 personas</span></th><td>US$160</td><td>US$140</td></tr>
+  </tbody>
 </table>`;
 
 test('parsePriceTables reads ids, options, rows and deposits', () => {
   const tables = parsePriceTables(FIXTURE);
-  assert.equal(tables.length, 3);
+  assert.equal(tables.length, 4);
   const falls = tables.find((table) => table.id === 'falls');
   assert.deepEqual(falls.options, ['zipline', 'basic']);
   assert.deepEqual(falls.optionKeys, ['price.zipline', 'price.noZipline']);
@@ -98,4 +105,31 @@ test('transfer tables are add-ons, never a "from" price', () => {
   assert.equal(priceCount(tables, 'boats'), 2);
   assert.equal(minPrice(tables, 'all'), 50);
   assert.equal(minPrice(tables, 'boats-transfer'), null);
+});
+
+test('vehicle tables: rows are the options, columns are vehicle counts', () => {
+  const quads = parsePriceTables(FIXTURE).find((table) => table.id === 'quads');
+  assert.equal(quads.pricing, 'vehicle');
+  assert.deepEqual(quads.options, ['atv', 'buggy-family']);
+  assert.deepEqual(quads.optionKeys, ['tours.buggy.atv', 'tours.buggy.buggy-family']);
+  assert.deepEqual(quads.columns, [{ min: 1, max: 2 }, { min: 3, max: null }]);
+  assert.equal(quads.rows[1].option, 'buggy-family');
+  assert.equal(quads.rows[1].seats, 4);
+  assert.equal(quads.rows[1].nameKey, 'tours.buggy.buggy-family');
+  assert.deepEqual(quads.rows[1].cells, [160, 140]);
+  assert.equal(quads.depositPercent, 50);
+});
+
+test('vehicle prices count for their own scope, never for "all"', () => {
+  const tables = parsePriceTables(FIXTURE);
+  assert.equal(minPrice(tables, 'quads'), 75);
+  assert.equal(maxPrice(tables, 'all'), 100);
+  assert.equal(maxPrice(tables, 'quads'), 160);
+  assert.equal(priceCount(tables, 'quads'), 4);
+  assert.equal(minPrice(tables, 'all'), 50);
+});
+
+test('formTablesHtml keeps the per-person and vehicle tables only', () => {
+  const ids = formTablesHtml(FIXTURE).map((html) => html.match(/data-prices="([^"]+)"/)[1]);
+  assert.deepEqual(ids, ['falls', 'quads']);
 });

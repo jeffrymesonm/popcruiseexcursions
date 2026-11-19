@@ -10,19 +10,33 @@
  *   never a "from" price;
  * - data-pricing="transfer" tables (the boats' optional round-trip transport, one price per group
  *   size) are add-ons too: they never count for "from" prices, price ranges or offers;
- * - the scope "all" means every per-person tour (charters and transfers excluded).
+ * - data-pricing="vehicle" tables (Buggies & ATVs) are turned around: each body row is one vehicle
+ *   (tr data-option = its id, data-seats = people per vehicle, its name in the first data-i18n of
+ *   the row's <th>) and each priced column is a range of vehicles booked (th data-min / data-max in
+ *   the header; no data-max = no limit). Their prices are per vehicle: they count for their own
+ *   scope, never for "all";
+ * - the scope "all" means every per-person tour (charters, transfers and vehicles excluded).
  * The build uses it to write the "from US$…" labels into the static HTML, the JSON-LD offers,
  * the price range of the business and llms.txt.
  */
 
 /**
- * @typedef {{min: number|null, max: number|null, charge: 'flat'|'extra'|null, cells: Array<number|null>}} PriceRow
- * @typedef {{id: string, tour: string|null, pricing: 'person'|'charter'|'transfer', deposit: number|null,
- *   depositPercent: number|null, options: string[], optionKeys: Array<string|null>, rows: PriceRow[]}} PriceTable
+ * @typedef {{min: number|null, max: number|null, charge: 'flat'|'extra'|null, option: string|null,
+ *   seats: number|null, nameKey: string|null, cells: Array<number|null>}} PriceRow
+ *   option / seats / nameKey are only set on the rows of vehicle tables.
+ * @typedef {{min: number|null, max: number|null}} PriceColumn - Range of vehicles a price column covers.
+ * @typedef {{id: string, tour: string|null, pricing: 'person'|'charter'|'transfer'|'vehicle', deposit: number|null,
+ *   depositPercent: number|null, options: string[], optionKeys: Array<string|null>, columns: PriceColumn[],
+ *   rows: PriceRow[]}} PriceTable
+ *   options / optionKeys are the price columns (th data-option) of every table except vehicle ones, where
+ *   they are the rows (one per vehicle). columns is only filled for vehicle tables.
  */
 
 /** data-pricing values other than the default per-person model. */
-const PRICING_MODELS = ['charter', 'transfer'];
+const PRICING_MODELS = ['charter', 'transfer', 'vehicle'];
+
+/** Models of the boats card (booked through the boat field of the form, never copied to other pages). */
+const BOAT_MODELS = ['charter', 'transfer'];
 
 /** <table … class="prices" …>…</table> — 1 = opening tag attributes, 2 = contents. */
 const TABLE = /<table\b([^>]*\bclass="prices"[^>]*)>([\s\S]*?)<\/table>/g;
@@ -71,37 +85,48 @@ export function parsePriceTables(html) {
   return [...html.matchAll(TABLE)].map(([, attrs, body]) => {
     const head = (body.match(/<thead\b[^>]*>([\s\S]*?)<\/thead>/) || [, ''])[1];
     const rowsHtml = (body.match(/<tbody\b[^>]*>([\s\S]*?)<\/tbody>/) || [, ''])[1];
-    const optionCells = [...head.matchAll(/<th\b([^>]*\sdata-option="[^"]+"[^>]*)>/g)].map((match) => match[1]);
+    const pricing = PRICING_MODELS.includes(attribute(attrs, 'data-pricing')) ? attribute(attrs, 'data-pricing') : 'person';
     const deposit = parseFloat(attribute(attrs, 'data-deposit'));
     const depositPercent = parseFloat(attribute(attrs, 'data-deposit-percent'));
+    const rows = [...rowsHtml.matchAll(/<tr\b([^>]*)>([\s\S]*?)<\/tr>/g)].map(([, rowAttrs, rowHtml]) => ({
+      min: wholeNumber(rowAttrs, 'data-min'),
+      max: wholeNumber(rowAttrs, 'data-max'),
+      charge: attribute(rowAttrs, 'data-charge'),
+      option: attribute(rowAttrs, 'data-option'),
+      seats: wholeNumber(rowAttrs, 'data-seats'),
+      nameKey: attribute((rowHtml.match(/<th\b[\s\S]*?<\/th>/) || [''])[0], 'data-i18n'),
+      cells: [...rowHtml.matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/g)].map((match) => parseCell(match[1]))
+    }));
+    // Vehicle tables are turned around: their options are the rows and their header cells are vehicle counts.
+    const isVehicle = pricing === 'vehicle';
+    const optionCells = [...head.matchAll(/<th\b([^>]*\sdata-option="[^"]+"[^>]*)>/g)].map((match) => match[1]);
+    const columnCells = [...head.matchAll(/<th\b([^>]*\sdata-min="[^"]+"[^>]*)>/g)].map((match) => match[1]);
     return {
       id: attribute(attrs, 'data-prices'),
       tour: attribute(attrs, 'data-tour'),
-      pricing: PRICING_MODELS.includes(attribute(attrs, 'data-pricing')) ? attribute(attrs, 'data-pricing') : 'person',
+      pricing,
       deposit: Number.isFinite(deposit) && deposit > 0 ? deposit : null,
       depositPercent: Number.isFinite(depositPercent) && depositPercent > 0 ? depositPercent : null,
-      options: optionCells.map((cellAttrs) => attribute(cellAttrs, 'data-option')),
-      optionKeys: optionCells.map((cellAttrs) => attribute(cellAttrs, 'data-i18n')),
-      rows: [...rowsHtml.matchAll(/<tr\b([^>]*)>([\s\S]*?)<\/tr>/g)].map(([, rowAttrs, rowHtml]) => ({
-        min: wholeNumber(rowAttrs, 'data-min'),
-        max: wholeNumber(rowAttrs, 'data-max'),
-        charge: attribute(rowAttrs, 'data-charge'),
-        cells: [...rowHtml.matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/g)].map((match) => parseCell(match[1]))
-      }))
+      options: isVehicle ? rows.map((row) => row.option) : optionCells.map((cellAttrs) => attribute(cellAttrs, 'data-option')),
+      optionKeys: isVehicle ? rows.map((row) => row.nameKey) : optionCells.map((cellAttrs) => attribute(cellAttrs, 'data-i18n')),
+      columns: isVehicle
+        ? columnCells.map((cellAttrs) => ({ min: wholeNumber(cellAttrs, 'data-min'), max: wholeNumber(cellAttrs, 'data-max') }))
+        : [],
+      rows
     };
   });
 }
 
 /**
- * Markup of every per-person price table of a page (neither charter nor transfer), exactly as written.
- * The build copies them, hidden, into pages that have the booking form but not the tour cards (the
- * catamaran page), so the form can price every tour there too.
+ * Markup of every per-person and vehicle price table of a page (neither charter nor transfer), exactly
+ * as written. The build copies them, hidden, into pages that have the booking form but not the tour
+ * cards (the catamaran page, which already has the boat tables), so the form can price every tour there too.
  * @param {string} html - Page or template markup.
- * @returns {string[]} One "<table …>…</table>" string per per-person table, in document order.
+ * @returns {string[]} One "<table …>…</table>" string per per-person or vehicle table, in document order.
  */
-export function perPersonTablesHtml(html) {
+export function formTablesHtml(html) {
   return [...html.matchAll(TABLE)]
-    .filter(([, attrs]) => !PRICING_MODELS.includes(attribute(attrs, 'data-pricing')))
+    .filter(([, attrs]) => !BOAT_MODELS.includes(attribute(attrs, 'data-pricing')))
     .map(([table]) => table);
 }
 

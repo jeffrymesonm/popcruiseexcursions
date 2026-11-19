@@ -24,7 +24,7 @@ import {
   applyIncludes, fillPlaceholders, prefixAssetPaths, stripTemplateOnly, selectLangScripts, relativeUrl, rootPrefix
 } from './lib/template.mjs';
 import {
-  parsePriceTables, minPrice, maxPrice, priceCount, formatUsd, fillPriceFrom, perPersonTablesHtml
+  parsePriceTables, minPrice, maxPrice, priceCount, formatUsd, fillPriceFrom, formTablesHtml
 } from './lib/prices.mjs';
 import { seoHeadTags, sitemapXml, jsonLdScript, llmsTxt, absoluteUrl } from './lib/seo.mjs';
 import { buildGraph } from './lib/schema.mjs';
@@ -87,7 +87,7 @@ function tourUrl(tourId, lang) {
 }
 
 /**
- * Replaces the {{price-tables}} marker of a template with hidden copies of the per-person price tables
+ * Replaces the {{price-tables}} marker of a template with hidden copies of the per-person and vehicle price tables
  * of the main template, before translation (so they are translated like the rest of the page). Pages
  * with the booking form but without the tour cards (the catamaran page) use it so the form can price
  * every tour; prices still live only in src/index.html.
@@ -98,9 +98,9 @@ function tourUrl(tourId, lang) {
 function withPriceTables(template, mainTemplate) {
   if (!template.includes('{{price-tables}}')) return template;
   const block = [
-    '    <!-- Per-person price tables copied by tools/build.mjs from src/index.html (hidden): the booking form prices every tour with them. -->',
+    '    <!-- Per-person and vehicle price tables copied by tools/build.mjs from src/index.html (hidden): the booking form prices every tour with them. -->',
     '    <div hidden data-price-tables>',
-    ...perPersonTablesHtml(mainTemplate),
+    ...formTablesHtml(mainTemplate),
     '    </div>'
   ].join('\n');
   return template.replace(/[ \t]*\{\{price-tables\}\}/, block);
