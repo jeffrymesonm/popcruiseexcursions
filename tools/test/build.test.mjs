@@ -128,7 +128,7 @@ test('JSON-LD describes the business, six tours and the FAQ', () => {
   assert.equal(trips.length, 6);
   const falls = trips.find((trip) => trip['@id'].endsWith('#tour-damajagua'));
   assert.equal(falls.offers.lowPrice, 50);
-  assert.equal(falls.offers.highPrice, 100);
+  assert.equal(falls.offers.highPrice, 120);
   assert.equal(graph.find((node) => node['@type'] === 'FAQPage').mainEntity.length, 10);
 });
 
