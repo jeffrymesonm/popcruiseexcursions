@@ -243,7 +243,7 @@ window.SITE_TRANSLATIONS.fr = {
   'faq.title': 'Questions fréquentes',
   'faq.lead': 'Ce que tout croisiériste demande avant de réserver.',
   'faq.1.q': 'D’où partent les excursions ?',
-  'faq.1.a': 'Nous venons vous chercher au port de croisière de Puerto Plata et vous y ramenons à la fin de l’excursion. Le transport aller-retour est inclus dans toutes les excursions ; pour les catamarans et les yachts, il est en option : ils partent de la plage de Sosúa, à 45 minutes du port d’Amber Cove et à 30 minutes de Taíno Bay, et vous pouvez ajouter le transport lors de la réservation, avec un prix selon la taille du groupe.',
+  'faq.1.a': 'Nous venons vous chercher au port de croisière de Puerto Plata et vous y ramenons à la fin de l’excursion. Le transport aller-retour est inclus dans toutes les autres excursions ; pour les catamarans et les yachts, il est en option : ils partent de la plage de Sosúa, à 45 minutes du port d’Amber Cove et à 30 minutes de Taíno Bay, et vous pouvez ajouter le transport lors de la réservation, avec un prix selon la taille du groupe.',
   'faq.2.q': 'Serai-je de retour à temps pour mon bateau ?',
   'faq.2.a': 'Nous organisons chaque excursion selon l’heure de départ de votre bateau. En réservant, indiquez-nous le nom de votre bateau et l’heure limite de retour à bord.',
   'faq.3.q': 'Comment fonctionnent les prix de groupe ?',

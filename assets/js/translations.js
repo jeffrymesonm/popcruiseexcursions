@@ -290,7 +290,7 @@ window.SITE_TRANSLATIONS = {
     'faq.title': 'Frequently asked questions',
     'faq.lead': 'What every cruise passenger asks before booking.',
     'faq.1.q': 'Where do the tours start?',
-    'faq.1.a': 'We pick you up at the Puerto Plata cruise port and bring you back when the tour ends. Round-trip transport is included in every tour; for catamarans and yachts it’s optional: they leave from Sosúa beach, 45 minutes from Amber Cove port and 30 minutes from Taíno Bay, and you can add the transport when you book, priced by group size.',
+    'faq.1.a': 'We pick you up at the Puerto Plata cruise port and bring you back when the tour ends. Round-trip transport is included in every other tour; for catamarans and yachts it’s optional: they leave from Sosúa beach, 45 minutes from Amber Cove port and 30 minutes from Taíno Bay, and you can add the transport when you book, priced by group size.',
     'faq.2.q': 'Will I make it back to my ship on time?',
     'faq.2.a': 'We plan every tour around your ship’s departure time. When you book, tell us your ship’s name and your all-aboard time.',
     'faq.3.q': 'How do group prices work?',

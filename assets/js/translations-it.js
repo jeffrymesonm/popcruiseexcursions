@@ -243,7 +243,7 @@ window.SITE_TRANSLATIONS.it = {
   'faq.title': 'Domande frequenti',
   'faq.lead': 'Quello che ogni crocierista chiede prima di prenotare.',
   'faq.1.q': 'Da dove partono le escursioni?',
-  'faq.1.a': 'Ti veniamo a prendere al porto crocieristico di Puerto Plata e ti riportiamo indietro alla fine dell’escursione. Il trasporto andata e ritorno è incluso in tutte le escursioni; per catamarani e yacht è opzionale: partono dalla spiaggia di Sosúa, a 45 minuti dal porto di Amber Cove e a 30 minuti da Taíno Bay, e puoi aggiungere il trasporto quando prenoti, con un prezzo in base al gruppo.',
+  'faq.1.a': 'Ti veniamo a prendere al porto crocieristico di Puerto Plata e ti riportiamo indietro alla fine dell’escursione. Il trasporto andata e ritorno è incluso in tutte le altre escursioni; per catamarani e yacht è opzionale: partono dalla spiaggia di Sosúa, a 45 minuti dal porto di Amber Cove e a 30 minuti da Taíno Bay, e puoi aggiungere il trasporto quando prenoti, con un prezzo in base al gruppo.',
   'faq.2.q': 'Tornerò in tempo alla nave?',
   'faq.2.a': 'Organizziamo ogni escursione in base all’orario di partenza della tua nave. Quando prenoti, indicaci il nome della nave e l’orario di rientro a bordo.',
   'faq.3.q': 'Come funzionano i prezzi di gruppo?',

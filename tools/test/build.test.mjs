@@ -299,3 +299,21 @@ test('no page says boat transport is quoted separately', () => {
     for (const phrase of stale) assert.ok(!html.includes(phrase), `${file} still says "${phrase}"`);
   }
 });
+
+test('transport answers never say every tour includes it', () => {
+  const pages = {
+    'es/index.html': 'en las demás excursiones',
+    'index.html': 'every other tour',
+    'fr/index.html': 'toutes les autres excursions',
+    'it/index.html': 'tutte le altre escursioni',
+    'amber-cove-excursions/index.html': 'our other tours',
+    'es/excursiones-amber-cove/index.html': 'en nuestras demás excursiones'
+  };
+  for (const [file, phrase] of Object.entries(pages)) {
+    const html = read(file);
+    assert.ok(html.includes(phrase), `${file}: says "${phrase}"`);
+    for (const stale of ['incluido en todas las excursiones', 'included in every tour', 'inclus dans toutes les excursions', 'incluso in tutte le escursioni', 'included in our tours;', 'está incluido; en los catamaranes']) {
+      assert.ok(!html.includes(stale), `${file}: still says "${stale}"`);
+    }
+  }
+});
