@@ -358,6 +358,7 @@ window.SITE_TRANSLATIONS = {
     'footer.company': 'Company',
     'footer.contact': 'Contact',
     'footer.ports': 'Ports',
+    'footer.pay': 'We accept',
     'footer.place': 'Puerto Plata, Dominican Republic'
   }
 };

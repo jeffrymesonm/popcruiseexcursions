@@ -8,7 +8,7 @@
 /**
  * @typedef {{name: string, origin: string, phone: string, email: string, whatsappUrl: string,
  *   logo: string, image: string, priceRange: string, sameAs: string[], knowsLanguage: string[],
- *   areaServed: string[]}} SiteInfo
+ *   areaServed: string[], paymentAccepted?: string[]}} SiteInfo
  * @typedef {{id: string, name: string, description: string, image: string, url: string,
  *   offer: {low: number, high: number, count: number}|null, stops?: string[]}} TourData
  * @typedef {{id: string, name: string, geo: {latitude: number, longitude: number}|null,
@@ -59,6 +59,7 @@ function businessNode(origin, site) {
     }
   };
   if (site.sameAs.length) node.sameAs = site.sameAs;
+  if (site.paymentAccepted && site.paymentAccepted.length) node.paymentAccepted = site.paymentAccepted.join(', ');
   return node;
 }
 

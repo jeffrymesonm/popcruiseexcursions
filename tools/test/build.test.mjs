@@ -124,6 +124,7 @@ test('JSON-LD describes the business, six tours and the FAQ', () => {
   const business = graph.find((node) => node['@type'] === 'TravelAgency');
   assert.equal(business['@id'], 'https://popcruiseexcursions.com/#org');
   assert.equal(business.priceRange, 'US$12–US$1,300');
+  assert.equal(business.paymentAccepted, 'PayPal, Zelle, Cash App');
   const trips = graph.filter((node) => node['@type'] === 'TouristTrip');
   assert.equal(trips.length, 6);
   const falls = trips.find((trip) => trip['@id'].endsWith('#tour-damajagua'));

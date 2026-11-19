@@ -135,6 +135,7 @@ export function llmsTxt({ site, summary, tours, ports, languages, faq }) {
     `- WhatsApp: ${site.phoneDisplay} (${site.whatsappUrl})`,
     `- Email: ${site.email}`,
     '- Location: Puerto Plata, Dominican Republic',
+    ...(site.paymentAccepted && site.paymentAccepted.length ? [`- Payment: ${site.paymentAccepted.join(', ')}`] : []),
     '',
     '## Tours',
     '',

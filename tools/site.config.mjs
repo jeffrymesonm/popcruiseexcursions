@@ -22,6 +22,8 @@ export const SITE = {
   image: 'assets/img/og-image.jpg',
   /** Social and listing profiles (Facebook, Instagram, TripAdvisor, Google Business Profile) once they exist. */
   sameAs: [],
+  /** Payment methods shown in the footer (schema.org paymentAccepted). Keep both in sync. */
+  paymentAccepted: ['PayPal', 'Zelle', 'Cash App'],
   knowsLanguage: ['es', 'en'],
   areaServed: ['Puerto Plata', 'Amber Cove Cruise Port', 'Taíno Bay Cruise Port']
 };

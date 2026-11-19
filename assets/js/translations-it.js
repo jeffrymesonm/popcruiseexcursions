@@ -301,5 +301,6 @@ window.SITE_TRANSLATIONS.it = {
   'footer.company': 'Azienda',
   'footer.contact': 'Contatti',
   'footer.ports': 'Porti',
+  'footer.pay': 'Pagamenti accettati',
   'footer.place': 'Puerto Plata, Repubblica Dominicana'
 };
