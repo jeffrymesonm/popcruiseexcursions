@@ -252,13 +252,16 @@ test('catamaran page lists the six boats with static prices', () => {
 test('catamaran page language links', () => {
   const html = read('puerto-plata-catamaran/index.html');
   assert.ok(html.includes('href="../es/catamaran-puerto-plata/" hreflang="es"'));
-  assert.ok(html.includes('href="../fr/" hreflang="fr"'));
+  // No French/Italian catamaran page: those switches go to the boats card in that language.
+  assert.ok(html.includes('href="../fr/#tour-catamaran" hreflang="fr"'));
+  assert.ok(html.includes('href="../it/#tour-catamaran" hreflang="it"'));
 });
 
 test('port pages and footer link the catamaran page', () => {
   assert.ok(read('amber-cove-excursions/index.html').includes('href="../puerto-plata-catamaran/"'));
   assert.ok(read('es/index.html').includes('href="catamaran-puerto-plata/"'));
-  assert.ok(read('fr/index.html').includes('href="../puerto-plata-catamaran/" hreflang="en"'));
+  assert.ok(read('fr/index.html').includes('href="#tour-catamaran" hreflang="fr" data-i18n="tours.catamaran.title"'), 'FR footer: French boats card');
+  assert.ok(read('it/index.html').includes('href="#tour-catamaran" hreflang="it" data-i18n="tours.catamaran.title"'), 'IT footer: Italian boats card');
   assert.ok(read('llms.txt').includes('https://popcruiseexcursions.com/puerto-plata-catamaran/'));
 });
 

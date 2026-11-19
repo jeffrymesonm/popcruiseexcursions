@@ -248,18 +248,30 @@ function markerResolver({ page, lang, urlPath, seoHead, readPartial, hasBooking 
     if (name === 'seo-head' && arg === null) return seoHead;
     if (name === 'root-redirect' && arg === null) return urlPath === '/' ? readPartial('root-redirect.html') : '';
     if (name === 'lang-url' && arg) {
-      const target = page.versions[arg] || homePage().versions[arg];
+      // This page in that language; without that version, that language's home page (at the tour's
+      // card for a tour page, so French visitors of the catamaran page land on the French boats card).
+      let target = page.versions[arg];
+      let hash = '';
+      if (!target) {
+        target = homePage().versions[arg];
+        if (page.tour) hash = `#tour-${page.tour}`;
+      }
       if (!target) return undefined;
-      const link = relativeUrl(urlPath, target) || './';
       // "/" redirects by saved choice or browser language: the explicit ?lang keeps the visitor's pick
       // even when localStorage is blocked or the click happens before i18n.js has loaded.
-      return target === '/' ? `${link}?lang=${arg}` : link;
+      const query = target === '/' ? `?lang=${arg}` : '';
+      return `${relativeUrl(urlPath, target) || './'}${query}${hash}`;
     }
-    // {{page-url:<page id>}} / {{page-lang:<page id>}}: link to another page in this language, or in
-    // the default language when that page has no version in it (FR/IT link to the English port pages).
+    // {{page-url:<page id>}} / {{page-lang:<page id>}}: link to another page in this language. When that
+    // page has no version in it, a tour page falls back to its card on this language's home page (FR/IT
+    // → the translated boats card) and any other page to its default-language version (FR/IT → the
+    // English port pages, which have no translated equivalent).
     if ((name === 'page-url' || name === 'page-lang') && arg) {
       const target = pageById(arg);
       if (!target) return undefined;
+      if (!target.versions[lang] && target.tour && homePage().versions[lang]) {
+        return name === 'page-lang' ? lang : `${relativeUrl(urlPath, homePath(lang))}#tour-${target.tour}`;
+      }
       const targetLang = target.versions[lang] ? lang : config.DEFAULT_LANG;
       return name === 'page-lang' ? targetLang : relativeUrl(urlPath, target.versions[targetLang]) || './';
     }
