@@ -203,7 +203,7 @@ window.SITE_TRANSLATIONS = {
 
     'tours.catamaran.title': 'Private catamaran or yacht',
     'tours.catamaran.desc': 'Charter the whole boat just for your group and sail the Puerto Plata coast. Choose from 4 catamarans and 2 yachts.',
-    'tours.catamaran.place': 'Boats leave from Sosúa beach, 45 minutes from Amber Cove port and 30 minutes from Taino Bay. Transport is not included: we’ll quote it separately on WhatsApp or by email.',
+    'tours.catamaran.place': 'Boats leave from Sosúa beach, 45 minutes from Amber Cove port and 30 minutes from Taíno Bay. You can add round-trip transport from the port: its price, by group size, is below.',
     'tours.catamaran.kicker': 'Private · Sea',
 
     // Boats (card 05): shared labels, then one block per boat
@@ -290,7 +290,7 @@ window.SITE_TRANSLATIONS = {
     'faq.title': 'Frequently asked questions',
     'faq.lead': 'What every cruise passenger asks before booking.',
     'faq.1.q': 'Where do the tours start?',
-    'faq.1.a': 'We pick you up at the Puerto Plata cruise port and bring you back when the tour ends. Round-trip transport is included, except for catamarans and yachts: they leave from Sosúa beach, 45 minutes from Amber Cove port and 30 minutes from Taino Bay, and we’ll quote that transport separately on WhatsApp or by email.',
+    'faq.1.a': 'We pick you up at the Puerto Plata cruise port and bring you back when the tour ends. Round-trip transport is included in every tour; for catamarans and yachts it’s optional: they leave from Sosúa beach, 45 minutes from Amber Cove port and 30 minutes from Taíno Bay, and you can add the transport when you book, priced by group size.',
     'faq.2.q': 'Will I make it back to my ship on time?',
     'faq.2.a': 'We plan every tour around your ship’s departure time. When you book, tell us your ship’s name and your all-aboard time.',
     'faq.3.q': 'How do group prices work?',
@@ -304,7 +304,7 @@ window.SITE_TRANSLATIONS = {
     'faq.7.q': 'What is your cancellation policy?',
     'faq.7.a': 'Cancel 10 or more days before your tour and we refund 100% of what you paid; with less than 10 days’ notice, we refund 50%. If your cruise ship doesn’t reach Puerto Plata, we refund 90%.',
     'faq.8.q': 'Do you pick up at Amber Cove and Taíno Bay?',
-    'faq.8.a': 'Yes. We pick you up at whichever port your ship docks at, Amber Cove or Taíno Bay, and bring you back when the tour ends. We confirm the exact meeting point on WhatsApp when you book. For catamarans and yachts, transport to Sosúa is quoted separately.',
+    'faq.8.a': 'Yes. We pick you up at whichever port your ship docks at, Amber Cove or Taíno Bay, and bring you back when the tour ends. We confirm the exact meeting point on WhatsApp when you book. For catamarans and yachts, transport to Sosúa is optional and priced by group size.',
     'faq.9.q': 'Which port will my cruise ship dock at?',
     'faq.9.a': 'Your cruise itinerary says so. In general, Amber Cove receives Carnival Corporation ships (Carnival, Princess, Holland America…) and Taíno Bay receives Royal Caribbean, Celebrity, Norwegian, MSC and other lines. Tell us your ship’s name when you book and we’ll check.',
     'faq.10.q': 'What should I bring on the tour?',

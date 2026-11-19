@@ -156,7 +156,7 @@ window.SITE_TRANSLATIONS.it = {
 
   'tours.catamaran.title': 'Catamarano o yacht privato',
   'tours.catamaran.desc': 'Noleggia l’intera barca solo per il tuo gruppo e naviga lungo la costa di Puerto Plata. Scegli tra 4 catamarani e 2 yacht.',
-  'tours.catamaran.place': 'Le barche partono dalla spiaggia di Sosúa, a 45 minuti dal porto di Amber Cove e a 30 minuti da Taíno Bay. Il trasporto non è incluso: ti facciamo un preventivo a parte su WhatsApp o via email.',
+  'tours.catamaran.place': 'Le barche partono dalla spiaggia di Sosúa, a 45 minuti dal porto di Amber Cove e a 30 minuti da Taíno Bay. Puoi aggiungere il trasporto andata e ritorno dal porto: il prezzo, in base al gruppo, è più in basso.',
   'tours.catamaran.kicker': 'Privato · Mare',
 
   // Boats (card 05)
@@ -243,7 +243,7 @@ window.SITE_TRANSLATIONS.it = {
   'faq.title': 'Domande frequenti',
   'faq.lead': 'Quello che ogni crocierista chiede prima di prenotare.',
   'faq.1.q': 'Da dove partono le escursioni?',
-  'faq.1.a': 'Ti veniamo a prendere al porto crocieristico di Puerto Plata e ti riportiamo indietro alla fine dell’escursione. Il trasporto andata e ritorno è incluso, tranne per catamarani e yacht: partono dalla spiaggia di Sosúa, a 45 minuti dal porto di Amber Cove e a 30 minuti da Taíno Bay, e per quel trasporto ti facciamo un preventivo a parte su WhatsApp o via email.',
+  'faq.1.a': 'Ti veniamo a prendere al porto crocieristico di Puerto Plata e ti riportiamo indietro alla fine dell’escursione. Il trasporto andata e ritorno è incluso in tutte le escursioni; per catamarani e yacht è opzionale: partono dalla spiaggia di Sosúa, a 45 minuti dal porto di Amber Cove e a 30 minuti da Taíno Bay, e puoi aggiungere il trasporto quando prenoti, con un prezzo in base al gruppo.',
   'faq.2.q': 'Tornerò in tempo alla nave?',
   'faq.2.a': 'Organizziamo ogni escursione in base all’orario di partenza della tua nave. Quando prenoti, indicaci il nome della nave e l’orario di rientro a bordo.',
   'faq.3.q': 'Come funzionano i prezzi di gruppo?',
@@ -257,7 +257,7 @@ window.SITE_TRANSLATIONS.it = {
   'faq.7.q': 'Qual è la politica di cancellazione?',
   'faq.7.a': 'Se cancelli con 10 o più giorni di anticipo, ti rimborsiamo il 100% di quanto pagato; con meno di 10 giorni, il 50%. Se la tua nave da crociera non arriva a Puerto Plata, ti rimborsiamo il 90%.',
   'faq.8.q': 'Venite a prenderci ad Amber Cove e a Taíno Bay?',
-  'faq.8.a': 'Sì. Ti veniamo a prendere al porto dove attracca la tua nave, Amber Cove o Taíno Bay, e ti riportiamo lì alla fine dell’escursione. Ti confermiamo il punto d’incontro esatto su WhatsApp quando prenoti. Per catamarani e yacht, il trasporto fino a Sosúa si quota a parte.',
+  'faq.8.a': 'Sì. Ti veniamo a prendere al porto dove attracca la tua nave, Amber Cove o Taíno Bay, e ti riportiamo lì alla fine dell’escursione. Ti confermiamo il punto d’incontro esatto su WhatsApp quando prenoti. Per catamarani e yacht, il trasporto fino a Sosúa è opzionale, con un prezzo in base al gruppo.',
   'faq.9.q': 'In quale porto attraccherà la mia nave?',
   'faq.9.a': 'Lo trovi nell’itinerario della crociera. In generale, Amber Cove accoglie le navi di Carnival Corporation (Carnival, Princess, Holland America…) e Taíno Bay quelle di Royal Caribbean, Celebrity, Norwegian, MSC e altre compagnie. Dicci il nome della tua nave quando prenoti e lo verifichiamo.',
   'faq.10.q': 'Cosa devo portare?',

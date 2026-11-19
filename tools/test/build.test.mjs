@@ -289,3 +289,13 @@ test('booking form offers transport for boats', () => {
     assert.ok(field.includes('name="transfer"'), `${file}: transport switch`);
   }
 });
+
+test('no page says boat transport is quoted separately', () => {
+  const stale = ['cotiza aparte', 'cotizamos aparte', 'quoted separately', 'quote it separately', 'quote that transport',
+    'menos en los catamaranes', 'except the catamarans', 'except for catamarans', 'Transport is not included',
+    'El transporte no está incluido', 'transporte no está incluido'];
+  for (const file of result.files.filter((name) => name.endsWith('.html') || name === 'llms.txt')) {
+    const html = read(file);
+    for (const phrase of stale) assert.ok(!html.includes(phrase), `${file} still says "${phrase}"`);
+  }
+});
