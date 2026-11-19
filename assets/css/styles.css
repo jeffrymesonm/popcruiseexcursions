@@ -1483,7 +1483,7 @@ button {
 }
 
 /*
- * Tablet and up: every card sticks at the same offset and stack-cards.js scales and fades the
+ * Tablet and up: every card that fits the screen sticks at the same offset and stack-cards.js scales and fades the
  * covered one. Phones get a plain list, because the tall cards would not fit a sticky viewport.
  */
 @media (min-width: 768px) {
@@ -1491,9 +1491,14 @@ button {
     gap: 3.5rem;
   }
 
+  /*
+   * A card taller than the screen sticks with its bottom 1.5rem above the screen's bottom edge
+   * instead, so its price table and button stay visible (--card-height is set by stack-cards.js;
+   * without JavaScript it is 0 and every card sticks at the normal offset).
+   */
   .tour-card {
     position: sticky;
-    top: max(1.5rem, calc(50vh - 22rem));
+    top: min(max(1.5rem, calc(50vh - 22rem)), calc(100vh - var(--card-height, 0px) - 1.5rem));
     grid-template-columns: 1fr 1fr;
     min-height: min(calc(100vh - 3rem), 44rem);
     padding: 1.25rem;

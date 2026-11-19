@@ -1,6 +1,7 @@
 /**
  * stack-cards.js — Scroll effect for the sticky tour cards (tablet and desktop).
- * All cards stick at the same offset (CSS, from 768px). As the next card slides over one, the
+ * All cards stick at the same offset (CSS, from 768px), except a card taller than the screen, which
+ * sticks by its bottom edge (CSS reads its height from --card-height, set here). As the next card slides over one, the
  * covered card shrinks to MIN_SCALE and fades out, so the stack reads as depth.
  * Phones (plain list) and reduced motion keep the cards untouched.
  */
@@ -71,10 +72,29 @@
     window.requestAnimationFrame(update);
   }
 
+  /**
+   * Publishes each card's height as --card-height, which styles.css uses to stick a card taller
+   * than the screen by its bottom edge (so its button is never hidden below the screen).
+   * offsetHeight ignores the scale transform, so the effect never feeds back into the height.
+   * @returns {void}
+   */
+  function measure() {
+    cards.forEach(function (card) {
+      card.style.setProperty('--card-height', card.offsetHeight + 'px');
+    });
+    requestUpdate();
+  }
+
   window.addEventListener('scroll', requestUpdate, { passive: true });
-  window.addEventListener('resize', requestUpdate);
+  window.addEventListener('resize', measure);
   [reducedMotion, stacked].forEach(function (query) {
-    if (typeof query.addEventListener === 'function') query.addEventListener('change', requestUpdate);
+    if (typeof query.addEventListener === 'function') query.addEventListener('change', measure);
   });
+  // Heights also change without a resize: photos and fonts loading, or another boat picked in card 06.
+  if (typeof window.ResizeObserver === 'function') {
+    var observer = new window.ResizeObserver(measure);
+    cards.forEach(function (card) { observer.observe(card); });
+  }
+  measure();
   update();
 })();
