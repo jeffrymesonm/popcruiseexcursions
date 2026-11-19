@@ -16,6 +16,8 @@ window.SITE_TRANSLATIONS = {
   es: {
     'nav.openMenu': 'Abrir menú',
     'nav.closeMenu': 'Cerrar menú',
+    'gallery.pause': 'Pausar video',
+    'gallery.play': 'Reproducir video',
     'price.perPerson': 'por persona',
     'wa.greeting': '¡Hola, Puerto Plata Cruise Excursions! Quiero información sobre sus excursiones en Puerto Plata.',
     'booking.person': 'persona',
@@ -186,8 +188,10 @@ window.SITE_TRANSLATIONS = {
 
     'tours.buggy.title': 'Buggies & ATVs',
     'tours.buggy.desc': 'Two hours on an ATV or buggy along dirt roads, mud and countryside, with a stop at the beach and another at a traditional Dominican house where you taste coffee, chocolate and cigars.',
-    'tours.buggy.alt': 'Buggy splashing through a muddy jungle stream',
-    'tours.buggy.alt2': 'Mud-covered buggy on the beach',
+    'tours.buggy.alt': 'A line of tourists on ATVs along a dirt road through pastures and palms',
+    'tours.buggy.alt2': 'Red two-seat buggy on a grey-sand beach',
+    'tours.buggy.alt3': 'Traditional blue wooden Dominican house with an open kitchen and the Dominican flag',
+    'tours.buggy.alt4': 'Tray of cacao and coffee beans next to cacao pods',
     'tours.buggy.kicker': 'Adrenaline',
     'tours.buggy.caption': 'Buggies & ATVs price per vehicle, by how many vehicles the group books',
     'tours.buggy.atv': 'Single ATV',
@@ -268,6 +272,8 @@ window.SITE_TRANSLATIONS = {
     'boats.cat-jacuzzi.alt': 'Jacuzzi on the catamaran’s bow, in front of the saloon',
     // Gallery: thumbnail label, strip label and the alt text of each extra photo
     'gallery.photo': 'Photo',
+    'gallery.pause': 'Pause video',
+    'gallery.play': 'Play video',
     'boats.photos': 'Boat photos',
     'boats.viking.alt2': 'The Viking yacht seen from a drone, with a group on the aft deck',
     'boats.viking.alt3': 'Couple holding two big fish on board the yacht',

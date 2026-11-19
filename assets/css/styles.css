@@ -1246,13 +1246,74 @@ button {
   background: var(--color-tag);
 }
 
-.tour-card__media img {
+.tour-card__media img,
+.tour-card__media video {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: var(--focus, 50% 50%);
+}
+
+/* Pause/play button of a gallery video (gallery.js); bottom right, away from the kicker. */
+.media-toggle {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: rgba(14, 58, 60, 0.6);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: #fff;
+}
+
+.media-toggle:hover {
+  background: rgba(14, 58, 60, 0.8);
+}
+
+.media-toggle:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.media-toggle svg {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+/* Thumbnail of a video: a small play badge over the frame. */
+.thumb--video {
+  position: relative;
+}
+
+.thumb--video::before,
+.thumb--video::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.thumb--video::before {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: rgba(14, 58, 60, 0.65);
+}
+
+.thumb--video::after {
+  width: 0.625rem;
+  height: 0.75rem;
+  margin-left: 0.1rem;
+  background: #fff;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
 }
 
 .tour-card__kicker {
@@ -1661,6 +1722,8 @@ button {
 .boat-panel[hidden],
 .boat-photo[hidden],
 .tour-card__media img[hidden],
+.tour-card__media video[hidden],
+.media-toggle[hidden],
 .thumbs[hidden] {
   display: none;
 }

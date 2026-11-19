@@ -384,3 +384,17 @@ test('booking form offers the buggy vehicles in table order', () => {
   }
   assert.ok(read('index.html').includes('<option value="atv-double" data-i18n="tours.buggy.atv-double">Double ATV</option>'));
 });
+
+test('buggy card shows the client video first, loaded only on demand', () => {
+  const es = read('es/index.html');
+  const video = (es.match(/<video\b[^>]*>/) || [''])[0];
+  assert.match(video, /data-photo="1"/);
+  assert.match(video, /preload="none"/);
+  assert.match(video, /poster="\.\.\/assets\/img\/tour-buggy-video\.webp"/);
+  assert.ok(es.includes('<source src="../assets/video/tour-buggy.mp4" type="video/mp4">'));
+  assert.match(es, /data-video-toggle[^>]*aria-label="Pausar video"/);
+  for (const file of ['amber-cove-excursions/index.html', 'es/excursiones-taino-bay/index.html']) {
+    const html = read(file);
+    assert.ok(html.includes('tour-buggy-2-thumb.webp') && !html.includes('tour-buggy-1-thumb.webp'), `${file}: buggy photo, not the video poster`);
+  }
+});

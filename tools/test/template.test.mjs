@@ -79,3 +79,10 @@ test('rootPrefix', () => {
   assert.equal(rootPrefix('/es/'), '../');
   assert.equal(rootPrefix('/es/excursiones-amber-cove/'), '../../');
 });
+
+test('prefixAssetPaths prefixes a video poster too', () => {
+  assert.equal(
+    prefixAssetPaths('<video poster="assets/img/a.webp"><source src="assets/video/a.mp4"></video>', '../'),
+    '<video poster="../assets/img/a.webp"><source src="../assets/video/a.mp4"></video>'
+  );
+});

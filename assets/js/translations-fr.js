@@ -136,8 +136,10 @@ window.SITE_TRANSLATIONS.fr = {
 
   'tours.buggy.title': 'Buggies et quads',
   'tours.buggy.desc': 'Deux heures en quad ou en buggy sur des chemins de terre, dans la boue et la campagne, avec un arrêt à la plage et un autre dans une maison typique dominicaine où vous goûtez café, chocolat et cigare.',
-  'tours.buggy.alt': 'Buggy traversant un ruisseau boueux dans la jungle',
-  'tours.buggy.alt2': 'Buggy couvert de boue sur la plage',
+  'tours.buggy.alt': 'Une file de touristes en quad sur un chemin de terre entre prés et palmiers',
+  'tours.buggy.alt2': 'Buggy rouge biplace sur une plage de sable gris',
+  'tours.buggy.alt3': 'Maison typique dominicaine en bois bleu, avec cuisine ouverte et drapeau dominicain',
+  'tours.buggy.alt4': 'Plateau de fèves de cacao et de grains de café, à côté de cabosses de cacao',
   'tours.buggy.kicker': 'Adrénaline',
   'tours.buggy.caption': 'Prix par véhicule des buggies et quads selon le nombre de véhicules réservés par le groupe',
   'tours.buggy.atv': 'Quad simple',
@@ -218,6 +220,8 @@ window.SITE_TRANSLATIONS.fr = {
   'boats.cat-jacuzzi.alt': 'Jacuzzi à l’avant du catamaran, devant le carré',
   // Gallery: thumbnail label, strip label and the alt text of each extra photo
   'gallery.photo': 'Photo',
+  'gallery.pause': 'Mettre la vidéo en pause',
+  'gallery.play': 'Lire la vidéo',
   'boats.photos': 'Photos du bateau',
   'boats.viking.alt2': 'Le yacht Viking vu par un drone, avec un groupe sur le pont arrière',
   'boats.viking.alt3': 'Couple montrant deux gros poissons à bord du yacht',

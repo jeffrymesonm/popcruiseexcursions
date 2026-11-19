@@ -18,3 +18,6 @@ desktop.ini
 # Internal design docs, plans and agent scratch (not part of the public site)
 /docs/
 /.superpowers/
+
+# Raw client videos (sources of assets/video). The page does not use them.
+/*.mp4

@@ -124,6 +124,12 @@
     <symbol id="icon-minus" viewBox="0 0 24 24">
       <path d="M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
     </symbol>
+    <symbol id="icon-play" viewBox="0 0 24 24">
+      <path d="M7 4.5v15l12-7.5z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-pause" viewBox="0 0 24 24">
+      <path d="M8 5v14M16 5v14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
     <symbol id="icon-check" viewBox="0 0 24 24">
       <path d="M20 6 9 17l-5-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
     </symbol>
@@ -349,7 +355,7 @@
             </li>
             <li class="spot spot--4">
               <a class="spot__card" href="#tour-buggy">
-                <img src="assets/img/spot-buggy.webp" alt="" width="800" height="1000" loading="lazy" decoding="async">
+                <img src="assets/img/spot-buggy.webp" alt="" width="720" height="900" loading="lazy" decoding="async">
                 <span class="spot__name" data-i18n="tours.buggy.short">Buggies</span>
               </a>
               <p class="spot__info"><span data-i18n="spots.4.info">2 hours of countryside and beach</span> · <span data-i18n="price.from">from</span> <span data-price-from="buggy">US$75</span> <span data-i18n="price.perVehicle">per vehicle</span></p>
@@ -418,7 +424,9 @@
             </div>
             <!-- Photo column, same in every tour card: tapping a thumbnail shows that photo
                  (gallery.js; the thumbnails are hidden without JS). Add a photo as one more
-                 img[data-photo] plus its thumbnail button. -->
+                 img[data-photo] plus its thumbnail button. A gallery may also hold one muted, looping
+                 video[data-photo] (card 04) with its pause/play button [data-video-toggle]: gallery.js
+                 plays it only while it is on screen and chosen. -->
             <div class="tour-card__visual">
               <div class="tour-card__media" data-photos="damajagua">
                 <img data-photo="1" src="assets/img/tour-damajagua.webp" alt="Group in helmets swimming in a pool below a Damajagua waterfall" data-i18n-alt="tours.damajagua.alt" width="1024" height="1024" loading="lazy" decoding="async">
@@ -573,13 +581,18 @@
             </div>
             <div class="tour-card__visual">
               <div class="tour-card__media" data-photos="buggy">
-                <img data-photo="1" src="assets/img/tour-buggy.webp" alt="Buggy splashing through a muddy jungle stream" data-i18n-alt="tours.buggy.alt" width="1400" height="934" loading="lazy" decoding="async">
-                <img data-photo="2" src="assets/img/spot-buggy.webp" alt="Mud-covered buggy on the beach" data-i18n-alt="tours.buggy.alt2" width="800" height="1000" loading="lazy" decoding="async" hidden>
+                <video data-photo="1" muted loop playsinline preload="none" poster="assets/img/tour-buggy-video.webp" aria-label="A line of tourists on ATVs along a dirt road through pastures and palms" data-i18n-aria-label="tours.buggy.alt" width="720" height="1280" style="--focus: 50% 60%"><source src="assets/video/tour-buggy.mp4" type="video/mp4"></video>
+                <img data-photo="2" src="assets/img/tour-buggy.webp" alt="Red two-seat buggy on a grey-sand beach" data-i18n-alt="tours.buggy.alt2" width="1280" height="852" loading="lazy" decoding="async" hidden>
+                <img data-photo="3" src="assets/img/tour-buggy-house.webp" alt="Traditional blue wooden Dominican house with an open kitchen and the Dominican flag" data-i18n-alt="tours.buggy.alt3" width="1280" height="854" loading="lazy" decoding="async" hidden>
+                <img data-photo="4" src="assets/img/tour-buggy-cacao.webp" alt="Tray of cacao and coffee beans next to cacao pods" data-i18n-alt="tours.buggy.alt4" width="1280" height="854" loading="lazy" decoding="async" hidden>
                 <span class="tour-card__kicker" data-i18n="tours.buggy.kicker">Adrenaline</span>
+                <button class="media-toggle" type="button" data-video-toggle aria-label="Pause video" data-i18n-aria-label="gallery.pause" hidden><svg aria-hidden="true"><use href="#icon-pause"/></svg></button>
               </div>
               <div class="thumbs" role="group" aria-label="Tour photos" data-i18n-aria-label="tours.photos" data-shots="buggy">
-                <button class="thumb" type="button" aria-pressed="true" data-shot="1"><img src="assets/img/tour-buggy-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 1</span></button>
+                <button class="thumb thumb--video" type="button" aria-pressed="true" data-shot="1"><img src="assets/img/tour-buggy-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 1</span></button>
                 <button class="thumb" type="button" aria-pressed="false" data-shot="2"><img src="assets/img/tour-buggy-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 2</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="3"><img src="assets/img/tour-buggy-3-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 3</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="4"><img src="assets/img/tour-buggy-4-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 4</span></button>
               </div>
             </div>
           </li>

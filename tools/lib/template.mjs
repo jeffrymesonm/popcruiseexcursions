@@ -53,8 +53,8 @@ export function fillPlaceholders(html, resolve) {
 }
 
 /**
- * Makes relative asset paths work from a page that lives in a sub-folder: every src/href value and
- * every srcset candidate that starts with "assets/" gets the prefix.
+ * Makes relative asset paths work from a page that lives in a sub-folder: every src/href/poster value
+ * and every srcset candidate that starts with "assets/" gets the prefix.
  * @param {string} html - Markup.
  * @param {string} prefix - Path back to the site root, e.g. "../" ('' leaves the markup as is).
  * @returns {string} Markup with prefixed asset paths.
@@ -62,7 +62,7 @@ export function fillPlaceholders(html, resolve) {
 export function prefixAssetPaths(html, prefix) {
   if (!prefix) return html;
   return html
-    .replace(/(\s(?:src|href)=")assets\//g, (match, start) => `${start}${prefix}assets/`)
+    .replace(/(\s(?:src|href|poster)=")assets\//g, (match, start) => `${start}${prefix}assets/`)
     .replace(/(\ssrcset=")([^"]*)(")/g, (match, start, value, end) =>
       start + value.replace(/(^|,\s*)assets\//g, (candidate, separator) => `${separator}${prefix}assets/`) + end);
 }
