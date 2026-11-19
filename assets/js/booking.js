@@ -331,7 +331,8 @@
    */
   function renderEstimate() {
     boatField.hidden = tourSelect.value !== BOAT_TOUR;
-    transferField.hidden = tourSelect.value !== BOAT_TOUR;
+    // Only for a boat, and only when the page has the transport price table.
+    transferField.hidden = tourSelect.value !== BOAT_TOUR || window.SitePrices.transferMax() === null;
     ziplineField.hidden = window.SitePrices.options(priceTableId()).indexOf('zipline') === -1;
 
     var result = currentQuote();
@@ -480,13 +481,14 @@
    * Ids the form does not offer are ignored.
    * @param {string|null} tourId - Tour option value, e.g. "damajagua".
    * @param {string|null} boatId - Boat option value, e.g. "libreterre".
-   * @returns {void}
+   * @returns {boolean} True when the form offers that tour (and it is now selected).
    */
   function preselect(tourId, boatId) {
-    if (!hasOption(tourSelect, tourId)) return;
+    if (!hasOption(tourSelect, tourId)) return false;
     tourSelect.value = tourId;
     if (hasOption(boatSelect, boatId)) boatSelect.value = boatId;
     renderEstimate();
+    return true;
   }
 
   /**
@@ -505,7 +507,8 @@
     } catch (error) {
       // Very old browsers without URLSearchParams: only the page default applies.
     }
-    preselect(tourId || (holder && holder.getAttribute('data-default-tour')), boatId);
+    // A missing or unknown ?tour= falls back to the page's own tour (if it has one).
+    if (!preselect(tourId, boatId) && holder) preselect(holder.getAttribute('data-default-tour'), boatId);
   }
 
   // The Boat field follows the boat the visitor is looking at in the picker (boat-tabs.js fires

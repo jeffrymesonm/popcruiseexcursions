@@ -3,7 +3,7 @@
  *
  * How it works:
  * - Spanish is the base language: static Spanish copy lives in the templates of src/ (index, port pages).
- * - `en` holds the English version of every key used in src/index.html (data-i18n, data-i18n-*); the build writes it into the static English page (port-page keys: src/i18n/ports.js).
+ * - `en` holds the English version of every key used in src/index.html (data-i18n, data-i18n-*); the build writes it into the static English page (port-page keys: src/i18n/ports.js; catamaran-page keys: src/i18n/catamaran.js).
  * - `es` only holds strings that JavaScript writes at runtime (menu labels, WhatsApp messages,
  *   booking form messages), because those do not exist in the markup.
  * To edit copy: Spanish → src/ (and `es` below for runtime strings), English → `en` below,

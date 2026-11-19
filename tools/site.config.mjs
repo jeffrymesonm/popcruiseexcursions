@@ -7,7 +7,8 @@
  *   port = a cruise-port page (PORTS key); tour + textKey = a page about one tour (TOURS id; its H1
  *   is the dictionary key <textKey>.h1). Templates link any page with {{page-url:<id>}}.
  * - TOURS: the six tours as structured data shows them (names and descriptions come from the
- *   dictionaries, prices from the price tables of src/index.html).
+ *   dictionaries, prices from the price tables of src/index.html and its partials: the boat tables are
+ *   in src/partials/boats.html).
  * - PORTS: the cruise terminals that have a landing page.
  * Texts never live here: Spanish is in src/, the other languages in the dictionaries.
  */

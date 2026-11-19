@@ -185,9 +185,10 @@
    * @returns {number|null} USD, or null when nothing is priced.
    */
   function minPrice(tourId) {
-    // "all" = per-person tables (no data-pricing); transfer tables are add-ons, never a "from" price.
+    // "all" = per-person tables (neither charter nor transfer, the same rule as tools/lib/prices.mjs);
+    // transfer tables are add-ons, never a "from" price.
     var scopes = tourId === 'all'
-      ? ['table[data-prices]:not([data-pricing])']
+      ? ['table[data-prices]:not([data-pricing="charter"]):not([data-pricing="transfer"])']
       : ['table[data-prices="' + tourId + '"]', 'table[data-tour="' + tourId + '"]'].map(function (scope) {
         return scope + ':not([data-pricing="transfer"])';
       });

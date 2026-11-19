@@ -1,5 +1,6 @@
 /**
- * prices.mjs — Reads the tour prices from the price tables of src/index.html at build time.
+ * prices.mjs — Reads the tour prices from the price tables of src/index.html (after its includes: the
+ * boat and transport tables are in src/partials/boats.html) at build time.
  *
  * Same rules as assets/js/prices.js (which does the same in the browser):
  * - <table class="prices" data-prices="id"> is one tour (or one boat); th[data-option] names its
@@ -92,7 +93,7 @@ export function parsePriceTables(html) {
 }
 
 /**
- * Markup of every per-person price table of a page (no data-pricing), exactly as written.
+ * Markup of every per-person price table of a page (neither charter nor transfer), exactly as written.
  * The build copies them, hidden, into pages that have the booking form but not the tour cards (the
  * catamaran page), so the form can price every tour there too.
  * @param {string} html - Page or template markup.
@@ -100,7 +101,7 @@ export function parsePriceTables(html) {
  */
 export function perPersonTablesHtml(html) {
   return [...html.matchAll(TABLE)]
-    .filter(([, attrs]) => attribute(attrs, 'data-pricing') === null)
+    .filter(([, attrs]) => !PRICING_MODELS.includes(attribute(attrs, 'data-pricing')))
     .map(([table]) => table);
 }
 

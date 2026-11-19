@@ -83,19 +83,19 @@ test('fillPriceFrom writes the lowest price and reports unknown scopes', () => {
 
 test('transfer tables are add-ons, never a "from" price', () => {
   const tables = parsePriceTables(`${FIXTURE}
-<table class="prices" data-prices="boat-transfer" data-tour="boats" data-pricing="transfer">
+<table class="prices" data-prices="boats-transfer" data-tour="boats" data-pricing="transfer">
   <thead><tr><th scope="col">Grupo</th><th scope="col" data-option="basic">Ida y vuelta</th></tr></thead>
   <tbody>
     <tr data-min="1" data-max="8"><th scope="row">1 a 8</th><td>US$160</td></tr>
     <tr data-min="29" data-max="45"><th scope="row">29 a 45</th><td>US$595</td></tr>
   </tbody>
 </table>`);
-  const transfer = tables.find((table) => table.id === 'boat-transfer');
+  const transfer = tables.find((table) => table.id === 'boats-transfer');
   assert.equal(transfer.pricing, 'transfer');
   assert.deepEqual(transfer.rows.map((row) => row.cells[0]), [160, 595]);
   assert.equal(minPrice(tables, 'boats'), 900);
   assert.equal(maxPrice(tables, 'boats'), 1100);
   assert.equal(priceCount(tables, 'boats'), 2);
   assert.equal(minPrice(tables, 'all'), 50);
-  assert.equal(minPrice(tables, 'boat-transfer'), null);
+  assert.equal(minPrice(tables, 'boats-transfer'), null);
 });

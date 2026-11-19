@@ -3,7 +3,7 @@
  *
  * Same keys as the `en` block of translations.js, except the WhatsApp message keys (booking.msg.*,
  * wa.greeting): the team reads Spanish and English only, so messages from Italian visitors go out in
- * English (see SiteI18n.messageLanguage in i18n.js). Prices are not here: they live in src/index.html. After editing, run `node tools/build.mjs`.
+ * English (see SiteI18n.messageLanguage in i18n.js). Prices are not here: they live in the price tables of src/index.html and src/partials/boats.html. After editing, run `node tools/build.mjs`.
  * Written by Claude; a review by a native speaker is recommended before relying on it.
  */
 window.SITE_TRANSLATIONS = window.SITE_TRANSLATIONS || {};

@@ -332,3 +332,19 @@ test('catamaran page carries the per-person price tables for the booking form', 
   assert.ok(read('puerto-plata-catamaran/index.html').includes('Damajagua Waterfalls prices per person'), 'tables are translated');
   for (const file of MAIN_PAGES) assert.ok(!read(file).includes('data-price-tables'), `${file}: no copy on the home page`);
 });
+
+test('minor details: hidden transport switch, transfer table id, port links to the boats', () => {
+  for (const file of ['es/index.html', 'puerto-plata-catamaran/index.html']) {
+    const html = read(file);
+    assert.match(html, /<label class="switch" data-transfer-field hidden>/, `${file}: switch hidden until a boat is chosen`);
+    assert.ok(html.includes('data-prices="boats-transfer"') && !html.includes('data-prices="boat-transfer"'), `${file}: transfer table id`);
+  }
+  assert.ok(read('amber-cove-excursions/index.html').includes('href="../puerto-plata-catamaran/#boats"'));
+  assert.ok(read('es/excursiones-taino-bay/index.html').includes('href="../catamaran-puerto-plata/#boats"'));
+  for (const file of ['fr/index.html', 'it/index.html']) {
+    const html = read(file);
+    for (const stale of ['devis séparé', 'chiffré à part', 'sauf pour les catamarans', 'preventivo a parte', 'si quota a parte', 'tranne per catamarani']) {
+      assert.ok(!html.includes(stale), `${file} still says "${stale}"`);
+    }
+  }
+});

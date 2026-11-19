@@ -410,7 +410,7 @@
               <div class="boat-transfer">
                 <h4 class="boat-transfer__title" data-i18n="boats.transfer.title">Round-trip transport (optional)</h4>
                 <p class="boat-transfer__lead" data-i18n="boats.transfer.lead">From the cruise port to Sosúa beach and back, for your whole group. Add it in the booking form.</p>
-                <table class="prices" data-prices="boat-transfer" data-tour="catamaran" data-pricing="transfer">
+                <table class="prices" data-prices="boats-transfer" data-tour="catamaran" data-pricing="transfer">
                   <caption class="visually-hidden" data-i18n="boats.transfer.caption">Round-trip transport price by group size</caption>
                   <thead>
                     <tr><th scope="col" data-i18n="price.group">Group</th><th scope="col" data-option="basic" data-i18n="boats.transfer.price">Round trip</th></tr>
@@ -713,7 +713,7 @@
 
             <!-- Shown only for the catamaran or yacht. Off by default: adds the round-trip transport port ↔ Sosúa
                  (transfer table in src/partials/boats.html) to the estimate and the WhatsApp message. -->
-            <label class="switch" data-transfer-field>
+            <label class="switch" data-transfer-field hidden>
               <input class="switch__input" type="checkbox" name="transfer">
               <span class="switch__track" aria-hidden="true"><span class="switch__thumb"></span></span>
               <span class="switch__label" data-i18n="booking.transfer">Add round-trip transport (port ↔ Sosúa)</span>
