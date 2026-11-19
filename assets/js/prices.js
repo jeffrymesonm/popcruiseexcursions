@@ -13,6 +13,8 @@
  * Boat tables are named data-prices="boat-<id>" and grouped with data-tour="catamaran"; their
  * data-deposit attribute is the deposit (USD) that books the boat. Per-person tables carry
  * data-deposit-percent instead: the share of the group's total that books the tour.
+ * The boats' optional round-trip transport is one more table, data-pricing="transfer" (one price for
+ * the whole group per size range): an add-on that booking.js adds, never a "from" price.
  * This script fills every [data-price-from="id"] (a table id, a data-tour group, or "all" for
  * per-person tours only) with the lowest price, and exposes window.SitePrices for booking.js.
  * Edit a price in its table and the "from" labels, the hero card and the booking estimate follow.
@@ -134,6 +136,32 @@
   }
 
   /**
+   * Price of the boats' optional round-trip transport (table data-pricing="transfer") for a group.
+   * @param {number} people - Group size.
+   * @returns {number|null} USD for the whole group, or null when no row covers that size (or no table).
+   */
+  function transfer(people) {
+    var element = document.querySelector('table[data-pricing="transfer"]');
+    if (!element) return null;
+    var price = null;
+    element.querySelectorAll('tbody tr').forEach(function (row) {
+      if (people >= rowNumber(row, 'data-min') && people <= rowNumber(row, 'data-max')) {
+        price = parseCell(row.querySelector('td'));
+      }
+    });
+    return price;
+  }
+
+  /**
+   * Largest group the round-trip transport table covers.
+   * @returns {number|null} People, or null when there is no transport table.
+   */
+  function transferMax() {
+    var element = document.querySelector('table[data-pricing="transfer"]');
+    return element ? maxPeople(element.getAttribute('data-prices')) : null;
+  }
+
+  /**
    * Largest group a tour's table covers.
    * @param {string} tourId - Tour id.
    * @returns {number|null} People, or null when the tour has no table.
@@ -221,6 +249,7 @@
 
   window.SitePrices = {
     options: options, quote: quote, maxPeople: maxPeople, minPrice: minPrice,
-    deposit: deposit, depositPercent: depositPercent, format: format
+    deposit: deposit, depositPercent: depositPercent, format: format,
+    transfer: transfer, transferMax: transferMax
   };
 })();

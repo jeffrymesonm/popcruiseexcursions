@@ -282,3 +282,10 @@ test('boats block lists the round-trip transport', () => {
   assert.ok(read('es/index.html').includes('data-price-from="catamaran">US$900<'));
   assert.ok(read('llms.txt').includes('1 to 8 people: US$160 for the group'));
 });
+
+test('booking form offers transport for boats', () => {
+  for (const file of ['es/index.html', 'puerto-plata-catamaran/index.html', 'fr/index.html']) {
+    const field = (read(file).match(/<label[^>]*data-transfer-field[\s\S]*?<\/label>/) || [''])[0];
+    assert.ok(field.includes('name="transfer"'), `${file}: transport switch`);
+  }
+});

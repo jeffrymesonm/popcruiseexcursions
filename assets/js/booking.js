@@ -7,7 +7,8 @@
  *   is made up (price per person × people, or boat price + extra people for a boat),
  *   read from the price tables through SitePrices (prices.js). It also shows the deposit that
  *   books the tour (a boat's fixed amount, or a share of the total for the other tours), which
- *   the WhatsApp message repeats.
+ *   the WhatsApp message repeats. For a boat, the visitor can add the round-trip transport port ↔ Sosúa
+ *   (switch off by default; price from the transfer table, more than its largest group = "we quote it").
  * - On submit the fields are validated (bilingual messages) and WhatsApp opens with the booking
  *   already written in the visitor's language, ready to send. Nothing is sent to any server and
  *   nothing the visitor types is logged.
@@ -35,6 +36,8 @@
   var boatField = form.querySelector('[data-boat-field]');
   var ziplineInput = form.elements.zipline;
   var ziplineField = form.querySelector('[data-zipline-field]');
+  var transferInput = form.elements.transfer;
+  var transferField = form.querySelector('[data-transfer-field]');
   var peopleInput = form.elements.people;
   var dateInput = form.elements.date;
   var estimateValue = form.querySelector('[data-estimate-value]');
@@ -283,17 +286,58 @@
   }
 
   /**
-   * Refreshes the boat field, the zipline switch and the live estimate.
+   * Round-trip transport the visitor added to a boat booking.
+   * @param {number} count - Group size.
+   * @returns {{state: string, amount?: number, max?: number|null}} state: "none" (not a boat, or the
+   *   switch is off), "priced" (amount in USD for the group) or "quote" (group above the transfer
+   *   table; max = the largest group it covers).
+   */
+  function currentTransfer(count) {
+    if (transferField.hidden || !transferInput.checked) return { state: 'none' };
+    var amount = window.SitePrices.transfer(count);
+    if (amount === null) return { state: 'quote', max: window.SitePrices.transferMax() };
+    return { state: 'priced', amount: amount };
+  }
+
+  /**
+   * Boat total plus the transport when it has a price.
+   * @param {Object} result - currentQuote() result with state "priced".
+   * @returns {number} USD.
+   */
+  function totalWithTransfer(result) {
+    var transfer = currentTransfer(result.count);
+    return result.price.total + (transfer.state === 'priced' ? transfer.amount : 0);
+  }
+
+  /**
+   * Transport part of the estimate detail, for boats only.
+   * @param {number} count - Group size.
+   * @returns {string} '' for other tours, else " · sin transporte", " · + US$160 transporte ida y
+   *   vuelta" or " · transporte para más de 45 personas: te lo cotizamos".
+   */
+  function transferDetail(count) {
+    if (transferField.hidden) return '';
+    var transfer = currentTransfer(count);
+    if (transfer.state === 'priced') {
+      return ' · ' + fill(t('booking.estimate.withTransfer'), { amount: window.SitePrices.format(transfer.amount) });
+    }
+    if (transfer.state === 'quote') return ' · ' + fill(t('booking.estimate.transferLarge'), { max: transfer.max });
+    return ' · ' + t('booking.estimate.noTransfer');
+  }
+
+  /**
+   * Refreshes the boat field, the zipline and transport switches and the live estimate.
    * @returns {void}
    */
   function renderEstimate() {
     boatField.hidden = tourSelect.value !== BOAT_TOUR;
+    transferField.hidden = tourSelect.value !== BOAT_TOUR;
     ziplineField.hidden = window.SitePrices.options(priceTableId()).indexOf('zipline') === -1;
 
     var result = currentQuote();
     if (result.state === 'priced') {
-      estimateValue.textContent = window.SitePrices.format(result.price.total);
-      estimateDetail.textContent = priceDetail(result.price, result.count);
+      estimateValue.textContent = window.SitePrices.format(totalWithTransfer(result));
+      estimateDetail.textContent = priceDetail(result.price, result.count) + transferDetail(result.count);
     } else if (result.state === 'quote') {
       estimateValue.textContent = t('booking.estimate.quote');
       estimateDetail.textContent = t('booking.estimate.quoteDetail');
@@ -345,7 +389,7 @@
     if (result.state === 'priced' && result.price.perPerson !== null) {
       priceLine = format(result.price.perPerson) + ' ' + tm('price.perPerson') + ', ' + tm('booking.msg.total') + ' ' + format(result.price.total);
     } else if (result.state === 'priced') {
-      priceLine = fill(tm('booking.msg.charter'), { total: format(result.price.total) });
+      priceLine = fill(tm('booking.msg.charter'), { total: format(totalWithTransfer(result)) });
     }
     var ship = form.elements.ship.value.trim();
 
@@ -358,6 +402,13 @@
       '• ' + tm('booking.msg.price') + ': ' + priceLine,
       '• ' + tm('booking.msg.name') + ': ' + form.elements.name.value.trim()
     ];
+    if (!transferField.hidden) {
+      var transfer = currentTransfer(people());
+      var transferText = tm('booking.msg.transferNo');
+      if (transfer.state === 'priced') transferText = fill(tm('booking.msg.transferYes'), { amount: format(transfer.amount) });
+      if (transfer.state === 'quote') transferText = fill(tm('booking.msg.transferQuote'), { max: transfer.max });
+      lines.splice(lines.length - 1, 0, '• ' + tm('booking.msg.transfer') + ': ' + transferText);
+    }
     var depositAmount = window.SitePrices.deposit(priceTableId(), quotedTotal(result));
     var percent = window.SitePrices.depositPercent(priceTableId());
     if (depositAmount !== null) {
