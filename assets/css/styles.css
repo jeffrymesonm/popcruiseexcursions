@@ -398,6 +398,18 @@ button {
   }
 }
 
+/* Narrowest phones (320–359 px): a slightly smaller logo and tighter gaps, so the logo, "Book now" and
+   the menu button fit without sideways scroll in every language. */
+@media (max-width: 359px) {
+  .nav__inner {
+    gap: 0.5rem;
+  }
+
+  .nav__logo {
+    --logo-height: 3.75rem;
+  }
+}
+
 .nav__actions {
   display: flex;
   align-items: center;
@@ -2023,6 +2035,9 @@ html:not(.js) .boat-photo__name {
 /* ============ Booking ============ */
 .contact__grid {
   display: grid;
+  /* minmax(0, …): the column may shrink below its content's width, so the form never pushes the page
+     sideways on 320 px phones. */
+  grid-template-columns: minmax(0, 1fr);
   gap: 1.25rem;
 }
 
