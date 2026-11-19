@@ -23,7 +23,9 @@ import { translateHtml, extractBaseDictionary, decodeEntities } from './lib/tran
 import {
   applyIncludes, fillPlaceholders, prefixAssetPaths, stripTemplateOnly, selectLangScripts, relativeUrl, rootPrefix
 } from './lib/template.mjs';
-import { parsePriceTables, minPrice, maxPrice, priceCount, formatUsd, fillPriceFrom } from './lib/prices.mjs';
+import {
+  parsePriceTables, minPrice, maxPrice, priceCount, formatUsd, fillPriceFrom, perPersonTablesHtml
+} from './lib/prices.mjs';
 import { seoHeadTags, sitemapXml, jsonLdScript, llmsTxt, absoluteUrl } from './lib/seo.mjs';
 import { buildGraph } from './lib/schema.mjs';
 
@@ -82,6 +84,26 @@ function tourUrl(tourId, lang) {
   const landing = config.PAGES.find((page) => page.tour === tourId && page.versions[lang]);
   if (landing) return absoluteUrl(config.SITE.origin, landing.versions[lang]);
   return `${absoluteUrl(config.SITE.origin, homePath(lang))}#tour-${tourId}`;
+}
+
+/**
+ * Replaces the {{price-tables}} marker of a template with hidden copies of the per-person price tables
+ * of the main template, before translation (so they are translated like the rest of the page). Pages
+ * with the booking form but without the tour cards (the catamaran page) use it so the form can price
+ * every tour; prices still live only in src/index.html.
+ * @param {string} template - Page template, after includes.
+ * @param {string} mainTemplate - src/index.html, after includes.
+ * @returns {string} Template with the marker replaced (unchanged when it has no marker).
+ */
+function withPriceTables(template, mainTemplate) {
+  if (!template.includes('{{price-tables}}')) return template;
+  const block = [
+    '    <!-- Per-person price tables copied by tools/build.mjs from src/index.html (hidden): the booking form prices every tour with them. -->',
+    '    <div hidden data-price-tables>',
+    ...perPersonTablesHtml(mainTemplate),
+    '    </div>'
+  ].join('\n');
+  return template.replace(/[ \t]*\{\{price-tables\}\}/, block);
 }
 
 /**
@@ -482,7 +504,9 @@ export async function build({ root, outDir = root }) {
   for (const page of config.PAGES) {
     let template;
     try {
-      template = page.template === MAIN_TEMPLATE ? mainTemplate : applyIncludes(readSource(page.template), readPartial);
+      template = page.template === MAIN_TEMPLATE
+        ? mainTemplate
+        : withPriceTables(applyIncludes(readSource(page.template), readPartial), mainTemplate);
     } catch (error) {
       errors.push(`${page.template}: ${error.message}`);
       continue;

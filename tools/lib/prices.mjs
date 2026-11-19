@@ -92,6 +92,19 @@ export function parsePriceTables(html) {
 }
 
 /**
+ * Markup of every per-person price table of a page (no data-pricing), exactly as written.
+ * The build copies them, hidden, into pages that have the booking form but not the tour cards (the
+ * catamaran page), so the form can price every tour there too.
+ * @param {string} html - Page or template markup.
+ * @returns {string[]} One "<table …>…</table>" string per per-person table, in document order.
+ */
+export function perPersonTablesHtml(html) {
+  return [...html.matchAll(TABLE)]
+    .filter(([, attrs]) => attribute(attrs, 'data-pricing') === null)
+    .map(([table]) => table);
+}
+
+/**
  * Prices a scope can be booked at: every cell of its non-extra rows (transfer tables are add-ons).
  * @param {PriceTable[]} tables - Parsed tables.
  * @param {string} scope - Table id (data-prices), group (data-tour) or "all" (per-person tours only).

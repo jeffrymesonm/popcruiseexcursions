@@ -616,6 +616,60 @@
       </div>
     </section>
 
+    <!-- Price-tables marker below: the build puts hidden copies of the per-person price tables here, so the form below
+         also prices the other tours (their prices still live only in src/index.html). -->
+    <!-- Per-person price tables copied by tools/build.mjs from src/index.html (hidden): the booking form prices every tour with them. -->
+    <div hidden data-price-tables>
+<table class="prices" data-prices="damajagua" data-deposit-percent="50">
+                <caption class="visually-hidden" data-i18n="tours.damajagua.caption">Damajagua Waterfalls prices per person by group size</caption>
+                <thead>
+                  <tr><th scope="col" data-i18n="price.group">Group</th><th scope="col" data-option="zipline" data-i18n="price.zipline">With zipline</th><th scope="col" data-option="basic" data-i18n="price.noZipline">No zipline</th></tr>
+                </thead>
+                <tbody>
+                  <tr data-min="1" data-max="2"><th scope="row" data-i18n="price.g1">1 to 2 people</th><td>US$120</td><td>US$100</td></tr>
+                  <tr data-min="3" data-max="5"><th scope="row" data-i18n="price.g2">3 to 5 people</th><td>US$100</td><td>US$75</td></tr>
+                  <tr data-min="6" data-max="14"><th scope="row" data-i18n="price.g3">6 to 14 people</th><td>US$80</td><td>US$65</td></tr>
+                  <tr data-min="15" data-max="50"><th scope="row" data-i18n="price.g4">15 to 50 people</th><td>US$70</td><td>US$50</td></tr>
+                </tbody>
+              </table>
+<table class="prices" data-prices="city" data-deposit-percent="50">
+                <caption class="visually-hidden" data-i18n="tours.city.caption">City Tour prices per person by group size</caption>
+                <thead>
+                  <tr><th scope="col" data-i18n="price.group">Group</th><th scope="col" data-option="basic" data-i18n="price.perPersonCol">Per person</th></tr>
+                </thead>
+                <tbody>
+                  <tr data-min="1" data-max="2"><th scope="row" data-i18n="price.g1">1 to 2 people</th><td>US$35</td></tr>
+                  <tr data-min="3" data-max="5"><th scope="row" data-i18n="price.g2">3 to 5 people</th><td>US$20</td></tr>
+                  <tr data-min="6" data-max="14"><th scope="row" data-i18n="price.g3">6 to 14 people</th><td>US$15</td></tr>
+                  <tr data-min="15" data-max="50"><th scope="row" data-i18n="price.g4">15 to 50 people</th><td>US$12</td></tr>
+                </tbody>
+              </table>
+<table class="prices" data-prices="horse" data-deposit-percent="50">
+                <caption class="visually-hidden" data-i18n="tours.horse.caption">Horseback riding prices per person by group size</caption>
+                <thead>
+                  <tr><th scope="col" data-i18n="price.group">Group</th><th scope="col" data-option="basic" data-i18n="price.perPersonCol">Per person</th></tr>
+                </thead>
+                <tbody>
+                  <tr data-min="1" data-max="2"><th scope="row" data-i18n="price.g1">1 to 2 people</th><td>US$85</td></tr>
+                  <tr data-min="3" data-max="5"><th scope="row" data-i18n="price.g2">3 to 5 people</th><td>US$70</td></tr>
+                  <tr data-min="6" data-max="14"><th scope="row" data-i18n="price.g3">6 to 14 people</th><td>US$65</td></tr>
+                  <tr data-min="15" data-max="50"><th scope="row" data-i18n="price.g4">15 to 50 people</th><td>US$60</td></tr>
+                </tbody>
+              </table>
+<table class="prices" data-prices="beach" data-deposit-percent="50">
+                <caption class="visually-hidden" data-i18n="tours.beach.caption">Playa Dorada Beach Day price per person by group size</caption>
+                <thead>
+                  <tr><th scope="col" data-i18n="price.group">Group</th><th scope="col" data-option="basic" data-i18n="price.perPersonCol">Per person</th></tr>
+                </thead>
+                <tbody>
+                  <tr data-min="1" data-max="2"><th scope="row" data-i18n="price.g1">1 to 2 people</th><td>US$50</td></tr>
+                  <tr data-min="3" data-max="5"><th scope="row" data-i18n="price.g2">3 to 5 people</th><td>US$30</td></tr>
+                  <tr data-min="6" data-max="14"><th scope="row" data-i18n="price.g3">6 to 14 people</th><td>US$25</td></tr>
+                  <tr data-min="15" data-max="50"><th scope="row" data-i18n="price.g4">15 to 50 people</th><td>US$15</td></tr>
+                </tbody>
+              </table>
+    </div>
+
     <!-- ============ Booking (builds a WhatsApp message; booking.js). Shared partial src/partials/booking.html, included by src/index.html and src/catamaran.html ============ -->
     <section class="section" id="booking" aria-labelledby="booking-title">
       <div class="container contact__grid">

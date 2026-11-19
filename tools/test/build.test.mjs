@@ -320,3 +320,15 @@ test('transport answers never say every tour includes it', () => {
     }
   }
 });
+
+test('catamaran page carries the per-person price tables for the booking form', () => {
+  for (const file of ['puerto-plata-catamaran/index.html', 'es/catamaran-puerto-plata/index.html']) {
+    const block = (read(file).match(/<div hidden data-price-tables>[\s\S]*?<\/div>/) || [''])[0];
+    for (const id of ['damajagua', 'city', 'horse', 'beach']) {
+      assert.ok(block.includes(`data-prices="${id}" data-deposit-percent="50"`), `${file}: ${id} table`);
+    }
+    assert.ok(!block.includes('data-pricing='), `${file}: only per-person tables`);
+  }
+  assert.ok(read('puerto-plata-catamaran/index.html').includes('Damajagua Waterfalls prices per person'), 'tables are translated');
+  for (const file of MAIN_PAGES) assert.ok(!read(file).includes('data-price-tables'), `${file}: no copy on the home page`);
+});
