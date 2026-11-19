@@ -7,16 +7,21 @@
  * - data-pricing="charter" tables (one per boat, grouped by data-tour) have a data-charge="flat"
  *   row (the whole boat) and a data-charge="extra" row (each extra person); extra rows are add-ons,
  *   never a "from" price;
- * - the scope "all" means every per-person tour (charters excluded).
+ * - data-pricing="transfer" tables (the boats' optional round-trip transport, one price per group
+ *   size) are add-ons too: they never count for "from" prices, price ranges or offers;
+ * - the scope "all" means every per-person tour (charters and transfers excluded).
  * The build uses it to write the "from US$…" labels into the static HTML, the JSON-LD offers,
  * the price range of the business and llms.txt.
  */
 
 /**
  * @typedef {{min: number|null, max: number|null, charge: 'flat'|'extra'|null, cells: Array<number|null>}} PriceRow
- * @typedef {{id: string, tour: string|null, pricing: 'person'|'charter', deposit: number|null,
+ * @typedef {{id: string, tour: string|null, pricing: 'person'|'charter'|'transfer', deposit: number|null,
  *   depositPercent: number|null, options: string[], optionKeys: Array<string|null>, rows: PriceRow[]}} PriceTable
  */
+
+/** data-pricing values other than the default per-person model. */
+const PRICING_MODELS = ['charter', 'transfer'];
 
 /** <table … class="prices" …>…</table> — 1 = opening tag attributes, 2 = contents. */
 const TABLE = /<table\b([^>]*\bclass="prices"[^>]*)>([\s\S]*?)<\/table>/g;
@@ -71,7 +76,7 @@ export function parsePriceTables(html) {
     return {
       id: attribute(attrs, 'data-prices'),
       tour: attribute(attrs, 'data-tour'),
-      pricing: attribute(attrs, 'data-pricing') === 'charter' ? 'charter' : 'person',
+      pricing: PRICING_MODELS.includes(attribute(attrs, 'data-pricing')) ? attribute(attrs, 'data-pricing') : 'person',
       deposit: Number.isFinite(deposit) && deposit > 0 ? deposit : null,
       depositPercent: Number.isFinite(depositPercent) && depositPercent > 0 ? depositPercent : null,
       options: optionCells.map((cellAttrs) => attribute(cellAttrs, 'data-option')),
@@ -87,15 +92,15 @@ export function parsePriceTables(html) {
 }
 
 /**
- * Prices a scope can be booked at: every cell of its non-extra rows.
+ * Prices a scope can be booked at: every cell of its non-extra rows (transfer tables are add-ons).
  * @param {PriceTable[]} tables - Parsed tables.
  * @param {string} scope - Table id (data-prices), group (data-tour) or "all" (per-person tours only).
  * @returns {number[]} The amounts, in table order.
  */
 function scopePrices(tables, scope) {
   const inScope = scope === 'all'
-    ? tables.filter((table) => table.pricing !== 'charter')
-    : tables.filter((table) => table.id === scope || table.tour === scope);
+    ? tables.filter((table) => table.pricing === 'person')
+    : tables.filter((table) => table.pricing !== 'transfer' && (table.id === scope || table.tour === scope));
   return inScope.flatMap((table) => table.rows
     .filter((row) => row.charge !== 'extra')
     .flatMap((row) => row.cells.filter((cell) => cell !== null)));

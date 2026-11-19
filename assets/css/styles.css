@@ -1358,6 +1358,26 @@ button {
   line-height: 1.4;
 }
 
+/* Boats card: optional round-trip transport (port ↔ Sosúa), one table for every boat. */
+.boat-transfer {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-tag);
+}
+
+.boat-transfer__title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: var(--tracking-tight);
+}
+
+.boat-transfer__lead {
+  margin: 0.35rem 0 0.75rem;
+  color: var(--color-muted-fg);
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+
 /* Catamaran page: the boats card stands alone, so its home-page number "(06)" means nothing there
    (hidden but kept in the row so the "from" badge stays on the right). */
 .cat-boats .tour-card__index {

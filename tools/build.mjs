@@ -344,7 +344,8 @@ function renderVersion({ page, lang, urlPath, template, data, tables, site, read
 }
 
 /**
- * Price lines of a tour for llms.txt ("1 to 5 people: US$100 with zipline, US$75 no zipline").
+ * Price lines of a tour for llms.txt ("1 to 5 people: US$100 with zipline, US$75 no zipline"); the
+ * boats add one line per boat and one per tier of the optional round-trip transport.
  * @param {string|null} scope - Price table id or data-tour group.
  * @param {Array<object>} tables - Parsed price tables.
  * @param {Record<string, string>} dict - English dictionary (column labels).
@@ -354,6 +355,11 @@ function renderVersion({ page, lang, urlPath, template, data, tables, site, read
 function priceLines(scope, tables, dict, boatNames) {
   if (!scope) return [];
   return tables.filter((table) => table.id === scope || table.tour === scope).flatMap((table) => {
+    if (table.pricing === 'transfer') {
+      return table.rows
+        .filter((row) => row.min !== null && row.max !== null && row.cells[0] !== null)
+        .map((row) => `Optional round-trip transport port ↔ Sosúa, ${row.min} to ${row.max} people: ${formatUsd(row.cells[0])} for the group`);
+    }
     if (table.pricing === 'charter') {
       const flat = table.rows.find((row) => row.charge === 'flat');
       const extra = table.rows.find((row) => row.charge === 'extra');

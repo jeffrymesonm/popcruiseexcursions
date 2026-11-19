@@ -822,6 +822,26 @@
                   <p class="tour-card__note" data-i18n="boats.deposit.700">Réservation avec un acompte de US$700.</p>
                 </div>
               </div>
+              <!-- Optional round-trip transport port ↔ Sosúa, the same for every boat (price for the whole group).
+                   data-pricing="transfer": an add-on, never a "from" price; booking.js adds it when the switch is on.
+                   More than 45 people: quoted on WhatsApp (no row). -->
+              <div class="boat-transfer">
+                <h4 class="boat-transfer__title" data-i18n="boats.transfer.title">Transport aller-retour (en option)</h4>
+                <p class="boat-transfer__lead" data-i18n="boats.transfer.lead">Du port de croisière à la plage de Sosúa et retour, pour tout votre groupe. Ajoutez-le dans le formulaire de réservation.</p>
+                <table class="prices" data-prices="boat-transfer" data-tour="catamaran" data-pricing="transfer">
+                  <caption class="visually-hidden" data-i18n="boats.transfer.caption">Prix du transport aller-retour selon la taille du groupe</caption>
+                  <thead>
+                    <tr><th scope="col" data-i18n="price.group">Groupe</th><th scope="col" data-option="basic" data-i18n="boats.transfer.price">Aller-retour</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr data-min="1" data-max="8"><th scope="row">1 <span data-i18n="price.to">à</span> 8 <span data-i18n="booking.persons">personnes</span></th><td>US$160</td></tr>
+                    <tr data-min="9" data-max="15"><th scope="row">9 <span data-i18n="price.to">à</span> 15 <span data-i18n="booking.persons">personnes</span></th><td>US$195</td></tr>
+                    <tr data-min="16" data-max="20"><th scope="row">16 <span data-i18n="price.to">à</span> 20 <span data-i18n="booking.persons">personnes</span></th><td>US$300</td></tr>
+                    <tr data-min="21" data-max="28"><th scope="row">21 <span data-i18n="price.to">à</span> 28 <span data-i18n="booking.persons">personnes</span></th><td>US$375</td></tr>
+                    <tr data-min="29" data-max="45"><th scope="row">29 <span data-i18n="price.to">à</span> 45 <span data-i18n="booking.persons">personnes</span></th><td>US$595</td></tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
             <!-- Photo column: the chosen boat's photo and its thumbnails (sticky on desktop). -->
             <div class="tour-card__visual">

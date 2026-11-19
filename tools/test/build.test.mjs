@@ -270,3 +270,15 @@ test('booking links stay on pages that have the form', () => {
   }
   assert.ok(read('amber-cove-excursions/index.html').includes('class="btn btn--sun nav__cta" href="../#booking"'));
 });
+
+test('boats block lists the round-trip transport', () => {
+  for (const file of ['es/index.html', 'es/catamaran-puerto-plata/index.html', 'index.html']) {
+    const html = read(file);
+    const table = (html.match(/<table[^>]*data-pricing="transfer"[\s\S]*?<\/table>/) || [''])[0];
+    assert.ok(table, `${file}: transfer table`);
+    for (const amount of ['US$160', 'US$195', 'US$300', 'US$375', 'US$595']) assert.ok(table.includes(amount), `${file}: ${amount}`);
+    assert.ok(table.includes('data-min="21" data-max="28"') && table.includes('data-min="29" data-max="45"'), `${file}: tiers`);
+  }
+  assert.ok(read('es/index.html').includes('data-price-from="catamaran">US$900<'));
+  assert.ok(read('llms.txt').includes('1 to 8 people: US$160 for the group'));
+});
