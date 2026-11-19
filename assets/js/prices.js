@@ -135,13 +135,39 @@
   }
 
   /**
-   * Total for a group on a vehicle table: as many vehicles of the chosen kind as the group needs,
-   * each at the price of the column that covers that many vehicles.
+   * Per-vehicle arithmetic: as many vehicles as the group needs (ceil(people / seats)), each at the
+   * price of the column whose range covers that many vehicles. Kept apart from the DOM so it can be tested.
+   * @param {number} people - Group size.
+   * @param {number} seats - People one vehicle carries.
+   * @param {Array<{min: number, max: number|null}>} columns - Vehicle range of each price column (max null or
+   *   NaN = no upper limit).
+   * @param {Array<number|null>} prices - Price per vehicle of each column, in the same order.
+   * @returns {{total: number, perPerson: null, perVehicle: number, vehicles: number, seats: number}|null}
+   *   The breakdown, or null when there are no seats, no column covers the count or that price is missing.
+   */
+  function vehicleTotal(people, seats, columns, prices) {
+    if (!(seats > 0)) return null;
+    var vehicles = Math.ceil(people / seats);
+    for (var i = 0; i < columns.length; i += 1) {
+      var max = columns[i].max;
+      var noLimit = max === null || max === undefined || isNaN(max);
+      if (vehicles >= columns[i].min && (noLimit || vehicles <= max)) {
+        var perVehicle = prices[i];
+        if (typeof perVehicle !== 'number') return null;
+        return { total: perVehicle * vehicles, perPerson: null, perVehicle: perVehicle, vehicles: vehicles, seats: seats };
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Total for a group on a vehicle table (reads the chosen row and the header's vehicle ranges, then
+   * applies vehicleTotal).
    * @param {HTMLTableElement} element - Price table with data-pricing="vehicle".
    * @param {number} people - Group size.
    * @param {string} option - Vehicle id (the row's data-option), e.g. "buggy".
    * @returns {{total: number, perPerson: null, perVehicle: number, vehicles: number, seats: number}|null}
-   *   The breakdown, or null when the vehicle is unknown, has no seats or no column covers the count.
+   *   The breakdown, or null when the vehicle is unknown or vehicleTotal has no price for it.
    */
   function vehicleQuote(element, people, option) {
     var row = null;
@@ -149,20 +175,12 @@
       if (candidate.getAttribute('data-option') === option) row = candidate;
     });
     if (!row) return null;
-    var seats = rowNumber(row, 'data-seats');
-    if (!(seats > 0)) return null;
-    var vehicles = Math.ceil(people / seats);
     // Price columns are the header cells with a vehicle range; their order matches the row's cells.
-    var columns = element.querySelectorAll('thead th[data-min]');
-    for (var i = 0; i < columns.length; i += 1) {
-      var max = rowNumber(columns[i], 'data-max');
-      if (vehicles >= rowNumber(columns[i], 'data-min') && (isNaN(max) || vehicles <= max)) {
-        var perVehicle = parseCell(row.querySelectorAll('td')[i]);
-        if (perVehicle === null) return null;
-        return { total: perVehicle * vehicles, perPerson: null, perVehicle: perVehicle, vehicles: vehicles, seats: seats };
-      }
-    }
-    return null;
+    var columns = Array.prototype.map.call(element.querySelectorAll('thead th[data-min]'), function (cell) {
+      return { min: rowNumber(cell, 'data-min'), max: rowNumber(cell, 'data-max') };
+    });
+    var prices = Array.prototype.map.call(row.querySelectorAll('td'), parseCell);
+    return vehicleTotal(people, rowNumber(row, 'data-seats'), columns, prices);
   }
 
   /**
@@ -301,6 +319,6 @@
   window.SitePrices = {
     options: options, quote: quote, maxPeople: maxPeople, minPrice: minPrice,
     deposit: deposit, depositPercent: depositPercent, format: format,
-    transfer: transfer, transferMax: transferMax
+    transfer: transfer, transferMax: transferMax, vehicleTotal: vehicleTotal
   };
 })();
