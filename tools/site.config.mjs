@@ -4,6 +4,8 @@
  * - SITE: business data used by the structured data (JSON-LD) and llms.txt.
  * - PAGES: every page, its Spanish template in src/ and the URL path of each language version.
  *   The default language (English) is the x-default version; "/" is English.
+ *   port = a cruise-port page (PORTS key); tour + textKey = a page about one tour (TOURS id; its H1
+ *   is the dictionary key <textKey>.h1). Templates link any page with {{page-url:<id>}}.
  * - TOURS: the six tours as structured data shows them (names and descriptions come from the
  *   dictionaries, prices from the price tables of src/index.html).
  * - PORTS: the cruise terminals that have a landing page.
@@ -45,7 +47,8 @@ export const DICTIONARY_FILES = [
   'assets/js/translations.js',
   'assets/js/translations-fr.js',
   'assets/js/translations-it.js',
-  'src/i18n/ports.js'
+  'src/i18n/ports.js',
+  'src/i18n/catamaran.js'
 ];
 
 /** Pages and their language versions (URL paths end in "/"; the file is <path>index.html). */
@@ -62,6 +65,13 @@ export const PAGES = [
     template: 'src/taino-bay.html',
     port: 'taino-bay',
     versions: { en: '/taino-bay-excursions/', es: '/es/excursiones-taino-bay/' }
+  },
+  {
+    id: 'catamaran',
+    template: 'src/catamaran.html',
+    tour: 'catamaran',
+    textKey: 'cat',
+    versions: { en: '/puerto-plata-catamaran/', es: '/es/catamaran-puerto-plata/' }
   }
 ];
 

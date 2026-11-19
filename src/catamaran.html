@@ -1,0 +1,223 @@
+<!doctype html>
+<!--
+  Source: src/catamaran.html is the template of the private catamaran and yacht page, built by
+  tools/build.mjs into /puerto-plata-catamaran/ (English) and /es/catamaran-puerto-plata/ (Spanish).
+  Never edit the generated files: change this template, then run "node tools/build.mjs".
+  The boats (picker, prices, photos) and the booking form are the shared partials boats.html and
+  booking.html, the same ones the home page shows: prices live only there.
+  Spanish copy lives here; English in src/i18n/catamaran.js (cat.* keys) and assets/js/translations.js
+  (keys shared with the home page). Facts only from what the client confirmed: Sosúa departure,
+  transport quoted separately, whole boat (not per person), 4 hours, deposit per boat.
+-->
+<html lang="es">
+<head>
+  <!-- Template only (removed by the build): keeps this source file out of search results if /src/ is ever crawled. -->
+  <meta name="robots" content="noindex" data-template-only>
+{{include:head.html}}
+  <title data-i18n="cat.meta.title">Catamarán y yate privado en Puerto Plata para cruceristas</title>
+  <meta name="description" content="Alquila un catamarán o yate privado en Puerto Plata: el barco completo para tu grupo, no por persona, 4 horas por la costa. 6 barcos que salen de Sosúa." data-i18n-content="cat.meta.description">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Puerto Plata Cruise Excursions">
+  <meta property="og:title" content="Catamarán y yate privado en Puerto Plata para cruceristas" data-i18n-content="cat.meta.title">
+  <meta property="og:description" content="Alquila un catamarán o yate privado en Puerto Plata: el barco completo para tu grupo, no por persona, 4 horas por la costa. 6 barcos que salen de Sosúa." data-i18n-content="cat.meta.description">
+  <meta property="og:image" content="https://popcruiseexcursions.com/assets/img/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  {{seo-head}}
+  <link rel="preload" as="image" href="assets/img/hero-catamaran.webp" fetchpriority="high">
+</head>
+<body>
+
+{{include:sprite.html}}
+
+{{include:header.html}}
+
+  <!-- data-default-tour: booking.js preselects this tour in the form when the URL names none. -->
+  <main id="main" data-menu-inert data-default-tour="catamaran">
+
+    <!-- ============ Hero (same layout as the port pages) ============ -->
+    <section class="hero hero--port" id="top" aria-labelledby="cat-title" data-hero>
+      <div class="hero__media">
+        <img class="hero__image" src="assets/img/hero-catamaran.webp" alt="" width="1280" height="720" fetchpriority="high" decoding="async">
+      </div>
+      <div class="hero__veil" aria-hidden="true"></div>
+      <div class="hero__inner container">
+        <div class="hero__content">
+          <nav class="crumbs" aria-label="Ruta de navegación" data-i18n-aria-label="port.crumbs" data-hero-item style="--delay: 0ms">
+            <ol class="crumbs__list">
+              <li><a href="{{home}}" data-i18n="port.home">Inicio</a></li>
+              <li aria-current="page" data-i18n="cat.h1">Catamarán y yate privado en Puerto Plata</li>
+            </ol>
+          </nav>
+          <h1 class="hero__title" id="cat-title" data-hero-item style="--delay: 80ms" data-i18n="cat.h1">Catamarán y yate privado en Puerto Plata</h1>
+          <p class="hero__lead" data-hero-item style="--delay: 160ms" data-i18n="cat.lead">Alquila el barco completo solo para tu grupo, no por persona: 4 horas navegando la costa de Puerto Plata en uno de nuestros 4 catamaranes o 2 yates. Salen de la playa de Sosúa y organizamos el día según la hora de tu crucero.</p>
+          <div class="hero__actions" data-hero-item style="--delay: 240ms">
+            <a class="btn btn--sun" href="#boats" data-i18n="boats.choose">Elige tu barco</a>
+            <a class="btn btn--glass" href="https://wa.me/18296277733" target="_blank" rel="noopener" data-wa-link data-i18n="cta.whatsapp">Escríbenos por WhatsApp</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ The six boats (shared partial; no data-stack-card: this page has no card stack) ============ -->
+    <section class="section cat-boats" id="boats" aria-labelledby="boats-title">
+      <div class="container">
+        <header class="section-head" data-reveal>
+          <p class="tag" data-i18n="cat.boats.tag">6 barcos privados</p>
+          <h2 class="section-head__title" id="boats-title" data-i18n="boats.choose">Elige tu barco</h2>
+          <p class="section-head__lead" data-i18n="cat.boats.lead">Toca un barco para ver sus fotos, qué incluye y su precio.</p>
+        </header>
+        <div class="tour-card tour-card--boats" id="tour-catamaran">
+{{include:boats.html}}
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ How booking a boat works ============ -->
+    <section class="section" id="cat-how" aria-labelledby="cat-how-title">
+      <div class="container">
+        <header class="section-head" data-reveal>
+          <p class="tag" data-i18n="port.pickup.tag">Cómo funciona</p>
+          <h2 class="section-head__title" id="cat-how-title" data-i18n="cat.how.title">Cómo se reserva un barco</h2>
+        </header>
+        <ol class="port-steps" data-reveal>
+          <li data-i18n="cat.how.1">Elige el barco y la fecha, y envíanos la reserva por WhatsApp con el nombre de tu crucero y la hora de embarque.</li>
+          <li data-i18n="cat.how.2">Se reserva con un depósito; el monto de cada barco está en su ficha.</li>
+          <li data-i18n="cat.how.3">Los barcos salen de la playa de Sosúa, a 45 minutos de Amber Cove y a 30 de Taíno Bay. El transporte no está incluido: te lo cotizamos aparte.</li>
+          <li data-i18n="cat.how.4">Organizamos el paseo de 4 horas según la hora de tu barco para que vuelvas a tiempo.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ Boat questions (also in the JSON-LD FAQPage; 2 and 7 are the home page's) ============ -->
+    <section class="section" id="faq" aria-labelledby="faq-title">
+      <div class="container">
+        <header class="section-head" data-reveal>
+          <p class="tag" data-i18n="faq.tag">Preguntas</p>
+          <h2 class="section-head__title" id="faq-title" data-i18n="cat.faq.title">Preguntas sobre los barcos</h2>
+        </header>
+        <div class="faq" data-reveal>
+          <div class="faq__column">
+            <div class="faq__item" data-faq-item>
+              <h3 class="faq__question">
+                <button class="faq__trigger" type="button" id="faq-q1" aria-expanded="false" aria-controls="faq-a1" data-faq-trigger>
+                  <span data-i18n="cat.faq.1.q">¿El precio es por persona o por el barco?</span>
+                  <span class="faq__icon" aria-hidden="true"><svg><use href="#icon-plus"/></svg></span>
+                </button>
+              </h3>
+              <div class="faq__panel" id="faq-a1" role="region" aria-labelledby="faq-q1">
+                <div class="faq__panel-inner">
+                  <p class="faq__answer" data-i18n="cat.faq.1.a">Por el barco completo. A diferencia de los paseos en barco compartidos, que se venden por persona, aquí alquilas el barco solo para tu grupo durante 4 horas. El precio cubre hasta 15 o 20 personas, según el barco, y cada persona adicional paga un extra. El precio de cada barco está en su ficha.</p>
+                </div>
+              </div>
+            </div>
+            <div class="faq__item" data-faq-item>
+              <h3 class="faq__question">
+                <button class="faq__trigger" type="button" id="faq-q2" aria-expanded="false" aria-controls="faq-a2" data-faq-trigger>
+                  <span data-i18n="cat.faq.2.q">¿Desde dónde salen los barcos? ¿El transporte está incluido?</span>
+                  <span class="faq__icon" aria-hidden="true"><svg><use href="#icon-plus"/></svg></span>
+                </button>
+              </h3>
+              <div class="faq__panel" id="faq-a2" role="region" aria-labelledby="faq-q2">
+                <div class="faq__panel-inner">
+                  <p class="faq__answer" data-i18n="cat.faq.2.a">Salen de la playa de Sosúa, a unos 45 minutos del puerto de Amber Cove y a 30 minutos de Taíno Bay. El transporte desde el puerto no está incluido en el precio del barco: te lo cotizamos aparte por WhatsApp o correo.</p>
+                </div>
+              </div>
+            </div>
+            <div class="faq__item" data-faq-item>
+              <h3 class="faq__question">
+                <button class="faq__trigger" type="button" id="faq-q3" aria-expanded="false" aria-controls="faq-a3" data-faq-trigger>
+                  <span data-i18n="cat.faq.3.q">¿Cómo reservo un barco?</span>
+                  <span class="faq__icon" aria-hidden="true"><svg><use href="#icon-plus"/></svg></span>
+                </button>
+              </h3>
+              <div class="faq__panel" id="faq-a3" role="region" aria-labelledby="faq-q3">
+                <div class="faq__panel-inner">
+                  <p class="faq__answer" data-i18n="cat.faq.3.a">Elige el barco, completa el formulario de reserva y te abrimos WhatsApp con la reserva lista para enviar. Se reserva con un depósito; el monto de cada barco está en su ficha. Dinos el nombre de tu crucero y la hora de embarque.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="faq__column">
+            <div class="faq__item" data-faq-item>
+              <h3 class="faq__question">
+                <button class="faq__trigger" type="button" id="faq-q4" aria-expanded="false" aria-controls="faq-a4" data-faq-trigger>
+                  <span data-i18n="cat.faq.4.q">¿Sirven para despedidas de soltera, cumpleaños o bodas?</span>
+                  <span class="faq__icon" aria-hidden="true"><svg><use href="#icon-plus"/></svg></span>
+                </button>
+              </h3>
+              <div class="faq__panel" id="faq-a4" role="region" aria-labelledby="faq-q4">
+                <div class="faq__panel-inner">
+                  <p class="faq__answer" data-i18n="cat.faq.4.a">Sí. Como el barco es solo para tu grupo, es ideal para celebrar: despedidas de soltera, cumpleaños, bodas pequeñas o un día en familia. En el Libreterre te ayudamos con decoración, pastel, catering, fotos y video (a consultar).</p>
+                </div>
+              </div>
+            </div>
+            <div class="faq__item" data-faq-item>
+              <h3 class="faq__question">
+                <button class="faq__trigger" type="button" id="faq-q5" aria-expanded="false" aria-controls="faq-a5" data-faq-trigger>
+                  <span data-i18n="faq.2.q">¿Llegaré a tiempo a mi barco?</span>
+                  <span class="faq__icon" aria-hidden="true"><svg><use href="#icon-plus"/></svg></span>
+                </button>
+              </h3>
+              <div class="faq__panel" id="faq-a5" role="region" aria-labelledby="faq-q5">
+                <div class="faq__panel-inner">
+                  <p class="faq__answer" data-i18n="faq.2.a">Organizamos cada excursión según la hora de salida de tu crucero. Al reservar, dinos el nombre del barco y a qué hora debes estar a bordo.</p>
+                </div>
+              </div>
+            </div>
+            <div class="faq__item" data-faq-item>
+              <h3 class="faq__question">
+                <button class="faq__trigger" type="button" id="faq-q6" aria-expanded="false" aria-controls="faq-a6" data-faq-trigger>
+                  <span data-i18n="faq.7.q">¿Cuál es la política de cancelación?</span>
+                  <span class="faq__icon" aria-hidden="true"><svg><use href="#icon-plus"/></svg></span>
+                </button>
+              </h3>
+              <div class="faq__panel" id="faq-a6" role="region" aria-labelledby="faq-q6">
+                <div class="faq__panel-inner">
+                  <p class="faq__answer" data-i18n="faq.7.a">Si cancelas con 10 días o más de anticipación, te devolvemos el 100% de lo pagado; con menos de 10 días, el 50%. Si tu crucero no llega a Puerto Plata, te devolvemos el 90%.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+{{include:booking.html}}
+
+    <!-- ============ Call to action + the port pages ============ -->
+    <section class="section" aria-labelledby="cta-title">
+      <div class="container">
+        <div class="trust" data-reveal>
+          <p class="tag tag--light" data-i18n="port.cta.tag">Reserva por WhatsApp</p>
+          <h2 class="trust__title" id="cta-title" data-i18n="cat.cta.title">¿No sabes qué barco elegir? Escríbenos con la fecha y cuántas personas son.</h2>
+          <a class="btn btn--whatsapp" href="https://wa.me/18296277733" target="_blank" rel="noopener" data-wa-link>
+            <svg aria-hidden="true"><use href="#icon-whatsapp"/></svg>
+            <span data-i18n="cta.whatsapp">Escríbenos por WhatsApp</span>
+          </a>
+          <a class="trust__link" href="{{page-url:amber-cove}}" hreflang="{{page-lang:amber-cove}}" data-i18n="ports.ac.cta">Excursiones desde Amber Cove</a>
+          <a class="trust__link" href="{{page-url:taino-bay}}" hreflang="{{page-lang:taino-bay}}" data-i18n="ports.tb.cta">Excursiones desde Taíno Bay</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+{{include:footer.html}}
+
+  <!-- Order matters: translations before i18n; i18n before the modules that read its strings. -->
+  <script src="assets/js/translations.js" defer></script>
+  <script src="assets/js/i18n.js" defer></script>
+  <script src="assets/js/hero-intro.js" defer></script>
+  <script src="assets/js/menu.js" defer></script>
+  <script src="assets/js/boat-tabs.js" defer></script>
+  <script src="assets/js/gallery.js" defer></script>
+  <script src="assets/js/faq.js" defer></script>
+  <script src="assets/js/reveal.js" defer></script>
+  <script src="assets/js/whatsapp.js" defer></script>
+  <script src="assets/js/prices.js" defer></script>
+  <script src="assets/js/booking.js" defer></script>
+  <script src="assets/js/footer-year.js" defer></script>
+</body>
+</html>

@@ -13,7 +13,8 @@
  *   nothing the visitor types is logged.
  * - "Book this tour" buttons ([data-book]) preselect their tour before jumping to the form;
  *   "Book this boat" buttons also carry data-book-boat and preselect the boat. Links from other
- *   pages (the port pages) do the same with ?tour=<id>&boat=<id> in the URL.
+ *   pages (the port pages) do the same with ?tour=<id>&boat=<id> in the URL. Without ?tour=, a page
+ *   can name its own tour with data-default-tour (the catamaran page: data-default-tour="catamaran").
  * Dates: the earliest allowed date is "today" in Puerto Plata (America/Santo_Domingo), because
  * the tour happens there, whatever the visitor's own time zone is.
  */
@@ -438,17 +439,22 @@
   }
 
   /**
-   * Preselects the tour named in the URL (?tour=<id>&boat=<id>), as the port pages link here.
+   * Preselects the tour named in the URL (?tour=<id>&boat=<id>), as the port pages link here; when
+   * the URL names none, the page's own tour (data-default-tour, e.g. on the catamaran page).
    * @returns {void}
    */
   function preselectFromUrl() {
-    var params;
+    var holder = document.querySelector('[data-default-tour]');
+    var tourId = null;
+    var boatId = null;
     try {
-      params = new URLSearchParams(window.location.search);
+      var params = new URLSearchParams(window.location.search);
+      tourId = params.get('tour');
+      boatId = params.get('boat');
     } catch (error) {
-      return;
+      // Very old browsers without URLSearchParams: only the page default applies.
     }
-    preselect(params.get('tour'), params.get('boat'));
+    preselect(tourId || (holder && holder.getAttribute('data-default-tour')), boatId);
   }
 
   // "Book this tour" / "Book this boat" buttons preselect their tour (and boat); the link itself

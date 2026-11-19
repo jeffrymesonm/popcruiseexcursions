@@ -56,4 +56,16 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://popcruiseexcursions.com/es/excursiones-taino-bay/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://popcruiseexcursions.com/taino-bay-excursions/"/>
   </url>
+  <url>
+    <loc>https://popcruiseexcursions.com/puerto-plata-catamaran/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://popcruiseexcursions.com/puerto-plata-catamaran/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://popcruiseexcursions.com/es/catamaran-puerto-plata/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://popcruiseexcursions.com/puerto-plata-catamaran/"/>
+  </url>
+  <url>
+    <loc>https://popcruiseexcursions.com/es/catamaran-puerto-plata/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://popcruiseexcursions.com/puerto-plata-catamaran/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://popcruiseexcursions.com/es/catamaran-puerto-plata/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://popcruiseexcursions.com/puerto-plata-catamaran/"/>
+  </url>
 </urlset>

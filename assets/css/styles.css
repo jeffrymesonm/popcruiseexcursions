@@ -1358,6 +1358,12 @@ button {
   line-height: 1.4;
 }
 
+/* Catamaran page: the boats card stands alone, so its home-page number "(06)" means nothing there
+   (hidden but kept in the row so the "from" badge stays on the right). */
+.cat-boats .tour-card__index {
+  visibility: hidden;
+}
+
 /* Price table (the only place prices are written; prices.js and booking.js read it). */
 .prices {
   width: 100%;

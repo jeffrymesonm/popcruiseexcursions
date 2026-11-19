@@ -42,7 +42,7 @@ before(async () => {
 });
 
 test('templates keep their noindex inside <head> (they are reachable under /src/)', () => {
-  for (const template of ['src/index.html', 'src/amber-cove.html', 'src/taino-bay.html']) {
+  for (const template of ['src/index.html', 'src/amber-cove.html', 'src/taino-bay.html', 'src/catamaran.html']) {
     const html = fs.readFileSync(path.join(ROOT, template), 'utf8');
     const noindex = html.indexOf('content="noindex" data-template-only');
     assert.ok(noindex > -1, `${template} has a template-only noindex`);
@@ -211,9 +211,53 @@ test('Spanish Taíno Bay page', () => {
 });
 
 test('sitemap and llms.txt', () => {
-  assert.equal((read('sitemap.xml').match(/<loc>/g) || []).length, 8);
+  assert.equal((read('sitemap.xml').match(/<loc>/g) || []).length, 10);
   const llms = read('llms.txt');
   for (const text of ['Puerto Plata Cruise Excursions', '+1 (829) 627-7733', 'Damajagua', 'US$12']) {
     assert.ok(llms.includes(text), `llms.txt mentions ${text}`);
   }
+});
+
+test('builds the two catamaran pages', () => {
+  for (const file of ['puerto-plata-catamaran/index.html', 'es/catamaran-puerto-plata/index.html']) {
+    assert.ok(result.files.includes(file), `${file} was built`);
+  }
+});
+
+test('English catamaran page', () => {
+  const url = 'https://popcruiseexcursions.com/puerto-plata-catamaran/';
+  const html = read('puerto-plata-catamaran/index.html');
+  assert.ok(html.includes('<html lang="en">'));
+  assert.ok(html.includes(`<link rel="canonical" href="${url}">`));
+  assert.ok(html.includes('hreflang="es" href="https://popcruiseexcursions.com/es/catamaran-puerto-plata/"'));
+  assert.match(html, /<h1[^>]*>[^<]*Catamaran[^<]*<\/h1>/);
+  assert.ok(html.includes('not per person'));
+  assert.ok(html.includes('data-default-tour="catamaran"'));
+  assert.ok(html.includes('id="booking"'));
+  const graph = graphOf(html);
+  const trips = graph.filter((node) => node['@type'] === 'TouristTrip');
+  assert.equal(trips.length, 1);
+  assert.equal(trips[0].url, url);
+  assert.equal(graph.find((node) => node['@type'] === 'BreadcrumbList').itemListElement.length, 2);
+  assert.equal(graph.find((node) => node['@type'] === 'FAQPage').mainEntity.length, 6);
+});
+
+test('catamaran page lists the six boats with static prices', () => {
+  const html = read('es/catamaran-puerto-plata/index.html');
+  assert.equal((html.match(/data-boat-panel="/g) || []).length, 6);
+  assert.ok(html.includes('data-price-from="boat-viking">US$900<'));
+  assert.ok(html.includes('src="../../assets/img/boat-viking.webp"'));
+});
+
+test('catamaran page language links', () => {
+  const html = read('puerto-plata-catamaran/index.html');
+  assert.ok(html.includes('href="../es/catamaran-puerto-plata/" hreflang="es"'));
+  assert.ok(html.includes('href="../fr/" hreflang="fr"'));
+});
+
+test('port pages and footer link the catamaran page', () => {
+  assert.ok(read('amber-cove-excursions/index.html').includes('href="../puerto-plata-catamaran/"'));
+  assert.ok(read('es/index.html').includes('href="catamaran-puerto-plata/"'));
+  assert.ok(read('fr/index.html').includes('href="../puerto-plata-catamaran/" hreflang="en"'));
+  assert.ok(read('llms.txt').includes('https://popcruiseexcursions.com/puerto-plata-catamaran/'));
 });
