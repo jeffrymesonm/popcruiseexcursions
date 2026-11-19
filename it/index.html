@@ -14,7 +14,9 @@
   Spanish copy lives in src/index.html (the template; base language); English copy lives in assets/js/translations.js,
   French in translations-fr.js and Italian in translations-it.js (WhatsApp messages from FR/IT go out in English).
   A key without a translation stops the build.
-  Prices live ONLY in the .prices tables below: the build (tools/lib/prices.mjs), prices.js and booking.js read them from there.
+  Prices live ONLY in the .prices tables of this page: the per-person ones below and the boat ones in
+  src/partials/boats.html (card 06, included below and on the catamaran page). The build (tools/lib/prices.mjs),
+  prices.js and booking.js read them from there.
   Two kinds of table: per person (default) and data-pricing="charter" (one per boat in the
   "catamaran or yacht" card: a flat price for the whole boat up to the "flat" row's data-max, plus
   a price per extra person; the extra row has no data-max, so there is no group limit).

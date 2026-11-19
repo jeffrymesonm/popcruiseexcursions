@@ -2,8 +2,9 @@
  * build.mjs — Static site generator for popcruiseexcursions.com.
  *
  * Reads the Spanish templates in src/ (partials in src/partials/), the dictionaries listed in
- * tools/site.config.mjs and the price tables of src/index.html, and writes:
- * - one static page per language version ("/" = English, /es/, /fr/, /it/, the port pages…), each with
+ * tools/site.config.mjs and the price tables of src/index.html (with its partials: the boat tables are in
+ * src/partials/boats.html), and writes:
+ * - one static page per language version ("/" = English, /es/, /fr/, /it/, the port pages, the catamaran page…), each with
  *   its title, description, canonical, hreflang alternates, Open Graph tags and JSON-LD;
  * - sitemap.xml (with language alternates) and llms.txt (a summary for AI assistants).
  * Every generated page starts with a GENERATED banner: edit src/ and the dictionaries, never the output.
@@ -234,12 +235,15 @@ function tourPageOf(page, lang, dict, errors, where) {
 
 /**
  * Value of a template marker for one page version.
- * @param {{page: object, lang: string, urlPath: string, seoHead: string, readPartial: Function}} context
+ * @param {{page: object, lang: string, urlPath: string, seoHead: string, readPartial: Function,
+ *   hasBooking: boolean}} context - hasBooking: the page has the booking form (id="booking").
  * @returns {(name: string, arg: string|null) => string|undefined} Resolver for fillPlaceholders.
  */
-function markerResolver({ page, lang, urlPath, seoHead, readPartial }) {
+function markerResolver({ page, lang, urlPath, seoHead, readPartial, hasBooking }) {
   return (name, arg) => {
     if (name === 'home' && arg === null) return relativeUrl(urlPath, homePath(lang));
+    // {{book-url}}: the booking form of this page when it has one (home, catamaran page), else the home page's.
+    if (name === 'book-url' && arg === null) return hasBooking ? '#booking' : `${relativeUrl(urlPath, homePath(lang))}#booking`;
     if (name === 'current' && arg) return arg === lang ? ' aria-current="page"' : '';
     if (name === 'seo-head' && arg === null) return seoHead;
     if (name === 'root-redirect' && arg === null) return urlPath === '/' ? readPartial('root-redirect.html') : '';
@@ -327,7 +331,8 @@ function renderVersion({ page, lang, urlPath, template, data, tables, site, read
   });
   const seoHead = `${seoHeadTags({ origin: site.origin, page, lang, locales: config.LOCALES, defaultLang: config.DEFAULT_LANG })}\n  ${jsonLdScript(graph)}`;
 
-  const filled = fillPlaceholders(html, markerResolver({ page, lang, urlPath, seoHead, readPartial }));
+  const hasBooking = /\sid="booking"/.test(template);
+  const filled = fillPlaceholders(html, markerResolver({ page, lang, urlPath, seoHead, readPartial, hasBooking }));
   if (filled.unknown.length) errors.push(`${where}: unknown markers: ${filled.unknown.join(', ')}`);
   html = prefixAssetPaths(selectLangScripts(stripTemplateOnly(filled.html), lang), rootPrefix(urlPath));
 

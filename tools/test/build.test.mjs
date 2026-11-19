@@ -261,3 +261,12 @@ test('port pages and footer link the catamaran page', () => {
   assert.ok(read('fr/index.html').includes('href="../puerto-plata-catamaran/" hreflang="en"'));
   assert.ok(read('llms.txt').includes('https://popcruiseexcursions.com/puerto-plata-catamaran/'));
 });
+
+test('booking links stay on pages that have the form', () => {
+  for (const file of ['puerto-plata-catamaran/index.html', 'es/catamaran-puerto-plata/index.html', 'index.html']) {
+    const html = read(file);
+    assert.ok(html.includes('class="btn btn--sun nav__cta" href="#booking"'), `${file}: header CTA stays on the page`);
+    assert.ok(!/href="\.\.\/(\.\.\/)?#booking"/.test(html), `${file}: no booking link to another page`);
+  }
+  assert.ok(read('amber-cove-excursions/index.html').includes('class="btn btn--sun nav__cta" href="../#booking"'));
+});
