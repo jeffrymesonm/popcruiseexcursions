@@ -1,0 +1,94 @@
+    <!-- ============ Booking (builds a WhatsApp message; booking.js). Shared partial src/partials/booking.html, included by src/index.html and src/catamaran.html ============ -->
+    <section class="section" id="booking" aria-labelledby="booking-title">
+      <div class="container contact__grid">
+        <div class="contact__card" data-reveal>
+          <p class="tag tag--light" data-i18n="booking.tag">Reservas</p>
+          <h2 class="section-head__title" id="booking-title" data-i18n="booking.title">Reserva tu excursión</h2>
+          <p class="contact__lead" data-i18n="booking.lead">Completa los datos y te abrimos WhatsApp con tu reserva lista para enviar.</p>
+
+          <form class="form" data-booking-form novalidate>
+            <div class="field">
+              <label class="field__label" for="booking-tour" data-i18n="booking.tour">Excursión</label>
+              <select class="field__input field__input--select" id="booking-tour" name="tour" required>
+                <option value="damajagua" data-i18n="tours.damajagua.title">Charcos de Damajagua</option>
+                <option value="city" data-i18n="tours.city.title">City Tour Puerto Plata</option>
+                <option value="horse" data-i18n="tours.horse.title">Cabalgata</option>
+                <option value="buggy" data-i18n="tours.buggy.title">Buggies y ATV</option>
+                <option value="beach" data-i18n="tours.beach.title">Beach Day en Playa Dorada</option>
+                <option value="catamaran" data-i18n="tours.catamaran.title">Catamarán o yate privado</option>
+              </select>
+            </div>
+
+            <!-- Shown only for "Catamarán o yate privado": which boat (its price table is data-prices="boat-<value>"). -->
+            <div class="field" data-boat-field hidden>
+              <label class="field__label" for="booking-boat" data-i18n="booking.boat">Barco</label>
+              <select class="field__input field__input--select" id="booking-boat" name="boat">
+                <option value="viking">Viking 48'</option>
+                <option value="yacht-jacuzzi" data-i18n="boats.yacht-jacuzzi.name">Yate con jacuzzi</option>
+                <option value="fp43">Fountaine Pajot 43'</option>
+                <option value="ocean-king">The Ocean King IV</option>
+                <option value="libreterre">Libreterre · Privilege 52'</option>
+                <option value="cat-jacuzzi" data-i18n="boats.cat-jacuzzi.name">Catamarán con jacuzzi</option>
+              </select>
+            </div>
+
+            <!-- Shown only for tours whose price table has a zipline column. Off by default (client's choice). -->
+            <label class="switch" data-zipline-field>
+              <input class="switch__input" type="checkbox" name="zipline">
+              <span class="switch__track" aria-hidden="true"><span class="switch__thumb"></span></span>
+              <span class="switch__label" data-i18n="booking.zipline">Agregar zipline</span>
+            </label>
+
+            <div class="form__row">
+              <div class="field">
+                <label class="field__label" for="booking-people" data-i18n="booking.people">Personas</label>
+                <div class="stepper">
+                  <button class="stepper__btn" type="button" data-step="-1" aria-label="Una persona menos" data-i18n-aria-label="booking.less"><svg aria-hidden="true"><use href="#icon-minus"/></svg></button>
+                  <input class="field__input stepper__input" id="booking-people" name="people" type="number" inputmode="numeric" min="1" max="50" step="1" value="2" required aria-describedby="booking-people-error">
+                  <button class="stepper__btn" type="button" data-step="1" aria-label="Una persona más" data-i18n-aria-label="booking.more"><svg aria-hidden="true"><use href="#icon-plus"/></svg></button>
+                </div>
+                <p class="field__error" id="booking-people-error" data-error-for="people" hidden></p>
+              </div>
+              <div class="field">
+                <label class="field__label" for="booking-date" data-i18n="booking.date">Fecha</label>
+                <input class="field__input" id="booking-date" name="date" type="date" required aria-describedby="booking-date-error">
+                <p class="field__error" id="booking-date-error" data-error-for="date" hidden></p>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="booking-name" data-i18n="booking.name">Tu nombre</label>
+              <input class="field__input" id="booking-name" name="name" type="text" autocomplete="name" maxlength="80" required
+                placeholder="Nombre y apellido" data-i18n-placeholder="booking.namePlaceholder" aria-describedby="booking-name-error">
+              <p class="field__error" id="booking-name-error" data-error-for="name" hidden></p>
+            </div>
+            <div class="field">
+              <label class="field__label" for="booking-ship" data-i18n="booking.ship">Crucero (opcional)</label>
+              <input class="field__input" id="booking-ship" name="ship" type="text" maxlength="80"
+                placeholder="Nombre de tu barco" data-i18n-placeholder="booking.shipPlaceholder">
+            </div>
+
+            <div class="estimate" aria-live="polite" data-estimate>
+              <p class="estimate__label" data-i18n="booking.estimate">Precio estimado</p>
+              <p class="estimate__value" data-estimate-value>—</p>
+              <p class="estimate__detail" data-estimate-detail></p>
+              <p class="estimate__deposit" data-estimate-deposit hidden></p>
+            </div>
+
+            <button class="btn btn--whatsapp btn--block" type="submit">
+              <svg aria-hidden="true"><use href="#icon-whatsapp"/></svg>
+              <span data-i18n="booking.submit">Reservar por WhatsApp</span>
+            </button>
+            <p class="form__status" role="status" aria-live="polite" data-form-status hidden></p>
+          </form>
+          <p class="contact__email"><span data-i18n="booking.email">¿Prefieres correo?</span> <a href="mailto:popcruiseexcursions@gmail.com">popcruiseexcursions@gmail.com</a></p>
+        </div>
+        <div class="contact__media" data-reveal style="--delay: 120ms">
+          <img src="assets/img/contact.webp" alt="Palmeras altas bajo un cielo azul" data-i18n-alt="booking.alt" width="1400" height="934" loading="lazy" decoding="async">
+          <a class="contact__chip" href="https://wa.me/18296277733" target="_blank" rel="noopener" data-wa-link>
+            <svg aria-hidden="true"><use href="#icon-whatsapp"/></svg>
+            <span>+1 (829) 627-7733</span>
+          </a>
+        </div>
+      </div>
+    </section>

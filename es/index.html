@@ -591,6 +591,7 @@
             boat-tabs.js shows one panel and its photo at a time; without JS all six panels are listed.
           -->
           <li class="tour-card tour-card--boats" id="tour-catamaran" data-stack-card>
+            <!-- Shared partial src/partials/boats.html (boat picker, prices, photos): included inside card 06 of src/index.html and on the catamaran page (src/catamaran.html). -->
             <div class="tour-card__text">
               <div class="tour-card__top">
                 <span class="tour-card__index" aria-hidden="true">(06)</span>
@@ -1118,7 +1119,7 @@
       </div>
     </section>
 
-    <!-- ============ Booking (builds a WhatsApp message; booking.js) ============ -->
+    <!-- ============ Booking (builds a WhatsApp message; booking.js). Shared partial src/partials/booking.html, included by src/index.html and src/catamaran.html ============ -->
     <section class="section" id="booking" aria-labelledby="booking-title">
       <div class="container contact__grid">
         <div class="contact__card" data-reveal>
