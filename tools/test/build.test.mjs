@@ -327,7 +327,8 @@ test('catamaran page carries the per-person price tables for the booking form', 
     for (const id of ['damajagua', 'city', 'horse', 'beach']) {
       assert.ok(block.includes(`data-prices="${id}" data-deposit-percent="50"`), `${file}: ${id} table`);
     }
-    assert.ok(!block.includes('data-pricing='), `${file}: only per-person tables`);
+    assert.ok(block.includes('data-prices="buggy" data-pricing="vehicle" data-deposit-percent="50"'), `${file}: buggy table`);
+    assert.ok(!/data-pricing="(charter|transfer)"/.test(block), `${file}: no boat tables`);
   }
   assert.ok(read('puerto-plata-catamaran/index.html').includes('Damajagua Waterfalls prices per person'), 'tables are translated');
   for (const file of MAIN_PAGES) assert.ok(!read(file).includes('data-price-tables'), `${file}: no copy on the home page`);
@@ -347,4 +348,26 @@ test('minor details: hidden transport switch, transfer table id, port links to t
       assert.ok(!html.includes(stale), `${file} still says "${stale}"`);
     }
   }
+});
+
+test('buggies are priced per vehicle on every page', () => {
+  const es = read('es/index.html');
+  assert.match(es, /data-price-from="buggy">US\$75<\/strong> <span data-i18n="price.perVehicle">por vehículo/);
+  assert.ok(es.includes('data-prices="buggy" data-pricing="vehicle" data-deposit-percent="50"'));
+  assert.ok(read('index.html').includes('Single ATV'));
+  for (const file of ['amber-cove-excursions/index.html', 'es/excursiones-taino-bay/index.html']) {
+    assert.match(read(file), /data-price-from="buggy">US\$75</, file);
+  }
+  for (const file of result.files.filter((name) => name.endsWith('.html'))) {
+    assert.ok(!/Consultar precio|Ask for a price|Precio según tu grupo/.test(read(file)), `${file}: stale buggy quote copy`);
+  }
+});
+
+test('JSON-LD and llms.txt carry the buggy prices', () => {
+  const trips = graphOf(read('index.html')).filter((node) => node['@type'] === 'TouristTrip');
+  const buggy = trips.find((trip) => trip['@id'].endsWith('#tour-buggy'));
+  assert.deepEqual([buggy.offers.lowPrice, buggy.offers.highPrice, buggy.offers.offerCount], [75, 160, 8]);
+  const llms = read('llms.txt');
+  assert.ok(llms.includes('Single ATV (1 person): US$90 per vehicle for 1 to 2 vehicles, US$75 per vehicle for 3 or more vehicles'), llms);
+  assert.ok(llms.includes('Family buggy (4 people): US$160 per vehicle'));
 });

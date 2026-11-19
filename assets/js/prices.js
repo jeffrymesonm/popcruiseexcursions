@@ -15,6 +15,11 @@
  * data-deposit-percent instead: the share of the group's total that books the tour.
  * The boats' optional round-trip transport is one more table, data-pricing="transfer" (one price for
  * the whole group per size range): an add-on that booking.js adds, never a "from" price.
+ * Buggies & ATVs use data-pricing="vehicle", a table turned around: one body row per vehicle
+ * (tr data-option = its id, data-seats = people it carries) and one price column per range of
+ * vehicles booked (thead th data-min / data-max; no data-max = no limit). A group books
+ * ceil(people / seats) vehicles of one kind and pays that many times the price of its column.
+ * Vehicle prices are per vehicle, so they never count for the per-person "all" scope.
  * This script fills every [data-price-from="id"] (a table id, a data-tour group, or "all" for
  * per-person tours only) with the lowest price, and exposes window.SitePrices for booking.js.
  * Edit a price in its table and the "from" labels, the hero card and the booking estimate follow.
@@ -32,14 +37,25 @@
   }
 
   /**
-   * Lists the price columns of a tour, in table order.
+   * Checks whether a table prices per vehicle (Buggies & ATVs).
+   * @param {HTMLTableElement} element - Price table.
+   * @returns {boolean} True for data-pricing="vehicle".
+   */
+  function isVehicleTable(element) {
+    return element.getAttribute('data-pricing') === 'vehicle';
+  }
+
+  /**
+   * Lists the bookable options of a tour, in table order: its price columns, or its vehicles (rows)
+   * for a vehicle table.
    * @param {string} tourId - Tour id.
-   * @returns {Array<string>} Option names such as ["zipline", "basic"]; empty when on request.
+   * @returns {Array<string>} Option names such as ["zipline", "basic"] or ["atv", "buggy"]; empty when on request.
    */
   function options(tourId) {
     var element = table(tourId);
     if (!element) return [];
-    return Array.prototype.map.call(element.querySelectorAll('thead th[data-option]'), function (cell) {
+    var selector = isVehicleTable(element) ? 'tbody tr[data-option]' : 'thead th[data-option]';
+    return Array.prototype.map.call(element.querySelectorAll(selector), function (cell) {
       return cell.getAttribute('data-option');
     });
   }
@@ -119,18 +135,51 @@
   }
 
   /**
+   * Total for a group on a vehicle table: as many vehicles of the chosen kind as the group needs,
+   * each at the price of the column that covers that many vehicles.
+   * @param {HTMLTableElement} element - Price table with data-pricing="vehicle".
+   * @param {number} people - Group size.
+   * @param {string} option - Vehicle id (the row's data-option), e.g. "buggy".
+   * @returns {{total: number, perPerson: null, perVehicle: number, vehicles: number, seats: number}|null}
+   *   The breakdown, or null when the vehicle is unknown, has no seats or no column covers the count.
+   */
+  function vehicleQuote(element, people, option) {
+    var row = null;
+    Array.prototype.forEach.call(element.querySelectorAll('tbody tr[data-option]'), function (candidate) {
+      if (candidate.getAttribute('data-option') === option) row = candidate;
+    });
+    if (!row) return null;
+    var seats = rowNumber(row, 'data-seats');
+    if (!(seats > 0)) return null;
+    var vehicles = Math.ceil(people / seats);
+    // Price columns are the header cells with a vehicle range; their order matches the row's cells.
+    var columns = element.querySelectorAll('thead th[data-min]');
+    for (var i = 0; i < columns.length; i += 1) {
+      var max = rowNumber(columns[i], 'data-max');
+      if (vehicles >= rowNumber(columns[i], 'data-min') && (isNaN(max) || vehicles <= max)) {
+        var perVehicle = parseCell(row.querySelectorAll('td')[i]);
+        if (perVehicle === null) return null;
+        return { total: perVehicle * vehicles, perPerson: null, perVehicle: perVehicle, vehicles: vehicles, seats: seats };
+      }
+    }
+    return null;
+  }
+
+  /**
    * Price of a tour for a group, whatever its pricing model.
    * @param {string} tourId - Tour id.
    * @param {number} people - Group size.
-   * @param {string} option - Column name (per-person tables only).
-   * @returns {{total: number, perPerson: number|null, base?: number, included?: number, extraCount?: number, extraPrice?: number}|null}
-   *   perPerson is set for per-person tours; base/included/extra* for charters.
-   *   null when the tour is priced on request or no row covers that group size.
+   * @param {string} option - Column name (per-person tables) or vehicle id (vehicle tables).
+   * @returns {{total: number, perPerson: number|null, base?: number, included?: number, extraCount?: number,
+   *   extraPrice?: number, perVehicle?: number, vehicles?: number, seats?: number}|null}
+   *   perPerson is set for per-person tours; base/included/extra* for charters; perVehicle/vehicles/seats
+   *   for vehicle tables. null when the tour is priced on request or nothing covers that group.
    */
   function quote(tourId, people, option) {
     var element = table(tourId);
     if (!element) return null;
     if (element.getAttribute('data-pricing') === 'charter') return charterQuote(element, people);
+    if (isVehicleTable(element)) return vehicleQuote(element, people, option);
     var perPerson = perPersonPrice(element, people, option);
     return perPerson === null ? null : { total: perPerson * people, perPerson: perPerson };
   }
@@ -179,16 +228,17 @@
 
   /**
    * Lowest price of one table, of a tour that groups several tables (the boats share
-   * data-tour="catamaran"), or the lowest price per person of every per-person tour.
+   * data-tour="catamaran"), or the lowest price per person of every per-person tour (vehicle
+   * prices are per vehicle, so "all" leaves them out).
    * Extra-person rows are skipped: they are add-ons, not a price you can book on its own.
    * @param {string} tourId - Table id (data-prices), group id (data-tour), or "all".
    * @returns {number|null} USD, or null when nothing is priced.
    */
   function minPrice(tourId) {
-    // "all" = per-person tables (neither charter nor transfer, the same rule as tools/lib/prices.mjs);
+    // "all" = per-person tables (neither charter, transfer nor vehicle, the same rule as tools/lib/prices.mjs);
     // transfer tables are add-ons, never a "from" price.
     var scopes = tourId === 'all'
-      ? ['table[data-prices]:not([data-pricing="charter"]):not([data-pricing="transfer"])']
+      ? ['table[data-prices]:not([data-pricing="charter"]):not([data-pricing="transfer"]):not([data-pricing="vehicle"])']
       : ['table[data-prices="' + tourId + '"]', 'table[data-tour="' + tourId + '"]'].map(function (scope) {
         return scope + ':not([data-pricing="transfer"])';
       });

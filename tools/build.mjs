@@ -378,8 +378,29 @@ function renderVersion({ page, lang, urlPath, template, data, tables, site, read
 }
 
 /**
+ * Price lines of a vehicle table for llms.txt, one per vehicle ("Single ATV (1 person): US$90 per vehicle
+ * for 1 to 2 vehicles, US$75 per vehicle for 3 or more vehicles"), plus the share that books it.
+ * @param {object} table - Parsed table with pricing "vehicle" (see tools/lib/prices.mjs).
+ * @param {Record<string, string>} dict - English dictionary (vehicle names).
+ * @returns {string[]} The lines.
+ */
+function vehiclePriceLines(table, dict) {
+  const ranges = table.columns.map(({ min, max }) => (max === null ? `${min} or more vehicles` : `${min} to ${max} vehicles`));
+  const lines = table.rows.filter((row) => row.option && row.seats).map((row) => {
+    const name = dict[row.nameKey] || row.option;
+    const prices = row.cells
+      .map((cell, index) => (cell === null || !ranges[index] ? null : `${formatUsd(cell)} per vehicle for ${ranges[index]}`))
+      .filter(Boolean);
+    return `${name} (${row.seats} ${row.seats === 1 ? 'person' : 'people'}): ${prices.join(', ')}`;
+  });
+  if (table.depositPercent) lines.push(`${table.depositPercent}% of the total to book`);
+  return lines;
+}
+
+/**
  * Price lines of a tour for llms.txt ("1 to 5 people: US$100 with zipline, US$75 no zipline"); the
- * boats add one line per boat and one per tier of the optional round-trip transport.
+ * boats add one line per boat and one per tier of the optional round-trip transport, buggies one per
+ * vehicle.
  * @param {string|null} scope - Price table id or data-tour group.
  * @param {Array<object>} tables - Parsed price tables.
  * @param {Record<string, string>} dict - English dictionary (column labels).
@@ -394,6 +415,7 @@ function priceLines(scope, tables, dict, boatNames) {
         .filter((row) => row.min !== null && row.max !== null && row.cells[0] !== null)
         .map((row) => `Optional round-trip transport port ↔ Sosúa, ${row.min} to ${row.max} people: ${formatUsd(row.cells[0])} for the group`);
     }
+    if (table.pricing === 'vehicle') return vehiclePriceLines(table, dict);
     if (table.pricing === 'charter') {
       const flat = table.rows.find((row) => row.charge === 'flat');
       const extra = table.rows.find((row) => row.charge === 'extra');

@@ -1442,6 +1442,13 @@ button {
   white-space: nowrap;
 }
 
+/* Vehicle table (Buggies & ATVs): how many people each vehicle carries, under its name. */
+.prices__seats {
+  display: block;
+  color: var(--color-muted-fg);
+  font-size: 0.8125rem;
+}
+
 /* Small phones: tighter cells so three columns with long names (French "Avec tyrolienne") fit 360px. */
 @media (max-width: 399px) {
   .prices th,
@@ -1451,6 +1458,12 @@ button {
 
   .prices thead th {
     letter-spacing: 0.02em;
+  }
+
+  /* The vehicle table has a two-line first column ("Buggy familiar / 4 personas"): a little more room. */
+  .prices[data-pricing="vehicle"] th,
+  .prices[data-pricing="vehicle"] td {
+    padding-inline: 0.5rem;
   }
 }
 
@@ -1511,25 +1524,6 @@ button {
   border-radius: 50%;
   background: var(--color-accent);
   color: #fff;
-}
-
-/* "Price on request" panel for tours without a table. */
-.quote-box {
-  padding: 1.125rem 1.25rem;
-  border-left: 4px solid var(--color-sun);
-  border-radius: var(--radius-inner);
-  background: var(--color-bg);
-}
-
-.quote-box__title {
-  font-weight: 600;
-}
-
-.quote-box__text {
-  margin-top: 0.25rem;
-  color: var(--color-muted-fg);
-  font-size: 0.9375rem;
-  line-height: 1.4;
 }
 
 /*

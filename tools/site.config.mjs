@@ -84,7 +84,7 @@ export const TOURS = [
   { id: 'damajagua', scope: 'damajagua', image: 'assets/img/tour-damajagua.webp' },
   { id: 'city', scope: 'city', image: 'assets/img/tour-city.webp', stops: 7 },
   { id: 'horse', scope: 'horse', image: 'assets/img/tour-horse.webp' },
-  { id: 'buggy', scope: null, image: 'assets/img/tour-buggy.webp' },
+  { id: 'buggy', scope: 'buggy', image: 'assets/img/tour-buggy.webp' },
   { id: 'beach', scope: 'beach', image: 'assets/img/tour-beach.webp' },
   { id: 'catamaran', scope: 'catamaran', image: 'assets/img/boat-libreterre.webp' }
 ];

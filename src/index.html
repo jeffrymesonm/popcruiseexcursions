@@ -16,11 +16,14 @@
   Prices live ONLY in the .prices tables of this page: the per-person ones below and the boat ones in
   src/partials/boats.html (card 06, included below and on the catamaran page). The build (tools/lib/prices.mjs),
   prices.js and booking.js read them from there.
-  Three kinds of table: per person (default), data-pricing="charter" (one per boat in the
+  Four kinds of table: per person (default), data-pricing="charter" (one per boat in the
   "catamaran or yacht" card: a flat price for the whole boat up to the "flat" row's data-max, plus
   a price per extra person; the extra row has no data-max, so there is no group limit) and
   data-pricing="transfer" (the boats' optional round-trip transport, one price per group range: an
-  add-on, never a "from" price).
+  add-on, never a "from" price) and data-pricing="vehicle" (Buggies & ATVs, card 04: priced per vehicle,
+  turned around: one row per vehicle with data-option = its id and data-seats = people it carries, one
+  column per range of vehicles booked, th data-min / data-max, no data-max = no limit; the form books
+  ceil(people / seats) vehicles of the chosen kind; never part of the per-person "all" price).
   Boat tables are data-prices="boat-<id>", grouped by data-tour="catamaran", with the booking
   deposit in data-deposit (USD; keep it equal to the amount in that boat's note).
   Per-person tours are booked with a share of the total: data-deposit-percent on their table (keep it
@@ -211,7 +214,7 @@
                 <img src="assets/img/spot-buggy.webp" alt="" width="800" height="1000" loading="lazy" decoding="async">
                 <span class="spot__name" data-i18n="tours.buggy.short">Buggies</span>
               </a>
-              <p class="spot__info" data-i18n="spots.4.info">Lodo, ríos y adrenalina</p>
+              <p class="spot__info"><span data-i18n="spots.4.info">2 horas por campo y playa</span> · <span data-i18n="price.from">desde</span> <span data-price-from="buggy">US$75</span> <span data-i18n="price.perVehicle">por vehículo</span></p>
             </li>
             <li class="spot spot--5">
               <a class="spot__card" href="#tour-beach">
@@ -238,7 +241,7 @@
         <header class="section-head" data-reveal>
           <p class="tag" data-i18n="tours.tag">Excursiones y precios</p>
           <h2 class="section-head__title" id="tours-title" data-i18n="tours.title">Precios claros, aventuras de verdad</h2>
-          <p class="section-head__lead" data-i18n="tours.lead">Precios en dólares (USD), por persona; los barcos se alquilan completos. Mientras más grande el grupo, menor el precio.</p>
+          <p class="section-head__lead" data-i18n="tours.lead">Precios en dólares (USD), por persona; los buggies y ATV, por vehículo, y los barcos se alquilan completos. Mientras más grande el grupo, menor el precio.</p>
         </header>
         <ol class="stack" data-stack>
 
@@ -396,22 +399,37 @@
             </div>
           </li>
 
-          <!-- 04 · Buggies & ATV (price on request) -->
+          <!-- 04 · Buggies & ATV: priced per vehicle (data-pricing="vehicle", see the comment at the top) -->
           <li class="tour-card" id="tour-buggy" data-stack-card>
             <div class="tour-card__text">
               <div class="tour-card__top">
                 <span class="tour-card__index" aria-hidden="true">(04)</span>
+                <span class="tour-card__from"><span data-i18n="price.from">desde</span> <strong data-price-from="buggy">US$75</strong> <span data-i18n="price.perVehicle">por vehículo</span></span>
               </div>
               <div>
                 <h3 class="tour-card__title" data-i18n="tours.buggy.title">Buggies y ATV</h3>
-                <p class="tour-card__desc" data-i18n="tours.buggy.desc">Maneja por caminos de tierra, charcos de lodo y plantaciones. Prepárate para ensuciarte: es parte de la diversión.</p>
+                <p class="tour-card__desc" data-i18n="tours.buggy.desc">Dos horas en ATV o buggy por caminos de tierra, lodo y campo, con una parada en la playa y otra en una casa típica dominicana donde pruebas café, chocolate y cigarro.</p>
               </div>
-              <div class="quote-box">
-                <p class="quote-box__title" data-i18n="tours.quote.title">Precio según tu grupo</p>
-                <p class="quote-box__text" data-i18n="tours.quote.text">Escríbenos cuántos son y la fecha de tu crucero, y te enviamos el precio por WhatsApp.</p>
-              </div>
+              <table class="prices" data-prices="buggy" data-pricing="vehicle" data-deposit-percent="50">
+                <caption class="visually-hidden" data-i18n="tours.buggy.caption">Precio por vehículo de Buggies y ATV según cuántos vehículos reserva el grupo</caption>
+                <thead>
+                  <tr><th scope="col" data-i18n="price.vehicle">Vehículo</th><th scope="col" data-min="1" data-max="2" data-i18n="price.v1">1 a 2 vehículos</th><th scope="col" data-min="3" data-i18n="price.v2">3 o más</th></tr>
+                </thead>
+                <tbody>
+                  <tr data-option="atv" data-seats="1"><th scope="row"><span data-i18n="tours.buggy.atv">ATV sencillo</span> <span class="prices__seats" data-i18n="price.seats1">1 persona</span></th><td>US$90</td><td>US$75</td></tr>
+                  <tr data-option="atv-double" data-seats="2"><th scope="row"><span data-i18n="tours.buggy.atv-double">ATV doble</span> <span class="prices__seats" data-i18n="price.seats2">2 personas</span></th><td>US$100</td><td>US$85</td></tr>
+                  <tr data-option="buggy" data-seats="2"><th scope="row"><span data-i18n="tours.buggy.buggy">Buggy</span> <span class="prices__seats" data-i18n="price.seats2">2 personas</span></th><td>US$120</td><td>US$100</td></tr>
+                  <tr data-option="buggy-family" data-seats="4"><th scope="row"><span data-i18n="tours.buggy.buggy-family">Buggy familiar</span> <span class="prices__seats" data-i18n="price.seats4">4 personas</span></th><td>US$160</td><td>US$140</td></tr>
+                </tbody>
+              </table>
+              <ul class="includes" aria-label="Incluye" data-i18n-aria-label="tours.includes">
+                <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="tours.buggy.inc1">Transporte ida y vuelta desde el puerto</span></li>
+                <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="tours.buggy.inc2">2 horas de recorrido en ATV o buggy</span></li>
+                <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="tours.buggy.inc3">Parada en la playa (10–15 min)</span></li>
+                <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="tours.buggy.inc4">Parada en una casa típica: café, chocolate y cigarro (10–15 min)</span></li>
+              </ul>
               <div class="tour-card__actions">
-                <a class="btn btn--sun" href="#booking" data-book="buggy" data-i18n="tours.ask">Consultar precio</a>
+                <a class="btn btn--sun" href="#booking" data-book="buggy" data-i18n="tours.book">Reservar este tour</a>
                 <p class="tour-card__note" data-i18n="tours.deposit">Se reserva con el 50% del total.</p>
               </div>
             </div>
@@ -642,7 +660,7 @@
               </h3>
               <div class="faq__panel" id="faq-a3" role="region" aria-labelledby="faq-q3">
                 <div class="faq__panel-inner">
-                  <p class="faq__answer" data-i18n="faq.3.a">El precio por persona depende de cuántos viajan juntos: de 1 a 2, de 3 a 5, de 6 a 14 o de 15 a 50 personas. Mientras más grande el grupo, menos paga cada uno. Los catamaranes y yates son distintos: se alquila el barco completo por un precio fijo para hasta 15 o 20 personas, según el barco, y cada persona adicional paga un extra.</p>
+                  <p class="faq__answer" data-i18n="faq.3.a">El precio por persona depende de cuántos viajan juntos: de 1 a 2, de 3 a 5, de 6 a 14 o de 15 a 50 personas. Mientras más grande el grupo, menos paga cada uno. Los buggies y ATV se cobran por vehículo, y salen más baratos desde 3 vehículos. Los catamaranes y yates son distintos: se alquila el barco completo por un precio fijo para hasta 15 o 20 personas, según el barco, y cada persona adicional paga un extra.</p>
                 </div>
               </div>
             </div>
