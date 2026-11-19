@@ -371,3 +371,16 @@ test('JSON-LD and llms.txt carry the buggy prices', () => {
   assert.ok(llms.includes('Single ATV (1 person): US$90 per vehicle for 1 to 2 vehicles, US$75 per vehicle for 3 or more vehicles'), llms);
   assert.ok(llms.includes('Family buggy (4 people): US$160 per vehicle'));
 });
+
+test('booking form offers the buggy vehicles in table order', () => {
+  for (const file of ['es/index.html', 'puerto-plata-catamaran/index.html']) {
+    const html = read(file);
+    const select = (html.match(/<select[^>]*id="booking-vehicle"[\s\S]*?<\/select>/) || [''])[0];
+    const values = [...select.matchAll(/value="([^"]+)"/g)].map((match) => match[1]);
+    const table = html.match(/<table[^>]*data-prices="buggy"[\s\S]*?<\/table>/)[0];
+    const rows = [...table.matchAll(/<tr data-option="([^"]+)"/g)].map((match) => match[1]);
+    assert.deepEqual(values, rows, file);
+    assert.match(html, /<div class="field" data-vehicle-field hidden>/, file);
+  }
+  assert.ok(read('index.html').includes('<option value="atv-double" data-i18n="tours.buggy.atv-double">Double ATV</option>'));
+});

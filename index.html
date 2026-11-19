@@ -1234,6 +1234,18 @@
               </select>
             </div>
 
+            <!-- Shown only for "Buggies y ATV": which vehicle (a row of the data-prices="buggy" table, same values and order).
+                 The form books ceil(people / seats) vehicles of that kind. -->
+            <div class="field" data-vehicle-field hidden>
+              <label class="field__label" for="booking-vehicle" data-i18n="booking.vehicle">Vehicle</label>
+              <select class="field__input field__input--select" id="booking-vehicle" name="vehicle">
+                <option value="atv" data-i18n="tours.buggy.atv">Single ATV</option>
+                <option value="atv-double" data-i18n="tours.buggy.atv-double">Double ATV</option>
+                <option value="buggy" data-i18n="tours.buggy.buggy">Buggy</option>
+                <option value="buggy-family" data-i18n="tours.buggy.buggy-family">Family buggy</option>
+              </select>
+            </div>
+
             <!-- Shown only for tours whose price table has a zipline column. Off by default (client's choice). -->
             <label class="switch" data-zipline-field>
               <input class="switch__input" type="checkbox" name="zipline">

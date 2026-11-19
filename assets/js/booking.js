@@ -3,8 +3,10 @@
  *
  * - The visitor picks a tour, zipline (only for tours whose table has a zipline column), the boat
  *   (only for the "catamaran or yacht" tour: each boat has its own table, data-prices="boat-<id>"),
- *   group size, date, name and optionally the ship. A live estimate shows the total and how it
- *   is made up (price per person × people, or boat price + extra people for a boat),
+ *   the vehicle (only for "Buggies & ATVs": a row of its data-pricing="vehicle" table), group size,
+ *   date, name and optionally the ship. A live estimate shows the total and how it is made up
+ *   (price per person × people, boat price + extra people for a boat, or vehicles × price per
+ *   vehicle for buggies, with as many vehicles as the group needs),
  *   read from the price tables through SitePrices (prices.js). It also shows the deposit that
  *   books the tour (a boat's fixed amount, or a share of the total for the other tours), which
  *   the WhatsApp message repeats. For a boat, the visitor can add the round-trip transport port ↔ Sosúa
@@ -30,10 +32,14 @@
   var TOUR_TIME_ZONE = 'America/Santo_Domingo';
   /** Tour whose price depends on the boat chosen in the "boat" field. */
   var BOAT_TOUR = 'catamaran';
+  /** Tour priced per vehicle: its options are the vehicles of the "vehicle" field. */
+  var VEHICLE_TOUR = 'buggy';
 
   var tourSelect = form.elements.tour;
   var boatSelect = form.elements.boat;
   var boatField = form.querySelector('[data-boat-field]');
+  var vehicleSelect = form.elements.vehicle;
+  var vehicleField = form.querySelector('[data-vehicle-field]');
   var ziplineInput = form.elements.zipline;
   var ziplineField = form.querySelector('[data-zipline-field]');
   var transferInput = form.elements.transfer;
@@ -158,10 +164,12 @@
   }
 
   /**
-   * Price column for the selected tour: "zipline" when available and switched on, else "basic".
-   * @returns {string} Option name.
+   * Price option for the selected tour: the chosen vehicle for buggies; otherwise "zipline" when
+   * available and switched on, else "basic".
+   * @returns {string} Option name (column) or vehicle id (row of a vehicle table).
    */
   function currentOption() {
+    if (tourSelect.value === VEHICLE_TOUR) return vehicleSelect.value;
     var tourOptions = window.SitePrices.options(priceTableId());
     if (tourOptions.indexOf('zipline') > -1 && ziplineInput.checked) return 'zipline';
     return tourOptions.indexOf('basic') > -1 ? 'basic' : (tourOptions[0] || 'basic');
@@ -269,13 +277,22 @@
    * Explains how a total is made up, under the estimate.
    * @param {Object} price - SitePrices.quote() result.
    * @param {number} count - Group size.
-   * @returns {string} e.g. "US$65 por persona × 8 personas", "Barco privado completo, hasta 15
-   *   personas" or "US$1,000 por el barco + 2 × US$25 por persona adicional".
+   * @returns {string} e.g. "US$65 por persona × 8 personas", "3 × Buggy · US$100 por vehículo
+   *   (5 personas)", "Barco privado completo, hasta 15 personas" or "US$1,000 por el barco + 2 ×
+   *   US$25 por persona adicional".
    */
   function priceDetail(price, count) {
     var format = window.SitePrices.format;
     if (price.perPerson !== null) {
       return format(price.perPerson) + ' ' + t('price.perPerson') + ' × ' + peopleLabel(count);
+    }
+    if (price.vehicles) {
+      return fill(t('booking.estimate.vehicle'), {
+        count: price.vehicles,
+        vehicle: vehicleSelect.options[vehicleSelect.selectedIndex].textContent.trim(),
+        price: format(price.perVehicle),
+        people: peopleLabel(count)
+      });
     }
     if (price.extraCount > 0) {
       return fill(t('booking.estimate.charterExtra'), {
@@ -331,6 +348,7 @@
    */
   function renderEstimate() {
     boatField.hidden = tourSelect.value !== BOAT_TOUR;
+    vehicleField.hidden = tourSelect.value !== VEHICLE_TOUR;
     // Only for a boat, and only when the page has the transport price table.
     transferField.hidden = tourSelect.value !== BOAT_TOUR || window.SitePrices.transferMax() === null;
     ziplineField.hidden = window.SitePrices.options(priceTableId()).indexOf('zipline') === -1;
@@ -381,6 +399,9 @@
     if (!boatField.hidden) {
       tourName += ' — ' + messageText(boatSelect.options[boatSelect.selectedIndex]);
     }
+    if (!vehicleField.hidden) {
+      tourName += ' — ' + messageText(vehicleSelect.options[vehicleSelect.selectedIndex]);
+    }
     if (!ziplineField.hidden) {
       tourName += ' (' + tm(ziplineInput.checked ? 'booking.msg.withZipline' : 'booking.msg.withoutZipline') + ')';
     }
@@ -389,20 +410,28 @@
     var priceLine = tm('booking.msg.toConfirm');
     if (result.state === 'priced' && result.price.perPerson !== null) {
       priceLine = format(result.price.perPerson) + ' ' + tm('price.perPerson') + ', ' + tm('booking.msg.total') + ' ' + format(result.price.total);
+    } else if (result.state === 'priced' && result.price.vehicles) {
+      priceLine = fill(tm('booking.msg.perVehicle'), { price: format(result.price.perVehicle), total: format(result.price.total) });
     } else if (result.state === 'priced') {
       priceLine = fill(tm('booking.msg.charter'), { total: format(totalWithTransfer(result)) });
     }
     var ship = form.elements.ship.value.trim();
+    var peopleLine = '• ' + tm('booking.msg.people') + ': ' + people();
 
     var lines = [
       tm('booking.msg.greeting'),
       '',
       '• ' + tm('booking.msg.tour') + ': ' + tourName,
       '• ' + tm('booking.msg.date') + ': ' + formatDate(dateInput.value),
-      '• ' + tm('booking.msg.people') + ': ' + people(),
+      peopleLine,
       '• ' + tm('booking.msg.price') + ': ' + priceLine,
       '• ' + tm('booking.msg.name') + ': ' + form.elements.name.value.trim()
     ];
+    if (result.state === 'priced' && result.price.vehicles) {
+      // Right after "People": how many vehicles that group books.
+      lines.splice(lines.indexOf(peopleLine) + 1, 0,
+        '• ' + tm('booking.msg.vehicles') + ': ' + result.price.vehicles);
+    }
     if (!transferField.hidden) {
       var transfer = currentTransfer(people());
       var transferText = tm('booking.msg.transferNo');
