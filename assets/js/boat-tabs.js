@@ -6,7 +6,8 @@
  * and thumbnail strip ([data-shots="id"], see gallery.js) and hides the others. Keyboard: ← / → (wrapping), Home and End.
  * The markup already shows the first boat, so nothing jumps while the page loads; without JS the
  * CSS hides the tabs and lists every panel, so the tabpanel roles are only added here. The booking
- * form is not touched here: the "Reservar este barco" links preselect the boat (booking.js).
+ * form is not touched here: each choice fires a bubbling "boat-select" event (detail.id = boat id)
+ * that booking.js follows, and the "Reservar este barco" links preselect the boat there too.
  */
 (function () {
   'use strict';
@@ -38,12 +39,14 @@
   }
 
   /**
-   * Selects a boat: updates the tabs (aria-selected, roving tabindex), panel and photo.
+   * Selects a boat: updates the tabs (aria-selected, roving tabindex), panel and photo, and tells the
+   * booking form (the "boat-select" event) when the visitor made the choice.
    * @param {HTMLElement} tab - Tab to select.
    * @param {boolean} moveFocus - Also move keyboard focus to the tab (keyboard navigation).
+   * @param {boolean} byVisitor - The visitor chose it (click or key), not the initial setup.
    * @returns {void}
    */
-  function select(tab, moveFocus) {
+  function select(tab, moveFocus, byVisitor) {
     var id = tab.getAttribute('data-boat-tab');
     tabs.forEach(function (other) {
       var active = other === tab;
@@ -54,11 +57,14 @@
     showOnly(photos, 'data-photos', id);
     showOnly(strips, 'data-shots', id);
     if (moveFocus) tab.focus();
+    if (byVisitor && typeof window.CustomEvent === 'function') {
+      tablist.dispatchEvent(new CustomEvent('boat-select', { bubbles: true, detail: { id: id } }));
+    }
   }
 
   tablist.addEventListener('click', function (event) {
     var tab = event.target.closest('[data-boat-tab]');
-    if (tab) select(tab, false);
+    if (tab) select(tab, false, true);
   });
 
   tablist.addEventListener('keydown', function (event) {
@@ -70,7 +76,7 @@
     else if (STEP[event.key]) next = (index + STEP[event.key] + tabs.length) % tabs.length;
     else return;
     event.preventDefault();
-    select(tabs[next], true);
+    select(tabs[next], true, true);
   });
 
   // Panels become tabpanels only now that their tabs work (without JS they are a plain list).
@@ -80,5 +86,5 @@
   });
 
   // Start from whatever the markup marks as selected (the first boat).
-  select(tabs.filter(function (tab) { return tab.getAttribute('aria-selected') === 'true'; })[0] || tabs[0], false);
+  select(tabs.filter(function (tab) { return tab.getAttribute('aria-selected') === 'true'; })[0] || tabs[0], false, false);
 })();

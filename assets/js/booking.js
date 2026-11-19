@@ -457,6 +457,19 @@
     preselect(tourId || (holder && holder.getAttribute('data-default-tour')), boatId);
   }
 
+  // The Boat field follows the boat the visitor is looking at in the picker (boat-tabs.js fires
+  // "boat-select"), until the visitor picks a boat in the field themselves.
+  var boatChosenInForm = false;
+  boatSelect.addEventListener('change', function () {
+    boatChosenInForm = true;
+  });
+  document.addEventListener('boat-select', function (event) {
+    var boatId = event.detail && event.detail.id;
+    if (boatChosenInForm || !hasOption(boatSelect, boatId)) return;
+    boatSelect.value = boatId;
+    renderEstimate();
+  });
+
   // "Book this tour" / "Book this boat" buttons preselect their tour (and boat); the link itself
   // then scrolls to the form.
   document.addEventListener('click', function (event) {
