@@ -19,7 +19,8 @@ const SITE = {
   priceRange: 'US$12–US$1,300',
   sameAs: [],
   knowsLanguage: ['es', 'en'],
-  areaServed: ['Puerto Plata', 'Amber Cove Cruise Port', 'Taíno Bay Cruise Port']
+  areaServed: ['Puerto Plata', 'Amber Cove Cruise Port', 'Taíno Bay Cruise Port'],
+  languages: ['en', 'es', 'fr', 'it']
 };
 const TOURS = [
   {
@@ -61,7 +62,7 @@ function nodes(graph, type) {
  */
 function homeGraph() {
   return buildGraph({
-    origin: ORIGIN, site: SITE, lang: 'en', url: `${ORIGIN}/`, pageType: 'home',
+    origin: ORIGIN, site: SITE, lang: 'en', url: `${ORIGIN}/`, homeUrl: `${ORIGIN}/`, pageType: 'home',
     title: 'Puerto Plata Cruise Excursions', description: 'Shore excursions.', audience: 'Cruise passengers',
     tours: TOURS, faq: FAQ
   });
@@ -74,10 +75,10 @@ function homeGraph() {
  */
 function portGraph(geo) {
   return buildGraph({
-    origin: ORIGIN, site: SITE, lang: 'en', url: `${ORIGIN}/amber-cove-excursions/`, pageType: 'port',
+    origin: ORIGIN, site: SITE, lang: 'en', url: `${ORIGIN}/amber-cove-excursions/`, homeUrl: `${ORIGIN}/`, pageType: 'port',
     title: 'Amber Cove Shore Excursions', description: 'Tours from Amber Cove.', audience: 'Cruise passengers',
     tours: TOURS, faq: FAQ,
-    port: { id: 'amber-cove', name: 'Amber Cove Cruise Port', geo, homeUrl: `${ORIGIN}/`, homeName: 'Home', pageName: 'Amber Cove Shore Excursions' }
+    port: { id: 'amber-cove', name: 'Amber Cove Cruise Port', geo, homeName: 'Home', pageName: 'Amber Cove Shore Excursions' }
   });
 }
 
@@ -89,6 +90,7 @@ test('home graph has the business, the site, one trip per tour and the FAQ', () 
   assert.equal(business.address.addressCountry, 'DO');
   assert.equal(business.telephone, '+1-829-627-7733');
   assert.equal(nodes(graph, 'WebSite')[0]['@id'], `${ORIGIN}/#website`);
+  assert.deepEqual(nodes(graph, 'WebSite')[0].inLanguage, SITE.languages);
   const [page] = nodes(graph, 'WebPage');
   assert.equal(page.url, `${ORIGIN}/`);
   assert.equal(page.inLanguage, 'en');
@@ -129,10 +131,10 @@ test('port graph has the terminal, breadcrumbs and tour list', () => {
 test('tour graph has one trip, breadcrumbs and the FAQ', () => {
   const url = `${ORIGIN}/puerto-plata-catamaran/`;
   const graph = buildGraph({
-    origin: ORIGIN, site: SITE, lang: 'en', url, pageType: 'tour',
+    origin: ORIGIN, site: SITE, lang: 'en', url, homeUrl: `${ORIGIN}/`, pageType: 'tour',
     title: 'Private Catamaran Charters', description: 'Six private boats.', audience: 'Cruise passengers',
     tours: TOURS, faq: FAQ,
-    tourPage: { id: 'city', homeUrl: `${ORIGIN}/`, homeName: 'Home', pageName: 'Puerto Plata City Tour' }
+    tourPage: { id: 'city', homeName: 'Home', pageName: 'Puerto Plata City Tour' }
   });
   const trips = nodes(graph, 'TouristTrip');
   assert.equal(trips.length, 1);
@@ -145,4 +147,16 @@ test('tour graph has one trip, breadcrumbs and the FAQ', () => {
   assert.deepEqual(crumbs.itemListElement.map((item) => item.item), [`${ORIGIN}/`, url]);
   assert.equal(nodes(graph, 'FAQPage').length, 1);
   assert.equal(nodes(graph, 'BoatTerminal').length, 0);
+});
+
+test('ids: the site is one node in every language, a trip has one id per language', () => {
+  const spanish = buildGraph({
+    origin: ORIGIN, site: SITE, lang: 'es', url: `${ORIGIN}/es/`, homeUrl: `${ORIGIN}/es/`, pageType: 'home',
+    title: 'Excursiones en Puerto Plata', description: 'Excursiones.', audience: 'Pasajeros de crucero',
+    tours: TOURS, faq: FAQ
+  });
+  assert.deepEqual(nodes(spanish, 'WebSite'), nodes(homeGraph(), 'WebSite'));
+  assert.deepEqual(nodes(spanish, 'TravelAgency'), nodes(homeGraph(), 'TravelAgency'));
+  assert.equal(nodes(spanish, 'TouristTrip')[0]['@id'], `${ORIGIN}/es/#tour-damajagua`);
+  assert.equal(nodes(spanish, 'WebPage')[0].inLanguage, 'es');
 });

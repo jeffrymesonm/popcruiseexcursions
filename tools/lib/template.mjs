@@ -7,7 +7,8 @@
  * - {{name}} / {{name:arg}} are filled per page and language by the build (see tools/build.mjs);
  * - data-template-only marks tags that exist only in the template (its noindex meta);
  * - data-lang-script="xx" marks scripts that only the page in language xx loads.
- * It also writes the relative paths that let one template serve pages at different folder depths.
+ * It also writes the relative paths that let one template serve pages at different folder depths, and
+ * the ?v= versions of local scripts and stylesheets (cache-busting).
  */
 
 /** {{include:<file>}} — 1 = file name. */
@@ -65,6 +66,31 @@ export function prefixAssetPaths(html, prefix) {
     .replace(/(\s(?:src|href|poster)=")assets\//g, (match, start) => `${start}${prefix}assets/`)
     .replace(/(\ssrcset=")([^"]*)(")/g, (match, start, value, end) =>
       start + value.replace(/(^|,\s*)assets\//g, (candidate, separator) => `${separator}${prefix}assets/`) + end);
+}
+
+/**
+ * Cache-busting: appends "?v=<version>" to the src of every <script> and the href of every <link>
+ * (stylesheets, preloads) that points to a local .js or .css file under assets/, so a deploy never
+ * mixes new pages with old cached scripts and styles. URLs that already carry a query or a hash, images
+ * and external URLs are left as they are. Runs before prefixAssetPaths (paths still start with "assets/").
+ * @param {string} html - Markup.
+ * @param {(assetPath: string) => string|null} versionOf - Version of a file ("assets/js/i18n.js"), or
+ *   null when the file does not exist (the reference is then left as is and reported).
+ * @returns {{html: string, missing: string[]}} Versioned markup, and the referenced files that do not
+ *   exist (sorted, unique).
+ */
+export function versionAssetUrls(html, versionOf) {
+  const missing = new Set();
+  const output = html.replace(/<(?:script|link)\b[^>]*>/g, (tag) =>
+    tag.replace(/(\s(?:src|href)=")(assets\/[^"?#]+\.(?:js|css))"/, (match, start, assetPath) => {
+      const version = versionOf(assetPath);
+      if (version === null) {
+        missing.add(assetPath);
+        return match;
+      }
+      return `${start}${assetPath}?v=${version}"`;
+    }));
+  return { html: output, missing: [...missing].sort() };
 }
 
 /**

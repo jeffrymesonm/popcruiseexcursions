@@ -4,17 +4,23 @@
  * port pages, the cruise terminal, breadcrumbs and the list of tours from that port; on a tour page
  * (the catamaran page), only that tour, breadcrumbs and the FAQ.
  * Never emits ratings or reviews: the business has no published reviews yet.
+ *
+ * @id rule: an id that repeats on several pages always carries the same content. The business, the site
+ * (its inLanguage lists every language it is published in) and the cruise terminals read the same in every
+ * language, so they share one id; a trip is described in the page language, so its id is its card on the
+ * home page of that language ("https://…/#tour-city" in English, "https://…/es/#tour-city" in Spanish).
  */
 
 /**
  * @typedef {{name: string, origin: string, phone: string, email: string, whatsappUrl: string,
  *   logo: string, image: string, priceRange: string, sameAs: string[], knowsLanguage: string[],
- *   areaServed: string[], paymentAccepted?: string[]}} SiteInfo
+ *   areaServed: string[], paymentAccepted?: string[], languages: string[]}} SiteInfo
+ *   knowsLanguage = languages the team speaks; languages = languages the website is published in.
  * @typedef {{id: string, name: string, description: string, image: string, url: string,
  *   offer: {low: number, high: number, count: number}|null, stops?: string[]}} TourData
  * @typedef {{id: string, name: string, geo: {latitude: number, longitude: number}|null,
- *   homeUrl: string, homeName: string, pageName: string}} PortData
- * @typedef {{id: string, homeUrl: string, homeName: string, pageName: string}} TourPageData
+ *   homeName: string, pageName: string}} PortData
+ * @typedef {{id: string, homeName: string, pageName: string}} TourPageData
  *   A page about one tour: id = its TOURS id; the other fields feed the breadcrumbs.
  */
 
@@ -67,16 +73,27 @@ function businessNode(origin, site) {
 }
 
 /**
+ * @id of a trip in one language: its card on the home page of that language.
+ * @param {string} homeUrl - Home page URL in the page language.
+ * @param {string} tourId - TOURS id.
+ * @returns {string} E.g. "https://popcruiseexcursions.com/es/#tour-city".
+ */
+function tripId(homeUrl, tourId) {
+  return `${homeUrl}#tour-${tourId}`;
+}
+
+/**
  * One tour as a TouristTrip, with its price range and, for the city tour, its stops.
  * @param {string} origin - Site origin.
+ * @param {string} homeUrl - Home page URL in the page language (base of the trip's @id).
  * @param {TourData} tour - Tour data in the page language.
  * @param {string} audience - Who the trip is for, in the page language.
  * @returns {object} TouristTrip node.
  */
-function tripNode(origin, tour, audience) {
+function tripNode(origin, homeUrl, tour, audience) {
   const node = {
     '@type': 'TouristTrip',
-    '@id': `${origin}/#tour-${tour.id}`,
+    '@id': tripId(homeUrl, tour.id),
     name: tour.name,
     description: tour.description,
     image: toAbsolute(origin, tour.image),
@@ -143,11 +160,12 @@ function breadcrumbNode(url, homeName, homeUrl, pageName) {
  * Nodes that only port pages have: the terminal, the breadcrumbs and the list of tours.
  * @param {string} origin - Site origin.
  * @param {string} url - Page URL.
+ * @param {string} homeUrl - Home page URL in the page language.
  * @param {PortData} port - Port data in the page language.
  * @param {TourData[]} tours - Tours offered from the port.
  * @returns {object[]} BoatTerminal, BreadcrumbList and ItemList nodes.
  */
-function portNodes(origin, url, port, tours) {
+function portNodes(origin, url, homeUrl, port, tours) {
   const terminal = {
     '@type': 'BoatTerminal',
     '@id': `${origin}/#port-${port.id}`,
@@ -157,7 +175,7 @@ function portNodes(origin, url, port, tours) {
   if (port.geo) terminal.geo = { '@type': 'GeoCoordinates', latitude: port.geo.latitude, longitude: port.geo.longitude };
   return [
     terminal,
-    breadcrumbNode(url, port.homeName, port.homeUrl, port.pageName),
+    breadcrumbNode(url, port.homeName, homeUrl, port.pageName),
     {
       '@type': 'ItemList',
       '@id': `${url}#tours`,
@@ -175,18 +193,21 @@ function portNodes(origin, url, port, tours) {
  * JSON-LD graph for one page version.
  * Home: every tour as a TouristTrip. Port: terminal, breadcrumbs and tour list. Tour: only the tour
  * named by tourPage.id (the page is about that trip) and breadcrumbs.
- * @param {{origin: string, site: SiteInfo, lang: string, url: string, pageType: 'home'|'port'|'tour',
- *   title: string, description: string, audience: string, tours: TourData[],
+ * @param {{origin: string, site: SiteInfo, lang: string, url: string, homeUrl: string,
+ *   pageType: 'home'|'port'|'tour', title: string, description: string, audience: string, tours: TourData[],
  *   faq: Array<{q: string, a: string}>, port?: PortData, tourPage?: TourPageData}} input
+ *   homeUrl = home page URL in the page language (breadcrumbs and trip ids).
  * @returns {{'@context': string, '@graph': object[]}} The graph.
  */
-export function buildGraph({ origin, site, lang, url, pageType, title, description, audience, tours, faq, port, tourPage }) {
+export function buildGraph({
+  origin, site, lang, url, homeUrl, pageType, title, description, audience, tours, faq, port, tourPage
+}) {
   const isPort = pageType === 'port' && port;
   const isTour = pageType === 'tour' && tourPage;
-  const tripId = isTour ? `${origin}/#tour-${tourPage.id}` : null;
+  const pageTripId = isTour ? tripId(homeUrl, tourPage.id) : null;
   let about = `${origin}/#org`;
   if (isPort) about = `${origin}/#port-${port.id}`;
-  if (isTour) about = tripId;
+  if (isTour) about = pageTripId;
   const page = {
     '@type': 'WebPage',
     '@id': `${url}#webpage`,
@@ -201,20 +222,20 @@ export function buildGraph({ origin, site, lang, url, pageType, title, descripti
   if (isPort) {
     page.breadcrumb = { '@id': `${url}#breadcrumb` };
     page.mainEntity = { '@id': `${url}#tours` };
-    pageNodes = portNodes(origin, url, port, tours);
+    pageNodes = portNodes(origin, url, homeUrl, port, tours);
   } else if (isTour) {
     page.breadcrumb = { '@id': `${url}#breadcrumb` };
-    page.mainEntity = { '@id': tripId };
+    page.mainEntity = { '@id': pageTripId };
     pageNodes = [
-      ...tours.filter((tour) => tour.id === tourPage.id).map((tour) => tripNode(origin, tour, audience)),
-      breadcrumbNode(url, tourPage.homeName, tourPage.homeUrl, tourPage.pageName)
+      ...tours.filter((tour) => tour.id === tourPage.id).map((tour) => tripNode(origin, homeUrl, tour, audience)),
+      breadcrumbNode(url, tourPage.homeName, homeUrl, tourPage.pageName)
     ];
   } else {
-    pageNodes = tours.map((tour) => tripNode(origin, tour, audience));
+    pageNodes = tours.map((tour) => tripNode(origin, homeUrl, tour, audience));
   }
   const graph = [
     businessNode(origin, site),
-    { '@type': 'WebSite', '@id': `${origin}/#website`, url: `${origin}/`, name: site.name, inLanguage: lang, publisher: { '@id': `${origin}/#org` } },
+    { '@type': 'WebSite', '@id': `${origin}/#website`, url: `${origin}/`, name: site.name, inLanguage: site.languages, publisher: { '@id': `${origin}/#org` } },
     page,
     ...pageNodes
   ];

@@ -1,6 +1,7 @@
 /**
  * template.test.mjs — Tests for the template engine (tools/lib/template.mjs): includes, placeholders,
- * asset paths, template-only tags, per-language scripts and relative links between site URLs.
+ * asset paths, script/stylesheet versions, template-only tags, per-language scripts and relative links
+ * between site URLs.
  * Run with: node --test "tools/test/*.test.mjs"
  */
 import { test } from 'node:test';
@@ -12,7 +13,8 @@ import {
   stripTemplateOnly,
   selectLangScripts,
   relativeUrl,
-  rootPrefix
+  rootPrefix,
+  versionAssetUrls
 } from '../lib/template.mjs';
 
 test('applyIncludes inlines partials', () => {
@@ -85,4 +87,31 @@ test('prefixAssetPaths prefixes a video poster too', () => {
     prefixAssetPaths('<video poster="assets/img/a.webp"><source src="assets/video/a.mp4"></video>', '../'),
     '<video poster="../assets/img/a.webp"><source src="../assets/video/a.mp4"></video>'
   );
+});
+
+test('versionAssetUrls versions local scripts and stylesheets only', () => {
+  const versions = { 'assets/js/i18n.js': 'aaaa1111', 'assets/css/styles.css': 'bbbb2222' };
+  const html = [
+    '<script src="assets/js/i18n.js" defer></script>',
+    '<link rel="stylesheet" href="assets/css/styles.css">',
+    '<link rel="preload" as="script" href="assets/js/i18n.js">',
+    '<link rel="preload" as="image" href="assets/img/hero.webp">',
+    '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter">',
+    '<script src="assets/js/i18n.js?v=keep" defer></script>',
+    '<a href="assets/js/i18n.js">source</a>',
+    '<script src="assets/js/gone.js"></script>'
+  ].join('\n');
+  const result = versionAssetUrls(html, (assetPath) => versions[assetPath] || null);
+  const lines = result.html.split('\n');
+  assert.equal(lines[0], '<script src="assets/js/i18n.js?v=aaaa1111" defer></script>');
+  assert.equal(lines[1], '<link rel="stylesheet" href="assets/css/styles.css?v=bbbb2222">');
+  assert.equal(lines[2], '<link rel="preload" as="script" href="assets/js/i18n.js?v=aaaa1111">');
+  assert.deepEqual(lines.slice(3, 7), html.split('\n').slice(3, 7), 'images, external URLs, existing queries and links stay');
+  assert.equal(lines[7], '<script src="assets/js/gone.js"></script>');
+  assert.deepEqual(result.missing, ['assets/js/gone.js']);
+});
+
+test('versioned URLs still get the sub-folder prefix', () => {
+  const versioned = versionAssetUrls('<script src="assets/js/i18n.js"></script>', () => 'aaaa1111').html;
+  assert.equal(prefixAssetPaths(versioned, '../../'), '<script src="../../assets/js/i18n.js?v=aaaa1111"></script>');
 });

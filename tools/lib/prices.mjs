@@ -23,7 +23,10 @@
 /**
  * @typedef {{min: number|null, max: number|null, charge: 'flat'|'extra'|null, option: string|null,
  *   seats: number|null, nameKey: string|null, cells: Array<number|null>}} PriceRow
- *   option / seats / nameKey are only set on the rows of vehicle tables.
+ *   option / seats are the row's data-option / data-seats (only vehicle rows carry them; null elsewhere).
+ *   nameKey is read on every row: the first data-i18n key inside the row's first <th> (on the <th> itself
+ *   or on a tag nested in it), null when it has none. On vehicle rows it names the vehicle; on other rows
+ *   it is the row label ("price.g1" on per-person rows, "price.to" on "1 to 15" charter rows).
  * @typedef {{min: number|null, max: number|null}} PriceColumn - Range of vehicles a price column covers.
  * @typedef {{id: string, tour: string|null, pricing: 'person'|'charter'|'transfer'|'vehicle', deposit: number|null,
  *   depositPercent: number|null, options: string[], optionKeys: Array<string|null>, columns: PriceColumn[],
@@ -131,16 +134,25 @@ export function formTablesHtml(html) {
 }
 
 /**
- * Prices a scope can be booked at: every cell of its non-extra rows (transfer tables are add-ons).
+ * Tables a scope can be booked with (transfer tables are add-ons, never part of a scope).
+ * @param {PriceTable[]} tables - Parsed tables.
+ * @param {string} scope - Table id (data-prices), group (data-tour) or "all" (per-person tours only).
+ * @returns {PriceTable[]} The tables, in document order.
+ */
+function scopeTables(tables, scope) {
+  return scope === 'all'
+    ? tables.filter((table) => table.pricing === 'person')
+    : tables.filter((table) => table.pricing !== 'transfer' && (table.id === scope || table.tour === scope));
+}
+
+/**
+ * Prices a scope can be booked at: every cell of its non-extra rows.
  * @param {PriceTable[]} tables - Parsed tables.
  * @param {string} scope - Table id (data-prices), group (data-tour) or "all" (per-person tours only).
  * @returns {number[]} The amounts, in table order.
  */
 function scopePrices(tables, scope) {
-  const inScope = scope === 'all'
-    ? tables.filter((table) => table.pricing === 'person')
-    : tables.filter((table) => table.pricing !== 'transfer' && (table.id === scope || table.tour === scope));
-  return inScope.flatMap((table) => table.rows
+  return scopeTables(tables, scope).flatMap((table) => table.rows
     .filter((row) => row.charge !== 'extra')
     .flatMap((row) => row.cells.filter((cell) => cell !== null)));
 }
@@ -175,6 +187,18 @@ export function maxPrice(tables, scope) {
  */
 export function priceCount(tables, scope) {
   return scopePrices(tables, scope).length;
+}
+
+/**
+ * Pricing model of a scope (what one of its prices buys: a person, a whole boat, a vehicle).
+ * @param {PriceTable[]} tables - Parsed tables.
+ * @param {string} scope - Table id, data-tour group or "all".
+ * @returns {'person'|'charter'|'vehicle'|null} The model its bookable tables share, or null when the
+ *   scope has no table or mixes models.
+ */
+export function scopePricing(tables, scope) {
+  const models = new Set(scopeTables(tables, scope).map((table) => table.pricing));
+  return models.size === 1 ? [...models][0] : null;
 }
 
 /**

@@ -4,7 +4,9 @@
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { parsePriceTables, minPrice, maxPrice, priceCount, formatUsd, fillPriceFrom, formTablesHtml } from '../lib/prices.mjs';
+import {
+  parsePriceTables, minPrice, maxPrice, priceCount, scopePricing, formatUsd, fillPriceFrom, formTablesHtml
+} from '../lib/prices.mjs';
 
 const FIXTURE = `
 <table class="prices" data-prices="falls" data-deposit-percent="50">
@@ -132,4 +134,21 @@ test('vehicle prices count for their own scope, never for "all"', () => {
 test('formTablesHtml keeps the per-person and vehicle tables only', () => {
   const ids = formTablesHtml(FIXTURE).map((html) => html.match(/data-prices="([^"]+)"/)[1]);
   assert.deepEqual(ids, ['falls', 'quads']);
+});
+
+test('scopePricing names what one price of a scope buys', () => {
+  const tables = parsePriceTables(FIXTURE);
+  assert.equal(scopePricing(tables, 'falls'), 'person');
+  assert.equal(scopePricing(tables, 'boats'), 'charter');
+  assert.equal(scopePricing(tables, 'quads'), 'vehicle');
+  assert.equal(scopePricing(tables, 'all'), 'person');
+  assert.equal(scopePricing(tables, 'nope'), null);
+});
+
+test('nameKey is the first data-i18n of the row header, on every kind of table', () => {
+  const tables = parsePriceTables(FIXTURE);
+  assert.equal(tables.find((table) => table.id === 'quads').rows[0].nameKey, 'tours.buggy.atv');
+  assert.equal(tables.find((table) => table.id === 'boat-a').rows[0].nameKey, 'price.to');
+  assert.equal(tables.find((table) => table.id === 'falls').rows[0].nameKey, null);
+  assert.equal(tables.find((table) => table.id === 'falls').rows[0].option, null);
 });
