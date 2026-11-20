@@ -1,10 +1,9 @@
-    <!-- ============ Booking (builds a WhatsApp message; booking.js). Shared partial src/partials/booking.html, included by src/index.html and src/catamaran.html ============ -->
+    <!-- ============ Booking (builds the booking message for WhatsApp or email; booking.js). Shared partial src/partials/booking.html, included by src/index.html and src/catamaran.html ============ -->
     <section class="section" id="booking" aria-labelledby="booking-title">
       <div class="container contact__grid">
         <div class="contact__card" data-reveal>
-          <p class="tag tag--light" data-i18n="booking.tag">Reservas</p>
           <h2 class="section-head__title" id="booking-title" data-i18n="booking.title">Reserva tu excursión</h2>
-          <p class="contact__lead" data-i18n="booking.lead">Completa los datos y te abrimos WhatsApp con tu reserva lista para enviar.</p>
+          <p class="contact__lead" data-i18n="booking.lead">Completa los datos y envíanos tu reserva por WhatsApp o por correo: te la dejamos escrita y lista para enviar.</p>
 
           <form class="form" data-booking-form novalidate>
             <div class="field">
@@ -52,7 +51,7 @@
             </label>
 
             <!-- Shown only for the catamaran or yacht. Off by default: adds the round-trip transport port ↔ Sosúa
-                 (transfer table in src/partials/boats.html) to the estimate and the WhatsApp message. -->
+                 (transfer table in src/partials/boats.html) to the estimate and the booking message. -->
             <label class="switch" data-transfer-field hidden>
               <input class="switch__input" type="checkbox" name="transfer">
               <span class="switch__track" aria-hidden="true"><span class="switch__thumb"></span></span>
@@ -95,16 +94,39 @@
               <p class="estimate__deposit" data-estimate-deposit hidden></p>
             </div>
 
+            <!-- Two ways to send the same booking: WhatsApp (submit, also Enter) or email (data-booking-email holds
+                 the address booking.js writes to; keep it equal to the other mailto: links in src/). -->
             <button class="btn btn--whatsapp btn--block" type="submit">
               <svg aria-hidden="true"><use href="#icon-whatsapp"/></svg>
               <span data-i18n="booking.submit">Reservar por WhatsApp</span>
             </button>
+            <button class="btn btn--primary btn--block" type="button" data-booking-email="popcruiseexcursions@gmail.com">
+              <svg aria-hidden="true"><use href="#icon-mail"/></svg>
+              <span data-i18n="booking.submitEmail">Reservar por correo</span>
+            </button>
             <p class="form__status" role="status" aria-live="polite" data-form-status hidden></p>
           </form>
-          <p class="contact__email"><span data-i18n="booking.email">¿Prefieres correo?</span> <a href="mailto:popcruiseexcursions@gmail.com">popcruiseexcursions@gmail.com</a></p>
+          <p class="contact__email"><span data-i18n="booking.email">¿Más información o alguna pregunta? Escríbenos a</span> <a href="mailto:popcruiseexcursions@gmail.com">popcruiseexcursions@gmail.com</a></p>
         </div>
+        <!-- Photo of what is being booked (booking.js): the one whose data-booking-photo is "tour:boat" or
+             "tour:vehicle", else "tour", else "default" (also the photo without JS). Hidden photos are lazy, so
+             only the one shown downloads. Same files and alt keys as the tour cards and the boat picker. -->
         <div class="contact__media" data-reveal style="--delay: 120ms">
-          <img src="assets/img/contact.webp" alt="Palmeras altas bajo un cielo azul" data-i18n-alt="booking.alt" width="1400" height="934" loading="lazy" decoding="async">
+          <img data-booking-photo="default" src="assets/img/contact.webp" alt="Palmeras altas bajo un cielo azul" data-i18n-alt="booking.alt" width="1400" height="934" loading="lazy" decoding="async">
+          <img data-booking-photo="damajagua" src="assets/img/tour-damajagua.webp" alt="Grupo con cascos nadando en una poza bajo una cascada de Damajagua" data-i18n-alt="tours.damajagua.alt" width="1024" height="1024" loading="lazy" decoding="async" hidden>
+          <img data-booking-photo="city" src="assets/img/tour-city.webp" alt="Glorieta del Parque Central de Puerto Plata" data-i18n-alt="tours.city.alt" width="1400" height="934" loading="lazy" decoding="async" hidden>
+          <img data-booking-photo="horse" src="assets/img/tour-horse.webp" alt="Grupo de turistas a caballo en la playa, con cruceros al fondo" data-i18n-alt="tours.horse.alt" width="1400" height="1050" loading="lazy" decoding="async" hidden>
+          <img data-booking-photo="buggy:atv" src="assets/img/tour-buggy-video.webp" alt="Fila de turistas en ATV por un camino de tierra entre potreros y palmas" data-i18n-alt="tours.buggy.alt" width="720" height="1280" loading="lazy" decoding="async" style="--focus: 50% 60%" hidden>
+          <img data-booking-photo="buggy:atv-double" src="assets/img/tour-buggy-atv-double.webp" alt="ATV doble gris, con asiento y respaldo para el pasajero" data-i18n-alt="tours.buggy.alt6" width="399" height="501" loading="lazy" decoding="async" style="--focus: 50% 35%" hidden>
+          <img data-booking-photo="buggy:buggy" src="assets/img/tour-buggy.webp" alt="Buggy rojo de dos plazas en una playa de arena gris" data-i18n-alt="tours.buggy.alt2" width="1280" height="852" loading="lazy" decoding="async" hidden>
+          <img data-booking-photo="buggy:buggy-family" src="assets/img/tour-buggy-family.webp" alt="Buggy familiar rojo de cuatro plazas en una playa de arena gris" data-i18n-alt="tours.buggy.alt5" width="1280" height="853" loading="lazy" decoding="async" hidden>
+          <img data-booking-photo="beach" src="assets/img/tour-beach.webp" alt="Tumbonas blancas y sombrillas verdes frente al mar en Playa Dorada" data-i18n-alt="tours.beach.alt" width="1030" height="786" loading="lazy" decoding="async" hidden>
+          <img data-booking-photo="catamaran:viking" src="assets/img/boat-viking.webp" alt="Yate Viking blanco anclado en aguas turquesa" data-i18n-alt="boats.viking.alt" width="1000" height="750" loading="lazy" decoding="async" style="--focus: 62% 50%" hidden>
+          <img data-booking-photo="catamaran:yacht-jacuzzi" src="assets/img/boat-yacht-jacuzzi.webp" alt="Yate de casco azul anclado frente a la costa" data-i18n-alt="boats.yacht-jacuzzi.alt" width="722" height="1000" loading="lazy" decoding="async" hidden>
+          <img data-booking-photo="catamaran:fp43" src="assets/img/boat-fp43.webp" alt="Catamarán blanco navegando frente a la costa de Puerto Plata, visto desde el aire" data-i18n-alt="boats.fp43.alt" width="720" height="960" loading="lazy" decoding="async" hidden>
+          <img data-booking-photo="catamaran:ocean-king" src="assets/img/boat-ocean-king.webp" alt="Catamarán de motor The Ocean King IV anclado en agua turquesa" data-i18n-alt="boats.ocean-king.alt" width="720" height="523" loading="lazy" decoding="async" style="--focus: 45% 50%" hidden>
+          <img data-booking-photo="catamaran:libreterre" src="assets/img/boat-libreterre.webp" alt="Catamarán Libreterre con tobogán, visto desde el aire en aguas cristalinas" data-i18n-alt="boats.libreterre.alt" width="828" height="824" loading="lazy" decoding="async" hidden>
+          <img data-booking-photo="catamaran:cat-jacuzzi" src="assets/img/boat-cat-jacuzzi.webp" alt="Jacuzzi en la proa del catamarán, frente al salón" data-i18n-alt="boats.cat-jacuzzi.alt" width="960" height="740" loading="lazy" decoding="async" hidden>
           <a class="contact__chip" href="https://wa.me/18296277733" target="_blank" rel="noopener" data-wa-link>
             <svg aria-hidden="true"><use href="#icon-whatsapp"/></svg>
             <span>+1 (829) 627-7733</span>

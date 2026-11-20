@@ -6,7 +6,7 @@
   Built on the "Laurel" template (landscaping-services) plus the scroll route from "La Plancha"
   (burger-restaurant), here with a little jeep driving between the tours.
   Sections: nav + full-screen menu, hero, marquee, about, adventure route, tours (stacked cards
-  with price tables), why us, call-to-action band, FAQ, WhatsApp booking form, footer.
+  with price tables), why us, call-to-action band, FAQ, booking form (WhatsApp or email), footer.
   Source: src/index.html is the template; tools/build.mjs turns it into one static page per language
   (/ = English, /es/, /fr/, /it/). The published index.html files are generated, never edit them. After any change run
   "node tools/build.mjs" and commit the results. Markers in double braces pull partials from
@@ -19,7 +19,7 @@
   prices.js and booking.js read them from there.
   Four kinds of table: per person (default), data-pricing="charter" (one per boat in the
   "catamaran or yacht" card: a flat price for the whole boat up to the "flat" row's data-max, plus
-  a price per extra person; the extra row has no data-max, so there is no group limit) and
+  a price per extra person; the extra row has no data-max, so there is no group limit),
   data-pricing="transfer" (the boats' optional round-trip transport, one price per group range: an
   add-on, never a "from" price) and data-pricing="vehicle" (Buggies & ATVs, card 04: priced per vehicle,
   turned around: one row per vehicle with data-option = its id and data-seats = people it carries, one
@@ -54,15 +54,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="../assets/css/styles.css?v=e2b7f09a">
   <title data-i18n="meta.title">Excursions à Puerto Plata depuis Amber Cove et Taíno Bay</title>
-  <meta name="description" content="Excursions pour croisiéristes à Puerto Plata : cascades de Damajagua, City Tour, journée à Playa Dorada et bateaux privés. Départ d’Amber Cove et de Taíno Bay." data-i18n-content="meta.description">
+  <meta name="description" content="Excursions pour croisiéristes à Puerto Plata : cascades de Damajagua, City Tour, journée à Playa Dorada et bateaux privés. Départ d’Amber Cove et de Taíno Bay." data-i18n-content="meta.description">
   <!-- Link preview (WhatsApp, Facebook…) uses the same title and description. Canonical, hreflang
        alternates, og:url, og:locale and the JSON-LD are written per page by tools/build.mjs. -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Puerto Plata Cruise Excursions">
   <meta property="og:title" content="Excursions à Puerto Plata depuis Amber Cove et Taíno Bay" data-i18n-content="meta.title">
-  <meta property="og:description" content="Excursions pour croisiéristes à Puerto Plata : cascades de Damajagua, City Tour, journée à Playa Dorada et bateaux privés. Départ d’Amber Cove et de Taíno Bay." data-i18n-content="meta.description">
+  <meta property="og:description" content="Excursions pour croisiéristes à Puerto Plata : cascades de Damajagua, City Tour, journée à Playa Dorada et bateaux privés. Départ d’Amber Cove et de Taíno Bay." data-i18n-content="meta.description">
   <meta property="og:image" content="https://popcruiseexcursions.com/assets/img/og-image.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -78,7 +78,7 @@
   <meta property="og:locale:alternate" content="en_US">
   <meta property="og:locale:alternate" content="es_ES">
   <meta property="og:locale:alternate" content="it_IT">
-  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TravelAgency","@id":"https://popcruiseexcursions.com/#org","name":"Puerto Plata Cruise Excursions","url":"https://popcruiseexcursions.com/","logo":"https://popcruiseexcursions.com/assets/img/logo.webp","image":"https://popcruiseexcursions.com/assets/img/og-image.jpg","telephone":"+1-829-627-7733","email":"popcruiseexcursions@gmail.com","priceRange":"US$12–US$1,300","address":{"@type":"PostalAddress","addressLocality":"Puerto Plata","addressRegion":"Puerto Plata","addressCountry":"DO"},"areaServed":[{"@type":"Place","name":"Puerto Plata"},{"@type":"Place","name":"Amber Cove Cruise Port"},{"@type":"Place","name":"Taíno Bay Cruise Port"}],"knowsLanguage":["es","en"],"contactPoint":{"@type":"ContactPoint","contactType":"reservations","telephone":"+1-829-627-7733","url":"https://wa.me/18296277733","availableLanguage":["es","en"]},"paymentAccepted":"PayPal, Zelle, Cash App"},{"@type":"WebSite","@id":"https://popcruiseexcursions.com/#website","url":"https://popcruiseexcursions.com/","name":"Puerto Plata Cruise Excursions","inLanguage":"fr","publisher":{"@id":"https://popcruiseexcursions.com/#org"}},{"@type":"WebPage","@id":"https://popcruiseexcursions.com/fr/#webpage","url":"https://popcruiseexcursions.com/fr/","name":"Excursions à Puerto Plata depuis Amber Cove et Taíno Bay","description":"Excursions pour croisiéristes à Puerto Plata : cascades de Damajagua, City Tour, journée à Playa Dorada et bateaux privés. Départ d’Amber Cove et de Taíno Bay.","inLanguage":"fr","isPartOf":{"@id":"https://popcruiseexcursions.com/#website"},"about":{"@id":"https://popcruiseexcursions.com/#org"}},{"@type":"TouristTrip","@id":"https://popcruiseexcursions.com/#tour-damajagua","name":"Cascades de Damajagua","description":"Sautez, nagez et glissez aux 27 Charcos de Damajagua, les cascades naturelles les plus célèbres de la côte nord. Ajoutez la tyrolienne et survolez la jungle.","image":"https://popcruiseexcursions.com/assets/img/tour-damajagua.webp","url":"https://popcruiseexcursions.com/fr/#tour-damajagua","touristType":"Croisiéristes","provider":{"@id":"https://popcruiseexcursions.com/#org"},"offers":{"@type":"AggregateOffer","priceCurrency":"USD","lowPrice":50,"highPrice":120,"offerCount":8}},{"@type":"TouristTrip","@id":"https://popcruiseexcursions.com/#tour-city","name":"City Tour de Puerto Plata","description":"Découvrez le meilleur de la ville avec un guide, puis profitez de temps libre à Playa Dorada.","image":"https://popcruiseexcursions.com/assets/img/tour-city.webp","url":"https://popcruiseexcursions.com/fr/#tour-city","touristType":"Croisiéristes","provider":{"@id":"https://popcruiseexcursions.com/#org"},"offers":{"@type":"AggregateOffer","priceCurrency":"USD","lowPrice":12,"highPrice":35,"offerCount":4},"itinerary":{"@type":"ItemList","itemListElement":[{"@type":"TouristAttraction","name":"Paseo Doña Blanca"},{"@type":"TouristAttraction","name":"Rue des Parapluies"},{"@type":"TouristAttraction","name":"Parc de l’Indépendance"},{"@type":"TouristAttraction","name":"Fabrique de cigares"},{"@type":"TouristAttraction","name":"Fabrique d’ambre et de larimar"},{"@type":"TouristAttraction","name":"Forteresse San Felipe"},{"@type":"TouristAttraction","name":"Playa Dorada"}]}},{"@type":"TouristTrip","@id":"https://popcruiseexcursions.com/#tour-horse","name":"Balade à cheval","description":"Une heure et demie à cheval sur la plage et dans la campagne de Puerto Plata.","image":"https://popcruiseexcursions.com/assets/img/tour-horse.webp","url":"https://popcruiseexcursions.com/fr/#tour-horse","touristType":"Croisiéristes","provider":{"@id":"https://popcruiseexcursions.com/#org"},"offers":{"@type":"AggregateOffer","priceCurrency":"USD","lowPrice":60,"highPrice":85,"offerCount":4}},{"@type":"TouristTrip","@id":"https://popcruiseexcursions.com/#tour-buggy","name":"Buggies et quads","description":"Deux heures en quad ou en buggy sur des chemins de terre, dans la boue et la campagne, avec un arrêt à la plage et un autre dans une maison typique dominicaine où vous goûtez café, chocolat et cigare.","image":"https://popcruiseexcursions.com/assets/img/tour-buggy.webp","url":"https://popcruiseexcursions.com/fr/#tour-buggy","touristType":"Croisiéristes","provider":{"@id":"https://popcruiseexcursions.com/#org"},"offers":{"@type":"AggregateOffer","priceCurrency":"USD","lowPrice":75,"highPrice":160,"offerCount":8}},{"@type":"TouristTrip","@id":"https://popcruiseexcursions.com/#tour-beach","name":"Journée plage à Playa Dorada","description":"Une journée à la plage sans souci : nous vous emmenons directement à Playa Dorada, avec parasols et transats réservés pour votre groupe, et nous vous ramenons au port avec une bonne marge.","image":"https://popcruiseexcursions.com/assets/img/tour-beach.webp","url":"https://popcruiseexcursions.com/fr/#tour-beach","touristType":"Croisiéristes","provider":{"@id":"https://popcruiseexcursions.com/#org"},"offers":{"@type":"AggregateOffer","priceCurrency":"USD","lowPrice":15,"highPrice":50,"offerCount":4}},{"@type":"TouristTrip","@id":"https://popcruiseexcursions.com/#tour-catamaran","name":"Catamaran ou yacht privé","description":"Louez le bateau entier rien que pour votre groupe et naviguez le long de la côte de Puerto Plata. Choisissez parmi 4 catamarans et 2 yachts.","image":"https://popcruiseexcursions.com/assets/img/boat-libreterre.webp","url":"https://popcruiseexcursions.com/fr/#tour-catamaran","touristType":"Croisiéristes","provider":{"@id":"https://popcruiseexcursions.com/#org"},"offers":{"@type":"AggregateOffer","priceCurrency":"USD","lowPrice":900,"highPrice":1300,"offerCount":6}},{"@type":"FAQPage","@id":"https://popcruiseexcursions.com/fr/#faq","mainEntity":[{"@type":"Question","name":"D’où partent les excursions ?","acceptedAnswer":{"@type":"Answer","text":"Nous venons vous chercher au port de croisière de Puerto Plata et vous y ramenons à la fin de l’excursion. Le transport aller-retour est inclus dans toutes les autres excursions ; pour les catamarans et les yachts, il est en option : ils partent de la plage de Sosúa, à 45 minutes du port d’Amber Cove et à 30 minutes de Taíno Bay, et vous pouvez ajouter le transport lors de la réservation, avec un prix selon la taille du groupe."}},{"@type":"Question","name":"Venez-vous nous chercher à Amber Cove et à Taíno Bay ?","acceptedAnswer":{"@type":"Answer","text":"Oui. Nous venons vous chercher au port où accoste votre navire, Amber Cove ou Taíno Bay, et vous y ramenons à la fin de l’excursion. Nous vous confirmons le point de rendez-vous exact sur WhatsApp lors de la réservation. Pour les catamarans et les yachts, le transport jusqu’à Sosúa est en option, avec un prix selon la taille du groupe."}},{"@type":"Question","name":"Dans quel port mon navire va-t-il accoster ?","acceptedAnswer":{"@type":"Answer","text":"C’est indiqué dans l’itinéraire de votre croisière. En général, Amber Cove accueille les navires de Carnival Corporation (Carnival, Princess, Holland America…) et Taíno Bay ceux de Royal Caribbean, Celebrity, Norwegian, MSC et d’autres compagnies. Indiquez-nous le nom de votre navire lors de la réservation et nous vérifions."}},{"@type":"Question","name":"Serai-je de retour à temps pour mon bateau ?","acceptedAnswer":{"@type":"Answer","text":"Nous organisons chaque excursion selon l’heure de départ de votre bateau. En réservant, indiquez-nous le nom de votre bateau et l’heure limite de retour à bord."}},{"@type":"Question","name":"Comment fonctionnent les prix de groupe ?","acceptedAnswer":{"@type":"Answer","text":"Le prix par personne dépend du nombre de voyageurs : de 1 à 2, de 3 à 5, de 6 à 14 ou de 15 à 50 personnes. Plus le groupe est grand, moins chacun paie. Les buggies et quads se paient par véhicule, et coûtent moins cher à partir de 3 véhicules. Les catamarans et les yachts fonctionnent autrement : vous louez le bateau entier à prix fixe jusqu’à 15 ou 20 personnes selon le bateau, et chaque personne en plus paie un supplément."}},{"@type":"Question","name":"Qu’est-ce qui est inclus dans l’excursion aux cascades de Damajagua ?","acceptedAnswer":{"@type":"Answer","text":"Le transport aller-retour, de l’eau pendant le parcours et un déjeuner buffet au restaurant des cascades. La tyrolienne est en option."}},{"@type":"Question","name":"Le déjeuner est-il inclus dans le City Tour ?","acceptedAnswer":{"@type":"Answer","text":"Non. À la fin du parcours, vous avez du temps libre à Playa Dorada, où vous pouvez déjeuner dans l’un des restaurants en bord de mer si vous le souhaitez. Le déjeuner et les boissons supplémentaires ne sont pas inclus."}},{"@type":"Question","name":"Dans quelle langue se déroulent les excursions ?","acceptedAnswer":{"@type":"Answer","text":"En espagnol et en anglais. Écrivez-nous sur WhatsApp en anglais ou en espagnol."}},{"@type":"Question","name":"Que dois-je apporter ?","acceptedAnswer":{"@type":"Answer","text":"Un maillot de bain, une serviette et de la crème solaire ; des chaussures qui peuvent être mouillées si vous allez à Damajagua ; un peu d’argent liquide en dollars pour les pourboires et les achats ; et votre carte de croisière avec une pièce d’identité avec photo pour remonter à bord."}},{"@type":"Question","name":"Quelle est votre politique d’annulation ?","acceptedAnswer":{"@type":"Answer","text":"Si vous annulez 10 jours ou plus avant la date, nous vous remboursons 100 % du montant payé. Moins de 10 jours avant, nous remboursons 50 %. Si votre navire de croisière n’arrive pas à Puerto Plata, nous vous remboursons 90 %."}}]}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TravelAgency","@id":"https://popcruiseexcursions.com/#org","name":"Puerto Plata Cruise Excursions","url":"https://popcruiseexcursions.com/","logo":"https://popcruiseexcursions.com/assets/img/logo.webp","image":"https://popcruiseexcursions.com/assets/img/og-image.jpg","telephone":"+1-829-627-7733","email":"popcruiseexcursions@gmail.com","priceRange":"US$12–US$1,300","address":{"@type":"PostalAddress","addressLocality":"Puerto Plata","addressRegion":"Puerto Plata","addressCountry":"DO"},"areaServed":[{"@type":"Place","name":"Puerto Plata"},{"@type":"Place","name":"Amber Cove Cruise Port"},{"@type":"Place","name":"Taíno Bay Cruise Port"}],"knowsLanguage":["es","en"],"contactPoint":{"@type":"ContactPoint","contactType":"reservations","telephone":"+1-829-627-7733","url":"https://wa.me/18296277733","availableLanguage":["es","en"]},"paymentAccepted":"PayPal, Zelle, Cash App"},{"@type":"WebSite","@id":"https://popcruiseexcursions.com/#website","url":"https://popcruiseexcursions.com/","name":"Puerto Plata Cruise Excursions","inLanguage":["en","es","fr","it"],"publisher":{"@id":"https://popcruiseexcursions.com/#org"}},{"@type":"WebPage","@id":"https://popcruiseexcursions.com/fr/#webpage","url":"https://popcruiseexcursions.com/fr/","name":"Excursions à Puerto Plata depuis Amber Cove et Taíno Bay","description":"Excursions pour croisiéristes à Puerto Plata : cascades de Damajagua, City Tour, journée à Playa Dorada et bateaux privés. Départ d’Amber Cove et de Taíno Bay.","inLanguage":"fr","isPartOf":{"@id":"https://popcruiseexcursions.com/#website"},"about":{"@id":"https://popcruiseexcursions.com/#org"}},{"@type":"TouristTrip","@id":"https://popcruiseexcursions.com/fr/#tour-damajagua","name":"Cascades de Damajagua","description":"Sautez, nagez et glissez aux 27 Charcos de Damajagua, les cascades naturelles les plus célèbres de la côte nord. Ajoutez la tyrolienne et survolez la jungle.","image":"https://popcruiseexcursions.com/assets/img/tour-damajagua.webp","url":"https://popcruiseexcursions.com/fr/#tour-damajagua","touristType":"Croisiéristes","provider":{"@id":"https://popcruiseexcursions.com/#org"},"offers":{"@type":"AggregateOffer","priceCurrency":"USD","lowPrice":50,"highPrice":120,"offerCount":8}},{"@type":"TouristTrip","@id":"https://popcruiseexcursions.com/fr/#tour-city","name":"City Tour de Puerto Plata","description":"Découvrez le meilleur de la ville avec un guide, puis profitez de temps libre à Playa Dorada.","image":"https://popcruiseexcursions.com/assets/img/tour-city.webp","url":"https://popcruiseexcursions.com/fr/#tour-city","touristType":"Croisiéristes","provider":{"@id":"https://popcruiseexcursions.com/#org"},"offers":{"@type":"AggregateOffer","priceCurrency":"USD","lowPrice":12,"highPrice":35,"offerCount":4},"itinerary":{"@type":"ItemList","itemListElement":[{"@type":"TouristAttraction","name":"Paseo Doña Blanca"},{"@type":"TouristAttraction","name":"Rue des Parapluies"},{"@type":"TouristAttraction","name":"Parc de l’Indépendance"},{"@type":"TouristAttraction","name":"Fabrique de cigares"},{"@type":"TouristAttraction","name":"Fabrique d’ambre et de larimar"},{"@type":"TouristAttraction","name":"Forteresse San Felipe"},{"@type":"TouristAttraction","name":"Playa Dorada"}]}},{"@type":"TouristTrip","@id":"https://popcruiseexcursions.com/fr/#tour-horse","name":"Balade à cheval","description":"Une heure et demie à cheval sur la plage et dans la campagne de Puerto Plata, jusque dans la mer.","image":"https://popcruiseexcursions.com/assets/img/tour-horse.webp","url":"https://popcruiseexcursions.com/fr/#tour-horse","touristType":"Croisiéristes","provider":{"@id":"https://popcruiseexcursions.com/#org"},"offers":{"@type":"AggregateOffer","priceCurrency":"USD","lowPrice":60,"highPrice":85,"offerCount":4}},{"@type":"TouristTrip","@id":"https://popcruiseexcursions.com/fr/#tour-buggy","name":"Buggies et quads","description":"Deux heures en quad ou en buggy sur des chemins de terre, dans la boue et la campagne, avec un arrêt à la plage et un autre dans une maison typique dominicaine où vous goûtez café, chocolat et cigare.","image":"https://popcruiseexcursions.com/assets/img/tour-buggy.webp","url":"https://popcruiseexcursions.com/fr/#tour-buggy","touristType":"Croisiéristes","provider":{"@id":"https://popcruiseexcursions.com/#org"},"offers":{"@type":"AggregateOffer","priceCurrency":"USD","lowPrice":75,"highPrice":160,"offerCount":8}},{"@type":"TouristTrip","@id":"https://popcruiseexcursions.com/fr/#tour-beach","name":"Journée plage à Playa Dorada","description":"Une journée à la plage sans souci : nous vous emmenons directement à Playa Dorada, avec parasols et transats réservés pour votre groupe, et nous vous ramenons au port avec une bonne marge.","image":"https://popcruiseexcursions.com/assets/img/tour-beach.webp","url":"https://popcruiseexcursions.com/fr/#tour-beach","touristType":"Croisiéristes","provider":{"@id":"https://popcruiseexcursions.com/#org"},"offers":{"@type":"AggregateOffer","priceCurrency":"USD","lowPrice":15,"highPrice":50,"offerCount":4}},{"@type":"TouristTrip","@id":"https://popcruiseexcursions.com/fr/#tour-catamaran","name":"Catamaran ou yacht privé","description":"Louez le bateau entier rien que pour votre groupe et naviguez le long de la côte de Puerto Plata. Choisissez parmi 4 catamarans et 2 yachts.","image":"https://popcruiseexcursions.com/assets/img/boat-libreterre.webp","url":"https://popcruiseexcursions.com/fr/#tour-catamaran","touristType":"Croisiéristes","provider":{"@id":"https://popcruiseexcursions.com/#org"},"offers":{"@type":"AggregateOffer","priceCurrency":"USD","lowPrice":900,"highPrice":1300,"offerCount":6}},{"@type":"FAQPage","@id":"https://popcruiseexcursions.com/fr/#faq","mainEntity":[{"@type":"Question","name":"D’où partent les excursions ?","acceptedAnswer":{"@type":"Answer","text":"Nous venons vous chercher au port de croisière de Puerto Plata et vous y ramenons à la fin de l’excursion. Le transport aller-retour est inclus dans toutes les autres excursions ; pour les catamarans et les yachts, il est en option : ils partent de la plage de Sosúa, à 45 minutes du port d’Amber Cove et à 30 minutes de Taíno Bay, et vous pouvez ajouter le transport lors de la réservation, avec un prix selon la taille du groupe."}},{"@type":"Question","name":"Venez-vous nous chercher à Amber Cove et à Taíno Bay ?","acceptedAnswer":{"@type":"Answer","text":"Oui. Nous venons vous chercher au port où accoste votre navire, Amber Cove ou Taíno Bay, et vous y ramenons à la fin de l’excursion. Nous vous confirmons le point de rendez-vous exact sur WhatsApp ou par e-mail lors de la réservation. Pour les catamarans et les yachts, le transport jusqu’à Sosúa est en option, avec un prix selon la taille du groupe."}},{"@type":"Question","name":"Dans quel port mon navire va-t-il accoster ?","acceptedAnswer":{"@type":"Answer","text":"C’est indiqué dans l’itinéraire de votre croisière. En général, Amber Cove accueille les navires de Carnival Corporation (Carnival, Princess, Holland America…) et Taíno Bay ceux de Royal Caribbean, Celebrity, Norwegian, MSC et d’autres compagnies. Indiquez-nous le nom de votre navire lors de la réservation et nous vérifions."}},{"@type":"Question","name":"Serai-je de retour à temps pour mon bateau ?","acceptedAnswer":{"@type":"Answer","text":"Nous organisons chaque excursion selon l’heure de départ de votre bateau. En réservant, indiquez-nous le nom de votre bateau et l’heure limite de retour à bord."}},{"@type":"Question","name":"Comment fonctionnent les prix de groupe ?","acceptedAnswer":{"@type":"Answer","text":"Le prix par personne dépend du nombre de voyageurs : de 1 à 2, de 3 à 5, de 6 à 14 ou de 15 à 50 personnes. Plus le groupe est grand, moins chacun paie. Les buggies et quads se paient par véhicule, et coûtent moins cher à partir de 3 véhicules. Les catamarans et les yachts fonctionnent autrement : vous louez le bateau entier à prix fixe jusqu’à 15 ou 20 personnes selon le bateau, et chaque personne en plus paie un supplément."}},{"@type":"Question","name":"Qu’est-ce qui est inclus dans l’excursion aux cascades de Damajagua ?","acceptedAnswer":{"@type":"Answer","text":"Le transport aller-retour, de l’eau pendant le parcours et un déjeuner buffet au restaurant des cascades. La tyrolienne est en option."}},{"@type":"Question","name":"Le déjeuner est-il inclus dans le City Tour ?","acceptedAnswer":{"@type":"Answer","text":"Non. À la fin du parcours, vous avez du temps libre à Playa Dorada, où vous pouvez déjeuner dans l’un des restaurants en bord de mer si vous le souhaitez. Le déjeuner et les boissons supplémentaires ne sont pas inclus."}},{"@type":"Question","name":"Dans quelle langue se déroulent les excursions ?","acceptedAnswer":{"@type":"Answer","text":"En espagnol et en anglais. Écrivez-nous sur WhatsApp ou par e-mail, en anglais ou en espagnol."}},{"@type":"Question","name":"Que dois-je apporter ?","acceptedAnswer":{"@type":"Answer","text":"Un maillot de bain, une serviette et de la crème solaire ; des chaussures qui peuvent être mouillées si vous allez à Damajagua ; un peu d’argent liquide en dollars pour les pourboires et les achats ; et votre carte de croisière avec une pièce d’identité avec photo pour remonter à bord."}},{"@type":"Question","name":"Quelle est votre politique d’annulation ?","acceptedAnswer":{"@type":"Answer","text":"Si vous annulez 10 jours ou plus avant la date, nous vous remboursons 100 % du montant payé. Moins de 10 jours avant, nous remboursons 50 %. Si votre navire de croisière n’arrive pas à Puerto Plata, nous vous remboursons 90 %."}},{"@type":"Question","name":"Comment payer ?","acceptedAnswer":{"@type":"Answer","text":"Vous réservez avec un acompte par PayPal, Zelle ou Cash App : 50 % du total pour les excursions, et un montant fixe pour les catamarans et les yachts (indiqué dans la fiche de chaque bateau). Vous payez le reste sur place, le jour de l’excursion."}}]}]}</script>
   <link rel="preload" as="image" href="../assets/img/hero.webp" fetchpriority="high">
 </head>
 <body>
@@ -107,6 +107,10 @@
     <symbol id="icon-quote" viewBox="0 0 24 24">
       <path d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2zM5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     </symbol>
+    <symbol id="icon-mail" viewBox="0 0 24 24">
+      <rect x="2" y="4" width="20" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
     <symbol id="icon-map-pin" viewBox="0 0 24 24">
       <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       <circle cx="12" cy="10" r="3" fill="none" stroke="currentColor" stroke-width="2"/>
@@ -133,7 +137,7 @@
   <!-- ============ Navigation ============ -->
   <header class="nav" data-nav>
     <div class="nav__inner container">
-      <a class="nav__logo" href="#top" aria-label="Puerto Plata Cruise Excursions, retour en haut" data-i18n-aria-label="nav.home">
+      <a class="nav__logo" href="#top" aria-label="Puerto Plata Cruise Excursions, page d’accueil" data-i18n-aria-label="nav.home">
         <img class="logo-badge" src="../assets/img/logo.webp" alt="" width="797" height="540" decoding="async">
       </a>
       <div class="nav__actions">
@@ -181,7 +185,6 @@
       <div class="hero__veil" aria-hidden="true"></div>
       <div class="hero__inner container">
         <div class="hero__content">
-          <p class="hero__badge" data-hero-item style="--delay: 0ms"><span class="hero__pulse" aria-hidden="true"></span><span data-i18n="hero.badge">Excursions depuis Amber Cove et Taíno Bay</span></p>
           <h1 class="hero__title" id="hero-title" data-hero-item style="--delay: 80ms">
             <span data-i18n="hero.title.1">Votre journée à terre à Puerto Plata,</span>
             <span class="hero__accent" data-i18n="hero.title.2">transformée en aventure.</span>
@@ -237,7 +240,7 @@
         <div class="about__card" data-reveal>
           <span class="about__badge" aria-hidden="true"><svg><use href="#icon-quote"/></svg></span>
           <div class="about__body">
-            <h2 class="tag tag--light" id="about-title" data-i18n="about.tag">À propos</h2>
+            <h2 class="visually-hidden" id="about-title" data-i18n="about.tag">À propos</h2>
             <figure class="about__figure">
               <blockquote class="about__quote">
                 <p data-i18n="about.quote">Nous sommes de Puerto Plata et nous connaissons chaque cascade, chaque rue et chaque plage. Nous voulons que votre journée à terre soit le meilleur souvenir de votre croisière.</p>
@@ -253,7 +256,8 @@
               <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="about.fact.1">Prise en charge à Amber Cove et à Taíno Bay</span></li>
               <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span><span data-i18n="about.fact.2">6 excursions dès</span> <span data-price-from="all">US$12</span> <span data-i18n="price.perPerson">par personne</span></span></li>
               <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="hero.card.2">Service en espagnol et en anglais</span></li>
-              <li><svg aria-hidden="true"><use href="#icon-check"/></svg><a class="about__link" href="https://wa.me/18296277733" target="_blank" rel="noopener" data-wa-link data-i18n="about.fact.4">Réservation sur WhatsApp : +1 (829) 627-7733</a></li>
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg><a class="about__link" href="https://wa.me/18296277733" target="_blank" rel="noopener" data-wa-link data-i18n="about.fact.4">Réservation sur WhatsApp : +1 (829) 627-7733</a></li>
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg><a class="about__link" href="mailto:popcruiseexcursions@gmail.com" data-i18n="about.fact.5">Réservation par e-mail : popcruiseexcursions@gmail.com</a></li>
             </ul>
           </div>
         </div>
@@ -267,9 +271,8 @@
     <section class="adventures" id="adventures" aria-labelledby="adventures-title">
       <div class="container">
         <header class="section-head section-head--dark" data-reveal>
-          <p class="tag tag--dark" data-i18n="adventures.tag">6 aventures</p>
           <h2 class="section-head__title" id="adventures-title" data-i18n="adventures.title">Choisissez votre aventure</h2>
-          <p class="section-head__lead" data-i18n="adventures.lead">Suivez la jeep : chaque arrêt est une façon différente de vivre Puerto Plata.</p>
+          <p class="section-head__lead" data-i18n="adventures.lead">Suivez la jeep : chaque arrêt est une façon différente de vivre Puerto Plata.</p>
         </header>
         <div class="route" data-route>
           <svg class="route__path" aria-hidden="true"><path data-route-path/></svg>
@@ -354,9 +357,8 @@
     <section class="section tours" id="tours" aria-labelledby="tours-title">
       <div class="container">
         <header class="section-head" data-reveal>
-          <p class="tag" data-i18n="tours.tag">Excursions et prix</p>
           <h2 class="section-head__title" id="tours-title" data-i18n="tours.title">Des prix clairs, de vraies aventures</h2>
-          <p class="section-head__lead" data-i18n="tours.lead">Prix en dollars américains, par personne ; les buggies et quads par véhicule, et les bateaux se louent entiers. Plus votre groupe est grand, plus le prix baisse.</p>
+          <p class="section-head__lead" data-i18n="tours.lead">Prix en dollars américains, par personne ; les buggies et quads par véhicule, et les bateaux se louent entiers. Plus votre groupe est grand, plus le prix baisse.</p>
         </header>
         <ol class="stack" data-stack>
 
@@ -403,7 +405,7 @@
                 <img data-photo="1" src="../assets/img/tour-damajagua.webp" alt="Groupe casqué nageant dans un bassin sous une cascade de Damajagua" data-i18n-alt="tours.damajagua.alt" width="1024" height="1024" loading="lazy" decoding="async">
                 <img data-photo="2" src="../assets/img/hero.webp" alt="Eau turquoise qui dévale le canyon rocheux de Damajagua" data-i18n-alt="tours.damajagua.alt2" width="1600" height="1065" loading="lazy" decoding="async" hidden>
                 <img data-photo="3" src="../assets/img/tour-damajagua-3.webp" alt="Touriste casqué et en gilet sur la tyrolienne au-dessus de la jungle" data-i18n-alt="tours.damajagua.alt3" width="720" height="480" loading="lazy" decoding="async" style="--focus: 30% 50%" hidden>
-                <img data-photo="4" src="../assets/img/tour-damajagua-4.webp" alt="Collage : tyrolienne, descente d’un toboggan naturel et groupe dans l’eau" data-i18n-alt="tours.damajagua.alt4" width="500" height="400" loading="lazy" decoding="async" style="--focus: 80% 50%" hidden>
+                <img data-photo="4" src="../assets/img/tour-damajagua-4.webp" alt="Collage : tyrolienne, descente d’un toboggan naturel et groupe dans l’eau" data-i18n-alt="tours.damajagua.alt4" width="500" height="400" loading="lazy" decoding="async" style="--focus: 80% 50%" hidden>
                 <span class="tour-card__kicker" data-i18n="tours.damajagua.kicker">Aventure · Nature</span>
               </div>
               <div class="thumbs" role="group" aria-label="Photos de l’excursion" data-i18n-aria-label="tours.photos" data-shots="damajagua">
@@ -479,7 +481,7 @@
               </div>
               <div>
                 <h3 class="tour-card__title" data-i18n="tours.horse.title">Balade à cheval</h3>
-                <p class="tour-card__desc" data-i18n="tours.horse.desc">Une heure et demie à cheval sur la plage et dans la campagne de Puerto Plata.</p>
+                <p class="tour-card__desc" data-i18n="tours.horse.desc">Une heure et demie à cheval sur la plage et dans la campagne de Puerto Plata, jusque dans la mer.</p>
               </div>
               <table class="prices" data-prices="horse" data-deposit-percent="50">
                 <caption class="visually-hidden" data-i18n="tours.horse.caption">Prix par personne de la balade à cheval selon la taille du groupe</caption>
@@ -543,7 +545,7 @@
                 <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="tours.buggy.inc1">Transport aller-retour depuis le port</span></li>
                 <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="tours.buggy.inc2">2 heures de balade en quad ou en buggy</span></li>
                 <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="tours.buggy.inc3">Arrêt à la plage (10–15 min)</span></li>
-                <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="tours.buggy.inc4">Arrêt dans une maison typique : café, chocolat et cigare (10–15 min)</span></li>
+                <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="tours.buggy.inc4">Arrêt dans une maison typique : café, chocolat et cigare (10–15 min)</span></li>
               </ul>
               <div class="tour-card__actions">
                 <a class="btn btn--sun" href="#booking" data-book="buggy" data-i18n="tours.book">Réserver cette excursion</a>
@@ -554,16 +556,20 @@
               <div class="tour-card__media" data-photos="buggy">
                 <video data-photo="1" muted loop playsinline preload="none" poster="../assets/img/tour-buggy-video.webp" aria-label="Une file de touristes en quad sur un chemin de terre entre prés et palmiers" data-i18n-aria-label="tours.buggy.alt" width="720" height="1280" style="--focus: 50% 60%"><source src="../assets/video/tour-buggy.mp4" type="video/mp4"></video>
                 <img data-photo="2" src="../assets/img/tour-buggy.webp" alt="Buggy rouge biplace sur une plage de sable gris" data-i18n-alt="tours.buggy.alt2" width="1280" height="852" loading="lazy" decoding="async" hidden>
-                <img data-photo="3" src="../assets/img/tour-buggy-house.webp" alt="Maison typique dominicaine en bois bleu, avec cuisine ouverte et drapeau dominicain" data-i18n-alt="tours.buggy.alt3" width="1280" height="854" loading="lazy" decoding="async" hidden>
-                <img data-photo="4" src="../assets/img/tour-buggy-cacao.webp" alt="Plateau de fèves de cacao et de grains de café, à côté de cabosses de cacao" data-i18n-alt="tours.buggy.alt4" width="1280" height="854" loading="lazy" decoding="async" hidden>
+                <img data-photo="3" src="../assets/img/tour-buggy-family.webp" alt="Buggy familial rouge à quatre places sur une plage de sable gris" data-i18n-alt="tours.buggy.alt5" width="1280" height="853" loading="lazy" decoding="async" hidden>
+                <img data-photo="4" src="../assets/img/tour-buggy-atv-double.webp" alt="Quad biplace gris, avec siège et dossier pour le passager" data-i18n-alt="tours.buggy.alt6" width="399" height="501" loading="lazy" decoding="async" style="--focus: 50% 35%" hidden>
+                <img data-photo="5" src="../assets/img/tour-buggy-house.webp" alt="Maison typique dominicaine en bois bleu, avec cuisine ouverte et drapeau dominicain" data-i18n-alt="tours.buggy.alt3" width="1280" height="854" loading="lazy" decoding="async" hidden>
+                <img data-photo="6" src="../assets/img/tour-buggy-cacao.webp" alt="Plateau de fèves de cacao et de grains de café, à côté de cabosses de cacao" data-i18n-alt="tours.buggy.alt4" width="1280" height="854" loading="lazy" decoding="async" hidden>
                 <span class="tour-card__kicker" data-i18n="tours.buggy.kicker">Adrénaline</span>
                 <button class="media-toggle" type="button" data-video-toggle aria-label="Mettre la vidéo en pause" data-i18n-aria-label="gallery.pause" hidden><svg aria-hidden="true"><use href="#icon-pause"/></svg></button>
               </div>
               <div class="thumbs" role="group" aria-label="Photos de l’excursion" data-i18n-aria-label="tours.photos" data-shots="buggy">
                 <button class="thumb thumb--video" type="button" aria-pressed="true" data-shot="1"><img src="../assets/img/tour-buggy-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 1</span></button>
                 <button class="thumb" type="button" aria-pressed="false" data-shot="2"><img src="../assets/img/tour-buggy-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 2</span></button>
-                <button class="thumb" type="button" aria-pressed="false" data-shot="3"><img src="../assets/img/tour-buggy-3-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 3</span></button>
-                <button class="thumb" type="button" aria-pressed="false" data-shot="4"><img src="../assets/img/tour-buggy-4-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 4</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="3"><img src="../assets/img/tour-buggy-family-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 3</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="4"><img src="../assets/img/tour-buggy-atv-double-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 4</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="5"><img src="../assets/img/tour-buggy-3-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 5</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="6"><img src="../assets/img/tour-buggy-4-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 6</span></button>
               </div>
             </div>
           </li>
@@ -577,7 +583,7 @@
               </div>
               <div>
                 <h3 class="tour-card__title" data-i18n="tours.beach.title">Journée plage à Playa Dorada</h3>
-                <p class="tour-card__desc" data-i18n="tours.beach.desc">Une journée à la plage sans souci : nous vous emmenons directement à Playa Dorada, avec parasols et transats réservés pour votre groupe, et nous vous ramenons au port avec une bonne marge.</p>
+                <p class="tour-card__desc" data-i18n="tours.beach.desc">Une journée à la plage sans souci : nous vous emmenons directement à Playa Dorada, avec parasols et transats réservés pour votre groupe, et nous vous ramenons au port avec une bonne marge.</p>
               </div>
               <table class="prices" data-prices="beach" data-deposit-percent="50">
                 <caption class="visually-hidden" data-i18n="tours.beach.caption">Prix par personne de la journée plage à Playa Dorada selon la taille du groupe</caption>
@@ -635,8 +641,8 @@
               <div>
                 <h3 class="tour-card__title" data-i18n="tours.catamaran.title">Catamaran ou yacht privé</h3>
                 <p class="tour-card__desc" data-i18n="tours.catamaran.desc">Louez le bateau entier rien que pour votre groupe et naviguez le long de la côte de Puerto Plata. Choisissez parmi 4 catamarans et 2 yachts.</p>
-                <p class="tour-card__place"><svg aria-hidden="true"><use href="#icon-map-pin"/></svg><span data-i18n="tours.catamaran.place">Les bateaux partent de la plage de Sosúa, à 45 minutes du port d’Amber Cove et à 30 minutes de Taíno Bay. Vous pouvez ajouter le transport aller-retour depuis le port : son prix, selon la taille du groupe, figure plus bas.</span></p>
-                <p class="boat-private" data-i18n="boats.private">Prix pour le bateau entier, pas par personne : seul votre groupe à bord, pendant 4 heures.</p>
+                <p class="tour-card__place"><svg aria-hidden="true"><use href="#icon-map-pin"/></svg><span data-i18n="tours.catamaran.place">Les bateaux partent de la plage de Sosúa, à 45 minutes du port d’Amber Cove et à 30 minutes de Taíno Bay. Vous pouvez ajouter le transport aller-retour depuis le port : son prix, selon la taille du groupe, figure plus bas.</span></p>
+                <p class="boat-private" data-i18n="boats.private">Prix pour le bateau entier, pas par personne : seul votre groupe à bord, pendant 4 heures. Le snorkeling est inclus sur tous les bateaux.</p>
               </div>
 
               <!-- Boat picker (boat-tabs.js): one tab per boat; hidden without JS, where every panel is listed. -->
@@ -677,7 +683,7 @@
               <div class="boat-panel" id="boat-viking" data-boat-panel="viking">
                 <div>
                   <h4 class="boat-panel__name">Viking 48' <span class="boat-panel__type" data-i18n="boats.type.yacht">Yacht</span></h4>
-                  <p class="boat-panel__desc" data-i18n="boats.viking.desc">Yacht de pêche sportive avec flybridge : le pont supérieur offre la plus belle vue. En bas, un salon, 2 cabines et 2 salles de bain, et le pont arrière est la zone de fête.</p>
+                  <p class="boat-panel__desc" data-i18n="boats.viking.desc">Yacht de pêche sportive avec flybridge : le pont supérieur offre la plus belle vue. En bas, un salon, 2 cabines et 2 salles de bain, et le pont arrière est la zone de fête.</p>
                 </div>
                 <ul class="boat-specs">
                   <li>48 <span data-i18n="boats.ft">pieds</span></li>
@@ -697,7 +703,7 @@
                   <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.crew">Équipage à bord</span></li>
                   <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.viking.inc2">Snacks, bière, sodas et eau</span></li>
                   <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.viking.inc3">Grill et musique Bluetooth</span></li>
-                  <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.snorkel">Arrêt snorkeling</span></li>
+                  <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.snorkel">Snorkeling inclus</span></li>
                 </ul>
                 <div class="tour-card__actions">
                   <a class="btn btn--sun" href="#booking" data-book="catamaran" data-book-boat="viking" data-i18n="boats.book">Réserver ce bateau</a>
@@ -728,6 +734,7 @@
                   <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.snacks">Fruits, nachos et salsa</span></li>
                   <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.bbq">Barbecue</span></li>
                   <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.bar">Rhum, bière, sodas, jus et eau</span></li>
+                  <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.snorkel">Snorkeling inclus</span></li>
                 </ul>
                 <div class="tour-card__actions">
                   <a class="btn btn--sun" href="#booking" data-book="catamaran" data-book-boat="yacht-jacuzzi" data-i18n="boats.book">Réserver ce bateau</a>
@@ -739,7 +746,7 @@
               <div class="boat-panel" id="boat-fp43" data-boat-panel="fp43" hidden>
                 <div>
                   <h4 class="boat-panel__name">Fountaine Pajot 43' <span class="boat-panel__type" data-i18n="boats.type.catamaran">Catamaran</span></h4>
-                  <p class="boat-panel__desc" data-i18n="boats.fp43.desc">Catamaran à voile avec filet à l’avant pour bronzer : 4 heures le long de la côte de Puerto Plata. Parfait pour un anniversaire, un petit mariage ou une journée en famille.</p>
+                  <p class="boat-panel__desc" data-i18n="boats.fp43.desc">Catamaran à voile avec filet à l’avant pour bronzer : 4 heures le long de la côte de Puerto Plata. Parfait pour un anniversaire, un petit mariage ou une journée en famille.</p>
                 </div>
                 <ul class="boat-specs">
                   <li>43 <span data-i18n="boats.ft">pieds</span></li>
@@ -759,6 +766,7 @@
                   <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.crew">Équipage à bord</span></li>
                   <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.food">Repas et boissons</span></li>
                   <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.music">Musique à bord</span></li>
+                  <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.snorkel">Snorkeling inclus</span></li>
                 </ul>
                 <div class="tour-card__actions">
                   <a class="btn btn--sun" href="#booking" data-book="catamaran" data-book-boat="fp43" data-i18n="boats.book">Réserver ce bateau</a>
@@ -770,7 +778,7 @@
               <div class="boat-panel" id="boat-ocean-king" data-boat-panel="ocean-king" hidden>
                 <div>
                   <h4 class="boat-panel__name">The Ocean King IV <span class="boat-panel__type" data-i18n="boats.type.catamaran">Catamaran</span></h4>
-                  <p class="boat-panel__desc" data-i18n="boats.ocean-king.desc">Catamaran à moteur sur deux niveaux avec terrasse en haut : beaucoup d’espace pour les grands groupes, barbecue et arrêts baignade dans une eau turquoise.</p>
+                  <p class="boat-panel__desc" data-i18n="boats.ocean-king.desc">Catamaran à moteur sur deux niveaux avec terrasse en haut : beaucoup d’espace pour les grands groupes, barbecue et arrêts baignade dans une eau turquoise.</p>
                 </div>
                 <ul class="boat-specs">
                   <li>4 <span data-i18n="boats.hours">heures</span></li>
@@ -789,6 +797,7 @@
                   <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.snacks">Fruits, nachos et salsa</span></li>
                   <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.bbq">Barbecue</span></li>
                   <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.bar">Rhum, bière, sodas, jus et eau</span></li>
+                  <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.snorkel">Snorkeling inclus</span></li>
                 </ul>
                 <div class="tour-card__actions">
                   <a class="btn btn--sun" href="#booking" data-book="catamaran" data-book-boat="ocean-king" data-i18n="boats.book">Réserver ce bateau</a>
@@ -800,7 +809,7 @@
               <div class="boat-panel" id="boat-libreterre" data-boat-panel="libreterre" hidden>
                 <div>
                   <h4 class="boat-panel__name">Libreterre · Privilege 52' <span class="boat-panel__type" data-i18n="boats.type.catamaran">Catamaran</span></h4>
-                  <p class="boat-panel__desc" data-i18n="boats.libreterre.desc">Catamaran à voile avec jacuzzi, toboggan, trampoline et pont supérieur ; 4 cabines et 4 salles de bain. Le favori des enterrements de vie de jeune fille et des anniversaires : nous vous aidons pour la décoration, le gâteau, le traiteur, les photos et la vidéo (sur demande).</p>
+                  <p class="boat-panel__desc" data-i18n="boats.libreterre.desc">Catamaran à voile avec jacuzzi, toboggan, trampoline et pont supérieur ; 4 cabines et 4 salles de bain. Le favori des enterrements de vie de jeune fille et des anniversaires : nous vous aidons pour la décoration, le gâteau, le traiteur, les photos et la vidéo (sur demande).</p>
                 </div>
                 <ul class="boat-specs">
                   <li>52 <span data-i18n="boats.ft">pieds</span></li>
@@ -820,7 +829,7 @@
                   <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.crew">Équipage à bord</span></li>
                   <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.food">Repas et boissons</span></li>
                   <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.music">Musique à bord</span></li>
-                  <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.snorkel">Arrêt snorkeling</span></li>
+                  <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.snorkel">Snorkeling inclus</span></li>
                 </ul>
                 <div class="tour-card__actions">
                   <a class="btn btn--sun" href="#booking" data-book="catamaran" data-book-boat="libreterre" data-i18n="boats.book">Réserver ce bateau</a>
@@ -849,6 +858,7 @@
                 </table>
                 <ul class="includes" aria-label="Inclus" data-i18n-aria-label="tours.includes">
                   <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.crew">Équipage à bord</span></li>
+                  <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="boats.inc.snorkel">Snorkeling inclus</span></li>
                 </ul>
                 <div class="tour-card__actions">
                   <a class="btn btn--sun" href="#booking" data-book="catamaran" data-book-boat="cat-jacuzzi" data-i18n="boats.book">Réserver ce bateau</a>
@@ -883,23 +893,31 @@
                   <img data-photo="1" src="../assets/img/boat-viking.webp" alt="Yacht Viking blanc ancré dans une eau turquoise" data-i18n-alt="boats.viking.alt" width="1000" height="750" loading="lazy" decoding="async" style="--focus: 62% 50%">
                     <img data-photo="2" src="../assets/img/boat-viking-2.webp" alt="Le yacht Viking vu par un drone, avec un groupe sur le pont arrière" data-i18n-alt="boats.viking.alt2" width="1000" height="696" loading="lazy" decoding="async" hidden>
                     <img data-photo="3" src="../assets/img/boat-viking-3.webp" alt="Couple montrant deux gros poissons à bord du yacht" data-i18n-alt="boats.viking.alt3" width="750" height="1000" loading="lazy" decoding="async" style="--focus: 50% 30%" hidden>
+                    <img data-photo="4" src="../assets/img/boat-snorkel-1.webp" alt="Personne faisant du snorkeling entourée de poissons-sergents dans une eau turquoise" data-i18n-alt="boats.snorkel.alt" width="659" height="465" loading="lazy" decoding="async" hidden>
+                    <img data-photo="5" src="../assets/img/boat-snorkel-2.webp" alt="Fillette avec un masque de snorkeling sous l’eau parmi les poissons, au-dessus du sable blanc" data-i18n-alt="boats.snorkel.alt2" width="1000" height="860" loading="lazy" decoding="async" style="--focus: 50% 40%" hidden>
                   <figcaption class="boat-photo__name">Viking 48'</figcaption>
                 </figure>
                 <figure class="boat-photo" data-photos="yacht-jacuzzi" hidden>
                   <img data-photo="1" src="../assets/img/boat-yacht-jacuzzi.webp" alt="Yacht à coque bleue ancré près de la côte" data-i18n-alt="boats.yacht-jacuzzi.alt" width="722" height="1000" loading="lazy" decoding="async">
                     <img data-photo="2" src="../assets/img/boat-yacht-jacuzzi-2.webp" alt="Jacuzzi à l’avant du yacht, avec des planches de paddle" data-i18n-alt="boats.yacht-jacuzzi.alt2" width="562" height="1000" loading="lazy" decoding="async" hidden>
                     <img data-photo="3" src="../assets/img/boat-yacht-jacuzzi-3.webp" alt="Couple dans le jacuzzi du yacht" data-i18n-alt="boats.yacht-jacuzzi.alt3" width="749" height="1000" loading="lazy" decoding="async" hidden>
+                    <img data-photo="4" src="../assets/img/boat-snorkel-1.webp" alt="Personne faisant du snorkeling entourée de poissons-sergents dans une eau turquoise" data-i18n-alt="boats.snorkel.alt" width="659" height="465" loading="lazy" decoding="async" hidden>
+                    <img data-photo="5" src="../assets/img/boat-snorkel-2.webp" alt="Fillette avec un masque de snorkeling sous l’eau parmi les poissons, au-dessus du sable blanc" data-i18n-alt="boats.snorkel.alt2" width="1000" height="860" loading="lazy" decoding="async" style="--focus: 50% 40%" hidden>
                   <figcaption class="boat-photo__name" data-i18n="boats.yacht-jacuzzi.name">Yacht avec jacuzzi</figcaption>
                 </figure>
                 <figure class="boat-photo" data-photos="fp43" hidden>
                   <img data-photo="1" src="../assets/img/boat-fp43.webp" alt="Catamaran blanc naviguant au large de Puerto Plata, vu du ciel" data-i18n-alt="boats.fp43.alt" width="720" height="960" loading="lazy" decoding="async">
                     <img data-photo="2" src="../assets/img/boat-fp43-2.webp" alt="Le catamaran vu d’en haut, en diagonale" data-i18n-alt="boats.fp43.alt2" width="562" height="1000" loading="lazy" decoding="async" hidden>
                     <img data-photo="3" src="../assets/img/boat-fp43-3.webp" alt="Le catamaran avec un groupe à bord, vu depuis une vedette" data-i18n-alt="boats.fp43.alt3" width="562" height="1000" loading="lazy" decoding="async" hidden>
+                    <img data-photo="4" src="../assets/img/boat-snorkel-1.webp" alt="Personne faisant du snorkeling entourée de poissons-sergents dans une eau turquoise" data-i18n-alt="boats.snorkel.alt" width="659" height="465" loading="lazy" decoding="async" hidden>
+                    <img data-photo="5" src="../assets/img/boat-snorkel-2.webp" alt="Fillette avec un masque de snorkeling sous l’eau parmi les poissons, au-dessus du sable blanc" data-i18n-alt="boats.snorkel.alt2" width="1000" height="860" loading="lazy" decoding="async" style="--focus: 50% 40%" hidden>
                   <figcaption class="boat-photo__name">Fountaine Pajot 43'</figcaption>
                 </figure>
                 <figure class="boat-photo" data-photos="ocean-king" hidden>
                   <img data-photo="1" src="../assets/img/boat-ocean-king.webp" alt="Le catamaran à moteur The Ocean King IV ancré dans une eau turquoise" data-i18n-alt="boats.ocean-king.alt" width="720" height="523" loading="lazy" decoding="async" style="--focus: 45% 50%">
                     <img data-photo="2" src="../assets/img/boat-ocean-king-2.webp" alt="Des gens nagent près de l’Ocean King IV dans une eau turquoise" data-i18n-alt="boats.ocean-king.alt2" width="720" height="543" loading="lazy" decoding="async" hidden>
+                    <img data-photo="3" src="../assets/img/boat-snorkel-1.webp" alt="Personne faisant du snorkeling entourée de poissons-sergents dans une eau turquoise" data-i18n-alt="boats.snorkel.alt" width="659" height="465" loading="lazy" decoding="async" hidden>
+                    <img data-photo="4" src="../assets/img/boat-snorkel-2.webp" alt="Fillette avec un masque de snorkeling sous l’eau parmi les poissons, au-dessus du sable blanc" data-i18n-alt="boats.snorkel.alt2" width="1000" height="860" loading="lazy" decoding="async" style="--focus: 50% 40%" hidden>
                   <figcaption class="boat-photo__name">The Ocean King IV</figcaption>
                 </figure>
                 <figure class="boat-photo" data-photos="libreterre" hidden>
@@ -907,6 +925,8 @@
                     <img data-photo="2" src="../assets/img/boat-libreterre-2.webp" alt="Le Libreterre de profil, avec son nom sur la coque" data-i18n-alt="boats.libreterre.alt2" width="1000" height="563" loading="lazy" decoding="async" hidden>
                     <img data-photo="3" src="../assets/img/boat-libreterre-3.webp" alt="L’arrière du Libreterre avec le toboggan" data-i18n-alt="boats.libreterre.alt3" width="1000" height="563" loading="lazy" decoding="async" hidden>
                     <img data-photo="4" src="../assets/img/boat-libreterre-4.webp" alt="Poulet et brochettes grillés à bord" data-i18n-alt="boats.libreterre.alt4" width="750" height="1000" loading="lazy" decoding="async" hidden>
+                    <img data-photo="5" src="../assets/img/boat-snorkel-1.webp" alt="Personne faisant du snorkeling entourée de poissons-sergents dans une eau turquoise" data-i18n-alt="boats.snorkel.alt" width="659" height="465" loading="lazy" decoding="async" hidden>
+                    <img data-photo="6" src="../assets/img/boat-snorkel-2.webp" alt="Fillette avec un masque de snorkeling sous l’eau parmi les poissons, au-dessus du sable blanc" data-i18n-alt="boats.snorkel.alt2" width="1000" height="860" loading="lazy" decoding="async" style="--focus: 50% 40%" hidden>
                   <figcaption class="boat-photo__name">Libreterre · Privilege 52'</figcaption>
                 </figure>
                 <figure class="boat-photo" data-photos="cat-jacuzzi" hidden>
@@ -915,6 +935,8 @@
                     <img data-photo="3" src="../assets/img/boat-cat-jacuzzi-3.webp" alt="Descente du toboggan dans la mer" data-i18n-alt="boats.cat-jacuzzi.alt3" width="1000" height="750" loading="lazy" decoding="async" hidden>
                     <img data-photo="4" src="../assets/img/boat-cat-jacuzzi-4.webp" alt="Petit mariage à l’avant du catamaran" data-i18n-alt="boats.cat-jacuzzi.alt4" width="1000" height="562" loading="lazy" decoding="async" hidden>
                     <img data-photo="5" src="../assets/img/boat-cat-jacuzzi-5.webp" alt="Groupe qui mange à bord pendant une fête" data-i18n-alt="boats.cat-jacuzzi.alt5" width="1000" height="664" loading="lazy" decoding="async" hidden>
+                    <img data-photo="6" src="../assets/img/boat-snorkel-1.webp" alt="Personne faisant du snorkeling entourée de poissons-sergents dans une eau turquoise" data-i18n-alt="boats.snorkel.alt" width="659" height="465" loading="lazy" decoding="async" hidden>
+                    <img data-photo="7" src="../assets/img/boat-snorkel-2.webp" alt="Fillette avec un masque de snorkeling sous l’eau parmi les poissons, au-dessus du sable blanc" data-i18n-alt="boats.snorkel.alt2" width="1000" height="860" loading="lazy" decoding="async" style="--focus: 50% 40%" hidden>
                   <figcaption class="boat-photo__name" data-i18n="boats.cat-jacuzzi.name">Catamaran avec jacuzzi</figcaption>
                 </figure>
                 <span class="tour-card__kicker" data-i18n="tours.catamaran.kicker">Privé · Mer</span>
@@ -924,26 +946,36 @@
                 <button class="thumb" type="button" aria-pressed="true" data-shot="1"><img src="../assets/img/boat-viking-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 1</span></button>
                 <button class="thumb" type="button" aria-pressed="false" data-shot="2"><img src="../assets/img/boat-viking-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 2</span></button>
                 <button class="thumb" type="button" aria-pressed="false" data-shot="3"><img src="../assets/img/boat-viking-3-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 3</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="4"><img src="../assets/img/boat-snorkel-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 4</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="5"><img src="../assets/img/boat-snorkel-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 5</span></button>
               </div>
               <div class="thumbs" role="group" aria-label="Photos du bateau" data-i18n-aria-label="boats.photos" data-shots="yacht-jacuzzi" hidden>
                 <button class="thumb" type="button" aria-pressed="true" data-shot="1"><img src="../assets/img/boat-yacht-jacuzzi-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 1</span></button>
                 <button class="thumb" type="button" aria-pressed="false" data-shot="2"><img src="../assets/img/boat-yacht-jacuzzi-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 2</span></button>
                 <button class="thumb" type="button" aria-pressed="false" data-shot="3"><img src="../assets/img/boat-yacht-jacuzzi-3-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 3</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="4"><img src="../assets/img/boat-snorkel-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 4</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="5"><img src="../assets/img/boat-snorkel-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 5</span></button>
               </div>
               <div class="thumbs" role="group" aria-label="Photos du bateau" data-i18n-aria-label="boats.photos" data-shots="fp43" hidden>
                 <button class="thumb" type="button" aria-pressed="true" data-shot="1"><img src="../assets/img/boat-fp43-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 1</span></button>
                 <button class="thumb" type="button" aria-pressed="false" data-shot="2"><img src="../assets/img/boat-fp43-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 2</span></button>
                 <button class="thumb" type="button" aria-pressed="false" data-shot="3"><img src="../assets/img/boat-fp43-3-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 3</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="4"><img src="../assets/img/boat-snorkel-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 4</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="5"><img src="../assets/img/boat-snorkel-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 5</span></button>
               </div>
               <div class="thumbs" role="group" aria-label="Photos du bateau" data-i18n-aria-label="boats.photos" data-shots="ocean-king" hidden>
                 <button class="thumb" type="button" aria-pressed="true" data-shot="1"><img src="../assets/img/boat-ocean-king-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 1</span></button>
                 <button class="thumb" type="button" aria-pressed="false" data-shot="2"><img src="../assets/img/boat-ocean-king-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 2</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="3"><img src="../assets/img/boat-snorkel-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 3</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="4"><img src="../assets/img/boat-snorkel-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 4</span></button>
               </div>
               <div class="thumbs" role="group" aria-label="Photos du bateau" data-i18n-aria-label="boats.photos" data-shots="libreterre" hidden>
                 <button class="thumb" type="button" aria-pressed="true" data-shot="1"><img src="../assets/img/boat-libreterre-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 1</span></button>
                 <button class="thumb" type="button" aria-pressed="false" data-shot="2"><img src="../assets/img/boat-libreterre-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 2</span></button>
                 <button class="thumb" type="button" aria-pressed="false" data-shot="3"><img src="../assets/img/boat-libreterre-3-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 3</span></button>
                 <button class="thumb" type="button" aria-pressed="false" data-shot="4"><img src="../assets/img/boat-libreterre-4-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 4</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="5"><img src="../assets/img/boat-snorkel-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 5</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="6"><img src="../assets/img/boat-snorkel-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 6</span></button>
               </div>
               <div class="thumbs" role="group" aria-label="Photos du bateau" data-i18n-aria-label="boats.photos" data-shots="cat-jacuzzi" hidden>
                 <button class="thumb" type="button" aria-pressed="true" data-shot="1"><img src="../assets/img/boat-cat-jacuzzi-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 1</span></button>
@@ -951,6 +983,8 @@
                 <button class="thumb" type="button" aria-pressed="false" data-shot="3"><img src="../assets/img/boat-cat-jacuzzi-3-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 3</span></button>
                 <button class="thumb" type="button" aria-pressed="false" data-shot="4"><img src="../assets/img/boat-cat-jacuzzi-4-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 4</span></button>
                 <button class="thumb" type="button" aria-pressed="false" data-shot="5"><img src="../assets/img/boat-cat-jacuzzi-5-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 5</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="6"><img src="../assets/img/boat-snorkel-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 6</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="7"><img src="../assets/img/boat-snorkel-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Photo</span> 7</span></button>
               </div>
             </div>
           </li>
@@ -962,7 +996,6 @@
     <section class="section why" id="why" aria-labelledby="why-title">
       <div class="container">
         <header class="section-head" data-reveal>
-          <p class="tag" data-i18n="why.tag">Pourquoi nous choisir</p>
           <h2 class="section-head__title" id="why-title" data-i18n="why.title">Votre journée à terre, sans souci</h2>
           <p class="section-head__lead" data-i18n="why.lead">Tout est organisé, vous n’avez plus qu’à profiter.</p>
         </header>
@@ -999,12 +1032,17 @@
     <section class="section" aria-labelledby="cta-title">
       <div class="container">
         <div class="trust" data-reveal>
-          <p class="tag tag--light" data-i18n="cta.tag">Puerto Plata vous attend</p>
           <h2 class="trust__title" id="cta-title" data-i18n="cta.title">Cascades, histoire et plage en une seule journée. Remontez à bord avec la plus belle histoire de la croisière.</h2>
-          <a class="btn btn--whatsapp" href="https://wa.me/18296277733" target="_blank" rel="noopener" data-wa-link>
-            <svg aria-hidden="true"><use href="#icon-whatsapp"/></svg>
-            <span data-i18n="cta.whatsapp">Écrivez-nous sur WhatsApp</span>
-          </a>
+          <div class="trust__actions">
+            <a class="btn btn--whatsapp" href="https://wa.me/18296277733" target="_blank" rel="noopener" data-wa-link>
+              <svg aria-hidden="true"><use href="#icon-whatsapp"/></svg>
+              <span data-i18n="cta.whatsapp">Écrivez-nous sur WhatsApp</span>
+            </a>
+            <a class="btn btn--primary" href="mailto:popcruiseexcursions@gmail.com">
+              <svg aria-hidden="true"><use href="#icon-mail"/></svg>
+              <span data-i18n="cta.email">Écrivez-nous par e-mail</span>
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -1014,8 +1052,7 @@
     <section class="section ports" id="ports" aria-labelledby="ports-title">
       <div class="container">
         <header class="section-head" data-reveal>
-          <p class="tag" data-i18n="ports.tag">Ports de croisière</p>
-          <h2 class="section-head__title" id="ports-title" data-i18n="ports.title">Votre navire accoste à Amber Cove ou à Taíno Bay ?</h2>
+          <h2 class="section-head__title" id="ports-title" data-i18n="ports.title">Votre navire accoste à Amber Cove ou à Taíno Bay ?</h2>
           <p class="section-head__lead" data-i18n="ports.lead">Nous venons vous chercher dans les deux ports de croisière de Puerto Plata. Découvrez que faire depuis le vôtre et le temps de trajet jusqu’à chaque excursion (pages en anglais).</p>
         </header>
         <ul class="ports__grid">
@@ -1041,7 +1078,6 @@
     <section class="section" id="faq" aria-labelledby="faq-title">
       <div class="container">
         <header class="section-head" data-reveal>
-          <p class="tag" data-i18n="faq.tag">FAQ</p>
           <h2 class="section-head__title" id="faq-title" data-i18n="faq.title">Questions fréquentes</h2>
           <p class="section-head__lead" data-i18n="faq.lead">Ce que tout croisiériste demande avant de réserver.</p>
         </header>
@@ -1050,33 +1086,33 @@
             <div class="faq__item" data-faq-item>
               <h3 class="faq__question">
                 <button class="faq__trigger" type="button" id="faq-q1" aria-expanded="false" aria-controls="faq-a1" data-faq-trigger>
-                  <span data-i18n="faq.1.q">D’où partent les excursions ?</span>
+                  <span data-i18n="faq.1.q">D’où partent les excursions ?</span>
                   <span class="faq__icon" aria-hidden="true"><svg><use href="#icon-plus"/></svg></span>
                 </button>
               </h3>
               <div class="faq__panel" id="faq-a1" role="region" aria-labelledby="faq-q1">
                 <div class="faq__panel-inner">
-                  <p class="faq__answer" data-i18n="faq.1.a">Nous venons vous chercher au port de croisière de Puerto Plata et vous y ramenons à la fin de l’excursion. Le transport aller-retour est inclus dans toutes les autres excursions ; pour les catamarans et les yachts, il est en option : ils partent de la plage de Sosúa, à 45 minutes du port d’Amber Cove et à 30 minutes de Taíno Bay, et vous pouvez ajouter le transport lors de la réservation, avec un prix selon la taille du groupe.</p>
+                  <p class="faq__answer" data-i18n="faq.1.a">Nous venons vous chercher au port de croisière de Puerto Plata et vous y ramenons à la fin de l’excursion. Le transport aller-retour est inclus dans toutes les autres excursions ; pour les catamarans et les yachts, il est en option : ils partent de la plage de Sosúa, à 45 minutes du port d’Amber Cove et à 30 minutes de Taíno Bay, et vous pouvez ajouter le transport lors de la réservation, avec un prix selon la taille du groupe.</p>
                 </div>
               </div>
             </div>
             <div class="faq__item" data-faq-item>
               <h3 class="faq__question">
                 <button class="faq__trigger" type="button" id="faq-q8" aria-expanded="false" aria-controls="faq-a8" data-faq-trigger>
-                  <span data-i18n="faq.8.q">Venez-vous nous chercher à Amber Cove et à Taíno Bay ?</span>
+                  <span data-i18n="faq.8.q">Venez-vous nous chercher à Amber Cove et à Taíno Bay ?</span>
                   <span class="faq__icon" aria-hidden="true"><svg><use href="#icon-plus"/></svg></span>
                 </button>
               </h3>
               <div class="faq__panel" id="faq-a8" role="region" aria-labelledby="faq-q8">
                 <div class="faq__panel-inner">
-                  <p class="faq__answer" data-i18n="faq.8.a">Oui. Nous venons vous chercher au port où accoste votre navire, Amber Cove ou Taíno Bay, et vous y ramenons à la fin de l’excursion. Nous vous confirmons le point de rendez-vous exact sur WhatsApp lors de la réservation. Pour les catamarans et les yachts, le transport jusqu’à Sosúa est en option, avec un prix selon la taille du groupe.</p>
+                  <p class="faq__answer" data-i18n="faq.8.a">Oui. Nous venons vous chercher au port où accoste votre navire, Amber Cove ou Taíno Bay, et vous y ramenons à la fin de l’excursion. Nous vous confirmons le point de rendez-vous exact sur WhatsApp ou par e-mail lors de la réservation. Pour les catamarans et les yachts, le transport jusqu’à Sosúa est en option, avec un prix selon la taille du groupe.</p>
                 </div>
               </div>
             </div>
             <div class="faq__item" data-faq-item>
               <h3 class="faq__question">
                 <button class="faq__trigger" type="button" id="faq-q9" aria-expanded="false" aria-controls="faq-a9" data-faq-trigger>
-                  <span data-i18n="faq.9.q">Dans quel port mon navire va-t-il accoster ?</span>
+                  <span data-i18n="faq.9.q">Dans quel port mon navire va-t-il accoster ?</span>
                   <span class="faq__icon" aria-hidden="true"><svg><use href="#icon-plus"/></svg></span>
                 </button>
               </h3>
@@ -1089,7 +1125,7 @@
             <div class="faq__item" data-faq-item>
               <h3 class="faq__question">
                 <button class="faq__trigger" type="button" id="faq-q2" aria-expanded="false" aria-controls="faq-a2" data-faq-trigger>
-                  <span data-i18n="faq.2.q">Serai-je de retour à temps pour mon bateau ?</span>
+                  <span data-i18n="faq.2.q">Serai-je de retour à temps pour mon bateau ?</span>
                   <span class="faq__icon" aria-hidden="true"><svg><use href="#icon-plus"/></svg></span>
                 </button>
               </h3>
@@ -1102,13 +1138,13 @@
             <div class="faq__item" data-faq-item>
               <h3 class="faq__question">
                 <button class="faq__trigger" type="button" id="faq-q3" aria-expanded="false" aria-controls="faq-a3" data-faq-trigger>
-                  <span data-i18n="faq.3.q">Comment fonctionnent les prix de groupe ?</span>
+                  <span data-i18n="faq.3.q">Comment fonctionnent les prix de groupe ?</span>
                   <span class="faq__icon" aria-hidden="true"><svg><use href="#icon-plus"/></svg></span>
                 </button>
               </h3>
               <div class="faq__panel" id="faq-a3" role="region" aria-labelledby="faq-q3">
                 <div class="faq__panel-inner">
-                  <p class="faq__answer" data-i18n="faq.3.a">Le prix par personne dépend du nombre de voyageurs : de 1 à 2, de 3 à 5, de 6 à 14 ou de 15 à 50 personnes. Plus le groupe est grand, moins chacun paie. Les buggies et quads se paient par véhicule, et coûtent moins cher à partir de 3 véhicules. Les catamarans et les yachts fonctionnent autrement : vous louez le bateau entier à prix fixe jusqu’à 15 ou 20 personnes selon le bateau, et chaque personne en plus paie un supplément.</p>
+                  <p class="faq__answer" data-i18n="faq.3.a">Le prix par personne dépend du nombre de voyageurs : de 1 à 2, de 3 à 5, de 6 à 14 ou de 15 à 50 personnes. Plus le groupe est grand, moins chacun paie. Les buggies et quads se paient par véhicule, et coûtent moins cher à partir de 3 véhicules. Les catamarans et les yachts fonctionnent autrement : vous louez le bateau entier à prix fixe jusqu’à 15 ou 20 personnes selon le bateau, et chaque personne en plus paie un supplément.</p>
                 </div>
               </div>
             </div>
@@ -1117,7 +1153,7 @@
             <div class="faq__item" data-faq-item>
               <h3 class="faq__question">
                 <button class="faq__trigger" type="button" id="faq-q4" aria-expanded="false" aria-controls="faq-a4" data-faq-trigger>
-                  <span data-i18n="faq.4.q">Qu’est-ce qui est inclus dans l’excursion aux cascades de Damajagua ?</span>
+                  <span data-i18n="faq.4.q">Qu’est-ce qui est inclus dans l’excursion aux cascades de Damajagua ?</span>
                   <span class="faq__icon" aria-hidden="true"><svg><use href="#icon-plus"/></svg></span>
                 </button>
               </h3>
@@ -1130,7 +1166,7 @@
             <div class="faq__item" data-faq-item>
               <h3 class="faq__question">
                 <button class="faq__trigger" type="button" id="faq-q5" aria-expanded="false" aria-controls="faq-a5" data-faq-trigger>
-                  <span data-i18n="faq.5.q">Le déjeuner est-il inclus dans le City Tour ?</span>
+                  <span data-i18n="faq.5.q">Le déjeuner est-il inclus dans le City Tour ?</span>
                   <span class="faq__icon" aria-hidden="true"><svg><use href="#icon-plus"/></svg></span>
                 </button>
               </h3>
@@ -1143,33 +1179,33 @@
             <div class="faq__item" data-faq-item>
               <h3 class="faq__question">
                 <button class="faq__trigger" type="button" id="faq-q6" aria-expanded="false" aria-controls="faq-a6" data-faq-trigger>
-                  <span data-i18n="faq.6.q">Dans quelle langue se déroulent les excursions ?</span>
+                  <span data-i18n="faq.6.q">Dans quelle langue se déroulent les excursions ?</span>
                   <span class="faq__icon" aria-hidden="true"><svg><use href="#icon-plus"/></svg></span>
                 </button>
               </h3>
               <div class="faq__panel" id="faq-a6" role="region" aria-labelledby="faq-q6">
                 <div class="faq__panel-inner">
-                  <p class="faq__answer" data-i18n="faq.6.a">En espagnol et en anglais. Écrivez-nous sur WhatsApp en anglais ou en espagnol.</p>
+                  <p class="faq__answer" data-i18n="faq.6.a">En espagnol et en anglais. Écrivez-nous sur WhatsApp ou par e-mail, en anglais ou en espagnol.</p>
                 </div>
               </div>
             </div>
             <div class="faq__item" data-faq-item>
               <h3 class="faq__question">
                 <button class="faq__trigger" type="button" id="faq-q10" aria-expanded="false" aria-controls="faq-a10" data-faq-trigger>
-                  <span data-i18n="faq.10.q">Que dois-je apporter ?</span>
+                  <span data-i18n="faq.10.q">Que dois-je apporter ?</span>
                   <span class="faq__icon" aria-hidden="true"><svg><use href="#icon-plus"/></svg></span>
                 </button>
               </h3>
               <div class="faq__panel" id="faq-a10" role="region" aria-labelledby="faq-q10">
                 <div class="faq__panel-inner">
-                  <p class="faq__answer" data-i18n="faq.10.a">Un maillot de bain, une serviette et de la crème solaire ; des chaussures qui peuvent être mouillées si vous allez à Damajagua ; un peu d’argent liquide en dollars pour les pourboires et les achats ; et votre carte de croisière avec une pièce d’identité avec photo pour remonter à bord.</p>
+                  <p class="faq__answer" data-i18n="faq.10.a">Un maillot de bain, une serviette et de la crème solaire ; des chaussures qui peuvent être mouillées si vous allez à Damajagua ; un peu d’argent liquide en dollars pour les pourboires et les achats ; et votre carte de croisière avec une pièce d’identité avec photo pour remonter à bord.</p>
                 </div>
               </div>
             </div>
             <div class="faq__item" data-faq-item>
               <h3 class="faq__question">
                 <button class="faq__trigger" type="button" id="faq-q7" aria-expanded="false" aria-controls="faq-a7" data-faq-trigger>
-                  <span data-i18n="faq.7.q">Quelle est votre politique d’annulation ?</span>
+                  <span data-i18n="faq.7.q">Quelle est votre politique d’annulation ?</span>
                   <span class="faq__icon" aria-hidden="true"><svg><use href="#icon-plus"/></svg></span>
                 </button>
               </h3>
@@ -1179,18 +1215,30 @@
                 </div>
               </div>
             </div>
+            <div class="faq__item" data-faq-item>
+              <h3 class="faq__question">
+                <button class="faq__trigger" type="button" id="faq-q11" aria-expanded="false" aria-controls="faq-a11" data-faq-trigger>
+                  <span data-i18n="faq.11.q">Comment payer ?</span>
+                  <span class="faq__icon" aria-hidden="true"><svg><use href="#icon-plus"/></svg></span>
+                </button>
+              </h3>
+              <div class="faq__panel" id="faq-a11" role="region" aria-labelledby="faq-q11">
+                <div class="faq__panel-inner">
+                  <p class="faq__answer" data-i18n="faq.11.a">Vous réservez avec un acompte par PayPal, Zelle ou Cash App : 50 % du total pour les excursions, et un montant fixe pour les catamarans et les yachts (indiqué dans la fiche de chaque bateau). Vous payez le reste sur place, le jour de l’excursion.</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ============ Booking (builds a WhatsApp message; booking.js). Shared partial src/partials/booking.html, included by src/index.html and src/catamaran.html ============ -->
+    <!-- ============ Booking (builds the booking message for WhatsApp or email; booking.js). Shared partial src/partials/booking.html, included by src/index.html and src/catamaran.html ============ -->
     <section class="section" id="booking" aria-labelledby="booking-title">
       <div class="container contact__grid">
         <div class="contact__card" data-reveal>
-          <p class="tag tag--light" data-i18n="booking.tag">Réservations</p>
           <h2 class="section-head__title" id="booking-title" data-i18n="booking.title">Réservez votre excursion</h2>
-          <p class="contact__lead" data-i18n="booking.lead">Remplissez les informations et nous ouvrons WhatsApp avec votre réservation prête à envoyer (en anglais, pour que notre équipe puisse la lire).</p>
+          <p class="contact__lead" data-i18n="booking.lead">Remplissez les informations et envoyez-nous votre réservation sur WhatsApp ou par e-mail : nous la rédigeons pour vous, prête à envoyer (en anglais, pour que notre équipe puisse la lire).</p>
 
           <form class="form" data-booking-form novalidate>
             <div class="field">
@@ -1238,7 +1286,7 @@
             </label>
 
             <!-- Shown only for the catamaran or yacht. Off by default: adds the round-trip transport port ↔ Sosúa
-                 (transfer table in src/partials/boats.html) to the estimate and the WhatsApp message. -->
+                 (transfer table in src/partials/boats.html) to the estimate and the booking message. -->
             <label class="switch" data-transfer-field hidden>
               <input class="switch__input" type="checkbox" name="transfer">
               <span class="switch__track" aria-hidden="true"><span class="switch__thumb"></span></span>
@@ -1281,16 +1329,39 @@
               <p class="estimate__deposit" data-estimate-deposit hidden></p>
             </div>
 
+            <!-- Two ways to send the same booking: WhatsApp (submit, also Enter) or email (data-booking-email holds
+                 the address booking.js writes to; keep it equal to the other mailto: links in src/). -->
             <button class="btn btn--whatsapp btn--block" type="submit">
               <svg aria-hidden="true"><use href="#icon-whatsapp"/></svg>
               <span data-i18n="booking.submit">Réserver sur WhatsApp</span>
             </button>
+            <button class="btn btn--primary btn--block" type="button" data-booking-email="popcruiseexcursions@gmail.com">
+              <svg aria-hidden="true"><use href="#icon-mail"/></svg>
+              <span data-i18n="booking.submitEmail">Réserver par e-mail</span>
+            </button>
             <p class="form__status" role="status" aria-live="polite" data-form-status hidden></p>
           </form>
-          <p class="contact__email"><span data-i18n="booking.email">Vous préférez l’e-mail ?</span> <a href="mailto:popcruiseexcursions@gmail.com">popcruiseexcursions@gmail.com</a></p>
+          <p class="contact__email"><span data-i18n="booking.email">Pour toute information ou question, écrivez-nous à</span> <a href="mailto:popcruiseexcursions@gmail.com">popcruiseexcursions@gmail.com</a></p>
         </div>
+        <!-- Photo of what is being booked (booking.js): the one whose data-booking-photo is "tour:boat" or
+             "tour:vehicle", else "tour", else "default" (also the photo without JS). Hidden photos are lazy, so
+             only the one shown downloads. Same files and alt keys as the tour cards and the boat picker. -->
         <div class="contact__media" data-reveal style="--delay: 120ms">
-          <img src="../assets/img/contact.webp" alt="Grands palmiers sur fond de ciel bleu" data-i18n-alt="booking.alt" width="1400" height="934" loading="lazy" decoding="async">
+          <img data-booking-photo="default" src="../assets/img/contact.webp" alt="Grands palmiers sur fond de ciel bleu" data-i18n-alt="booking.alt" width="1400" height="934" loading="lazy" decoding="async">
+          <img data-booking-photo="damajagua" src="../assets/img/tour-damajagua.webp" alt="Groupe casqué nageant dans un bassin sous une cascade de Damajagua" data-i18n-alt="tours.damajagua.alt" width="1024" height="1024" loading="lazy" decoding="async" hidden>
+          <img data-booking-photo="city" src="../assets/img/tour-city.webp" alt="Le kiosque du parc central de Puerto Plata" data-i18n-alt="tours.city.alt" width="1400" height="934" loading="lazy" decoding="async" hidden>
+          <img data-booking-photo="horse" src="../assets/img/tour-horse.webp" alt="Groupe de touristes à cheval sur la plage, avec des bateaux de croisière derrière" data-i18n-alt="tours.horse.alt" width="1400" height="1050" loading="lazy" decoding="async" hidden>
+          <img data-booking-photo="buggy:atv" src="../assets/img/tour-buggy-video.webp" alt="Une file de touristes en quad sur un chemin de terre entre prés et palmiers" data-i18n-alt="tours.buggy.alt" width="720" height="1280" loading="lazy" decoding="async" style="--focus: 50% 60%" hidden>
+          <img data-booking-photo="buggy:atv-double" src="../assets/img/tour-buggy-atv-double.webp" alt="Quad biplace gris, avec siège et dossier pour le passager" data-i18n-alt="tours.buggy.alt6" width="399" height="501" loading="lazy" decoding="async" style="--focus: 50% 35%" hidden>
+          <img data-booking-photo="buggy:buggy" src="../assets/img/tour-buggy.webp" alt="Buggy rouge biplace sur une plage de sable gris" data-i18n-alt="tours.buggy.alt2" width="1280" height="852" loading="lazy" decoding="async" hidden>
+          <img data-booking-photo="buggy:buggy-family" src="../assets/img/tour-buggy-family.webp" alt="Buggy familial rouge à quatre places sur une plage de sable gris" data-i18n-alt="tours.buggy.alt5" width="1280" height="853" loading="lazy" decoding="async" hidden>
+          <img data-booking-photo="beach" src="../assets/img/tour-beach.webp" alt="Transats blancs et parasols verts face à la mer à Playa Dorada" data-i18n-alt="tours.beach.alt" width="1030" height="786" loading="lazy" decoding="async" hidden>
+          <img data-booking-photo="catamaran:viking" src="../assets/img/boat-viking.webp" alt="Yacht Viking blanc ancré dans une eau turquoise" data-i18n-alt="boats.viking.alt" width="1000" height="750" loading="lazy" decoding="async" style="--focus: 62% 50%" hidden>
+          <img data-booking-photo="catamaran:yacht-jacuzzi" src="../assets/img/boat-yacht-jacuzzi.webp" alt="Yacht à coque bleue ancré près de la côte" data-i18n-alt="boats.yacht-jacuzzi.alt" width="722" height="1000" loading="lazy" decoding="async" hidden>
+          <img data-booking-photo="catamaran:fp43" src="../assets/img/boat-fp43.webp" alt="Catamaran blanc naviguant au large de Puerto Plata, vu du ciel" data-i18n-alt="boats.fp43.alt" width="720" height="960" loading="lazy" decoding="async" hidden>
+          <img data-booking-photo="catamaran:ocean-king" src="../assets/img/boat-ocean-king.webp" alt="Le catamaran à moteur The Ocean King IV ancré dans une eau turquoise" data-i18n-alt="boats.ocean-king.alt" width="720" height="523" loading="lazy" decoding="async" style="--focus: 45% 50%" hidden>
+          <img data-booking-photo="catamaran:libreterre" src="../assets/img/boat-libreterre.webp" alt="Le catamaran Libreterre et son toboggan, vu du ciel dans une eau cristalline" data-i18n-alt="boats.libreterre.alt" width="828" height="824" loading="lazy" decoding="async" hidden>
+          <img data-booking-photo="catamaran:cat-jacuzzi" src="../assets/img/boat-cat-jacuzzi.webp" alt="Jacuzzi à l’avant du catamaran, devant le carré" data-i18n-alt="boats.cat-jacuzzi.alt" width="960" height="740" loading="lazy" decoding="async" hidden>
           <a class="contact__chip" href="https://wa.me/18296277733" target="_blank" rel="noopener" data-wa-link>
             <svg aria-hidden="true"><use href="#icon-whatsapp"/></svg>
             <span>+1 (829) 627-7733</span>
@@ -1305,7 +1376,7 @@
   <footer class="footer" data-menu-inert>
     <div class="container">
       <div class="footer__top">
-        <a class="footer__logo" href="#top" aria-label="Puerto Plata Cruise Excursions, retour en haut" data-i18n-aria-label="nav.home"><img class="logo-badge" src="../assets/img/logo.webp" alt="" width="797" height="540" loading="lazy" decoding="async"></a>
+        <a class="footer__logo" href="#top" aria-label="Puerto Plata Cruise Excursions, page d’accueil" data-i18n-aria-label="nav.home"><img class="logo-badge" src="../assets/img/logo.webp" alt="" width="797" height="540" loading="lazy" decoding="async"></a>
         <div class="footer__cols">
           <nav class="footer__col" aria-labelledby="footer-tours">
             <h2 class="footer__heading" id="footer-tours" data-i18n="footer.tours">Excursions</h2>
@@ -1366,20 +1437,20 @@
 
   <!-- Order matters: translations before i18n; i18n before the modules that read its strings;
        whatsapp before booking (booking uses SiteWhatsApp); prices before booking (booking uses SitePrices). -->
-  <script src="../assets/js/translations.js" defer></script>
-  <script src="../assets/js/translations-fr.js" defer></script>
-  <script src="../assets/js/i18n.js" defer></script>
-  <script src="../assets/js/hero-intro.js" defer></script>
-  <script src="../assets/js/menu.js" defer></script>
-  <script src="../assets/js/route.js" defer></script>
-  <script src="../assets/js/stack-cards.js" defer></script>
-  <script src="../assets/js/boat-tabs.js" defer></script>
-  <script src="../assets/js/gallery.js" defer></script>
-  <script src="../assets/js/faq.js" defer></script>
-  <script src="../assets/js/reveal.js" defer></script>
-  <script src="../assets/js/whatsapp.js" defer></script>
-  <script src="../assets/js/prices.js" defer></script>
-  <script src="../assets/js/booking.js" defer></script>
-  <script src="../assets/js/footer-year.js" defer></script>
+  <script src="../assets/js/translations.js?v=c60d60f0" defer></script>
+  <script src="../assets/js/translations-fr.js?v=dcc18445" defer></script>
+  <script src="../assets/js/i18n.js?v=36f58c8c" defer></script>
+  <script src="../assets/js/hero-intro.js?v=e116a445" defer></script>
+  <script src="../assets/js/menu.js?v=b74ba0fa" defer></script>
+  <script src="../assets/js/route.js?v=4922339d" defer></script>
+  <script src="../assets/js/stack-cards.js?v=10185783" defer></script>
+  <script src="../assets/js/boat-tabs.js?v=b8d5e65c" defer></script>
+  <script src="../assets/js/gallery.js?v=a54a9fb9" defer></script>
+  <script src="../assets/js/faq.js?v=73c602b2" defer></script>
+  <script src="../assets/js/reveal.js?v=f956ab79" defer></script>
+  <script src="../assets/js/whatsapp.js?v=8b4012c6" defer></script>
+  <script src="../assets/js/prices.js?v=4f176edf" defer></script>
+  <script src="../assets/js/booking.js?v=479e4dba" defer></script>
+  <script src="../assets/js/footer-year.js?v=d34a11d1" defer></script>
 </body>
 </html>

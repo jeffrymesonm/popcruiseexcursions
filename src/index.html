@@ -5,7 +5,7 @@
   Built on the "Laurel" template (landscaping-services) plus the scroll route from "La Plancha"
   (burger-restaurant), here with a little jeep driving between the tours.
   Sections: nav + full-screen menu, hero, marquee, about, adventure route, tours (stacked cards
-  with price tables), why us, call-to-action band, FAQ, WhatsApp booking form, footer.
+  with price tables), why us, call-to-action band, FAQ, booking form (WhatsApp or email), footer.
   Source: src/index.html is the template; tools/build.mjs turns it into one static page per language
   (/ = English, /es/, /fr/, /it/). The published index.html files are generated, never edit them. After any change run
   "node tools/build.mjs" and commit the results. Markers in double braces pull partials from
@@ -18,7 +18,7 @@
   prices.js and booking.js read them from there.
   Four kinds of table: per person (default), data-pricing="charter" (one per boat in the
   "catamaran or yacht" card: a flat price for the whole boat up to the "flat" row's data-max, plus
-  a price per extra person; the extra row has no data-max, so there is no group limit) and
+  a price per extra person; the extra row has no data-max, so there is no group limit),
   data-pricing="transfer" (the boats' optional round-trip transport, one price per group range: an
   add-on, never a "from" price) and data-pricing="vehicle" (Buggies & ATVs, card 04: priced per vehicle,
   turned around: one row per vehicle with data-option = its id and data-seats = people it carries, one
@@ -66,7 +66,6 @@
       <div class="hero__veil" aria-hidden="true"></div>
       <div class="hero__inner container">
         <div class="hero__content">
-          <p class="hero__badge" data-hero-item style="--delay: 0ms"><span class="hero__pulse" aria-hidden="true"></span><span data-i18n="hero.badge">Excursiones desde Amber Cove y Taíno Bay</span></p>
           <h1 class="hero__title" id="hero-title" data-hero-item style="--delay: 80ms">
             <span data-i18n="hero.title.1">Tu día en tierra en Puerto Plata,</span>
             <span class="hero__accent" data-i18n="hero.title.2">convertido en aventura.</span>
@@ -122,7 +121,7 @@
         <div class="about__card" data-reveal>
           <span class="about__badge" aria-hidden="true"><svg><use href="#icon-quote"/></svg></span>
           <div class="about__body">
-            <h2 class="tag tag--light" id="about-title" data-i18n="about.tag">Sobre nosotros</h2>
+            <h2 class="visually-hidden" id="about-title" data-i18n="about.tag">Sobre nosotros</h2>
             <figure class="about__figure">
               <blockquote class="about__quote">
                 <p data-i18n="about.quote">Somos de Puerto Plata y conocemos cada cascada, cada calle y cada playa. Queremos que tu día en tierra sea el mejor recuerdo de tu crucero.</p>
@@ -139,6 +138,7 @@
               <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span><span data-i18n="about.fact.2">6 excursiones desde</span> <span data-price-from="all">US$12</span> <span data-i18n="price.perPerson">por persona</span></span></li>
               <li><svg aria-hidden="true"><use href="#icon-check"/></svg><span data-i18n="hero.card.2">Servicio en español e inglés</span></li>
               <li><svg aria-hidden="true"><use href="#icon-check"/></svg><a class="about__link" href="https://wa.me/18296277733" target="_blank" rel="noopener" data-wa-link data-i18n="about.fact.4">Reservas por WhatsApp: +1 (829) 627-7733</a></li>
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg><a class="about__link" href="mailto:popcruiseexcursions@gmail.com" data-i18n="about.fact.5">Reservas por correo: popcruiseexcursions@gmail.com</a></li>
             </ul>
           </div>
         </div>
@@ -152,7 +152,6 @@
     <section class="adventures" id="adventures" aria-labelledby="adventures-title">
       <div class="container">
         <header class="section-head section-head--dark" data-reveal>
-          <p class="tag tag--dark" data-i18n="adventures.tag">6 aventuras</p>
           <h2 class="section-head__title" id="adventures-title" data-i18n="adventures.title">Elige tu aventura</h2>
           <p class="section-head__lead" data-i18n="adventures.lead">Sigue el carrito: cada parada es una forma distinta de vivir Puerto Plata.</p>
         </header>
@@ -239,7 +238,6 @@
     <section class="section tours" id="tours" aria-labelledby="tours-title">
       <div class="container">
         <header class="section-head" data-reveal>
-          <p class="tag" data-i18n="tours.tag">Excursiones y precios</p>
           <h2 class="section-head__title" id="tours-title" data-i18n="tours.title">Precios claros, aventuras de verdad</h2>
           <p class="section-head__lead" data-i18n="tours.lead">Precios en dólares (USD), por persona; los buggies y ATV, por vehículo, y los barcos se alquilan completos. Mientras más grande el grupo, menor el precio.</p>
         </header>
@@ -364,7 +362,7 @@
               </div>
               <div>
                 <h3 class="tour-card__title" data-i18n="tours.horse.title">Cabalgata</h3>
-                <p class="tour-card__desc" data-i18n="tours.horse.desc">Hora y media a caballo por la playa y el campo de Puerto Plata.</p>
+                <p class="tour-card__desc" data-i18n="tours.horse.desc">Hora y media a caballo por la playa y el campo de Puerto Plata, hasta entrar al mar.</p>
               </div>
               <table class="prices" data-prices="horse" data-deposit-percent="50">
                 <caption class="visually-hidden" data-i18n="tours.horse.caption">Precios por persona de la Cabalgata según el tamaño del grupo</caption>
@@ -439,16 +437,20 @@
               <div class="tour-card__media" data-photos="buggy">
                 <video data-photo="1" muted loop playsinline preload="none" poster="assets/img/tour-buggy-video.webp" aria-label="Fila de turistas en ATV por un camino de tierra entre potreros y palmas" data-i18n-aria-label="tours.buggy.alt" width="720" height="1280" style="--focus: 50% 60%"><source src="assets/video/tour-buggy.mp4" type="video/mp4"></video>
                 <img data-photo="2" src="assets/img/tour-buggy.webp" alt="Buggy rojo de dos plazas en una playa de arena gris" data-i18n-alt="tours.buggy.alt2" width="1280" height="852" loading="lazy" decoding="async" hidden>
-                <img data-photo="3" src="assets/img/tour-buggy-house.webp" alt="Casa típica dominicana de madera azul, con cocina abierta y bandera dominicana" data-i18n-alt="tours.buggy.alt3" width="1280" height="854" loading="lazy" decoding="async" hidden>
-                <img data-photo="4" src="assets/img/tour-buggy-cacao.webp" alt="Bandeja con granos de cacao y café, y mazorcas de cacao" data-i18n-alt="tours.buggy.alt4" width="1280" height="854" loading="lazy" decoding="async" hidden>
+                <img data-photo="3" src="assets/img/tour-buggy-family.webp" alt="Buggy familiar rojo de cuatro plazas en una playa de arena gris" data-i18n-alt="tours.buggy.alt5" width="1280" height="853" loading="lazy" decoding="async" hidden>
+                <img data-photo="4" src="assets/img/tour-buggy-atv-double.webp" alt="ATV doble gris, con asiento y respaldo para el pasajero" data-i18n-alt="tours.buggy.alt6" width="399" height="501" loading="lazy" decoding="async" style="--focus: 50% 35%" hidden>
+                <img data-photo="5" src="assets/img/tour-buggy-house.webp" alt="Casa típica dominicana de madera azul, con cocina abierta y bandera dominicana" data-i18n-alt="tours.buggy.alt3" width="1280" height="854" loading="lazy" decoding="async" hidden>
+                <img data-photo="6" src="assets/img/tour-buggy-cacao.webp" alt="Bandeja con granos de cacao y café, y mazorcas de cacao" data-i18n-alt="tours.buggy.alt4" width="1280" height="854" loading="lazy" decoding="async" hidden>
                 <span class="tour-card__kicker" data-i18n="tours.buggy.kicker">Adrenalina</span>
                 <button class="media-toggle" type="button" data-video-toggle aria-label="Pausar video" data-i18n-aria-label="gallery.pause" hidden><svg aria-hidden="true"><use href="#icon-pause"/></svg></button>
               </div>
               <div class="thumbs" role="group" aria-label="Fotos de la excursión" data-i18n-aria-label="tours.photos" data-shots="buggy">
                 <button class="thumb thumb--video" type="button" aria-pressed="true" data-shot="1"><img src="assets/img/tour-buggy-1-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 1</span></button>
                 <button class="thumb" type="button" aria-pressed="false" data-shot="2"><img src="assets/img/tour-buggy-2-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 2</span></button>
-                <button class="thumb" type="button" aria-pressed="false" data-shot="3"><img src="assets/img/tour-buggy-3-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 3</span></button>
-                <button class="thumb" type="button" aria-pressed="false" data-shot="4"><img src="assets/img/tour-buggy-4-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 4</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="3"><img src="assets/img/tour-buggy-family-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 3</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="4"><img src="assets/img/tour-buggy-atv-double-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 4</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="5"><img src="assets/img/tour-buggy-3-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 5</span></button>
+                <button class="thumb" type="button" aria-pressed="false" data-shot="6"><img src="assets/img/tour-buggy-4-thumb.webp" alt="" width="240" height="180" loading="lazy" decoding="async"><span class="visually-hidden"><span data-i18n="gallery.photo">Foto</span> 6</span></button>
               </div>
             </div>
           </li>
@@ -521,7 +523,6 @@
     <section class="section why" id="why" aria-labelledby="why-title">
       <div class="container">
         <header class="section-head" data-reveal>
-          <p class="tag" data-i18n="why.tag">Por qué elegirnos</p>
           <h2 class="section-head__title" id="why-title" data-i18n="why.title">Tu día en tierra, sin preocupaciones</h2>
           <p class="section-head__lead" data-i18n="why.lead">Todo organizado para que solo pienses en disfrutar.</p>
         </header>
@@ -558,12 +559,17 @@
     <section class="section" aria-labelledby="cta-title">
       <div class="container">
         <div class="trust" data-reveal>
-          <p class="tag tag--light" data-i18n="cta.tag">Puerto Plata te espera</p>
           <h2 class="trust__title" id="cta-title" data-i18n="cta.title">Cascadas, historia y playa en un solo día. Vuelve al barco con la mejor historia del crucero.</h2>
-          <a class="btn btn--whatsapp" href="https://wa.me/18296277733" target="_blank" rel="noopener" data-wa-link>
-            <svg aria-hidden="true"><use href="#icon-whatsapp"/></svg>
-            <span data-i18n="cta.whatsapp">Escríbenos por WhatsApp</span>
-          </a>
+          <div class="trust__actions">
+            <a class="btn btn--whatsapp" href="https://wa.me/18296277733" target="_blank" rel="noopener" data-wa-link>
+              <svg aria-hidden="true"><use href="#icon-whatsapp"/></svg>
+              <span data-i18n="cta.whatsapp">Escríbenos por WhatsApp</span>
+            </a>
+            <a class="btn btn--primary" href="mailto:popcruiseexcursions@gmail.com">
+              <svg aria-hidden="true"><use href="#icon-mail"/></svg>
+              <span data-i18n="cta.email">Escríbenos por correo</span>
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -573,7 +579,6 @@
     <section class="section ports" id="ports" aria-labelledby="ports-title">
       <div class="container">
         <header class="section-head" data-reveal>
-          <p class="tag" data-i18n="ports.tag">Puertos de cruceros</p>
           <h2 class="section-head__title" id="ports-title" data-i18n="ports.title">¿Tu barco llega a Amber Cove o a Taíno Bay?</h2>
           <p class="section-head__lead" data-i18n="ports.lead">Te recogemos en los dos puertos de cruceros de Puerto Plata. Mira qué puedes hacer desde el tuyo y cuánto se tarda a cada excursión.</p>
         </header>
@@ -600,7 +605,6 @@
     <section class="section" id="faq" aria-labelledby="faq-title">
       <div class="container">
         <header class="section-head" data-reveal>
-          <p class="tag" data-i18n="faq.tag">Preguntas</p>
           <h2 class="section-head__title" id="faq-title" data-i18n="faq.title">Preguntas frecuentes</h2>
           <p class="section-head__lead" data-i18n="faq.lead">Lo que todo crucerista pregunta antes de reservar.</p>
         </header>
@@ -628,7 +632,7 @@
               </h3>
               <div class="faq__panel" id="faq-a8" role="region" aria-labelledby="faq-q8">
                 <div class="faq__panel-inner">
-                  <p class="faq__answer" data-i18n="faq.8.a">Sí. Te recogemos en el puerto donde atraca tu crucero, Amber Cove o Taíno Bay, y te llevamos de vuelta al terminar. El punto exacto de encuentro te lo confirmamos por WhatsApp al reservar. En los catamaranes y yates, el transporte a Sosúa es opcional y su precio depende del tamaño del grupo.</p>
+                  <p class="faq__answer" data-i18n="faq.8.a">Sí. Te recogemos en el puerto donde atraca tu crucero, Amber Cove o Taíno Bay, y te llevamos de vuelta al terminar. El punto exacto de encuentro te lo confirmamos por WhatsApp o por correo al reservar. En los catamaranes y yates, el transporte a Sosúa es opcional y su precio depende del tamaño del grupo.</p>
                 </div>
               </div>
             </div>
@@ -708,7 +712,7 @@
               </h3>
               <div class="faq__panel" id="faq-a6" role="region" aria-labelledby="faq-q6">
                 <div class="faq__panel-inner">
-                  <p class="faq__answer" data-i18n="faq.6.a">En español e inglés. Escríbenos por WhatsApp en el idioma que prefieras.</p>
+                  <p class="faq__answer" data-i18n="faq.6.a">En español e inglés. Escríbenos por WhatsApp o por correo en el idioma que prefieras.</p>
                 </div>
               </div>
             </div>
@@ -735,6 +739,19 @@
               <div class="faq__panel" id="faq-a7" role="region" aria-labelledby="faq-q7">
                 <div class="faq__panel-inner">
                   <p class="faq__answer" data-i18n="faq.7.a">Si cancelas con 10 días o más de anticipación, te devolvemos el 100% de lo pagado; con menos de 10 días, el 50%. Si tu crucero no llega a Puerto Plata, te devolvemos el 90%.</p>
+                </div>
+              </div>
+            </div>
+            <div class="faq__item" data-faq-item>
+              <h3 class="faq__question">
+                <button class="faq__trigger" type="button" id="faq-q11" aria-expanded="false" aria-controls="faq-a11" data-faq-trigger>
+                  <span data-i18n="faq.11.q">¿Cómo se paga?</span>
+                  <span class="faq__icon" aria-hidden="true"><svg><use href="#icon-plus"/></svg></span>
+                </button>
+              </h3>
+              <div class="faq__panel" id="faq-a11" role="region" aria-labelledby="faq-q11">
+                <div class="faq__panel-inner">
+                  <p class="faq__answer" data-i18n="faq.11.a">Reservas con un depósito por PayPal, Zelle o Cash App: el 50% del total en las excursiones y un monto fijo en los catamaranes y yates (está en la ficha de cada barco). El resto lo pagas en persona el día de la excursión.</p>
                 </div>
               </div>
             </div>

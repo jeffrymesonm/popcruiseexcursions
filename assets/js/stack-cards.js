@@ -3,12 +3,16 @@
  * All cards stick at the same offset (CSS, from 768px), except a card taller than the screen, which
  * sticks by its bottom edge (CSS reads its height from --card-height, set here). As the next card slides over one, the
  * covered card shrinks to MIN_SCALE and fades out, so the stack reads as depth.
- * Phones (plain list) and reduced motion keep the cards untouched.
+ * A card counts as covered from COVERED_AT on: it then fires "stack-cover" (bubbles, detail.covered),
+ * and again when it is uncovered, so gallery.js can pause a video nobody can see.
+ * Phones (plain list) and reduced motion keep the cards untouched (and never covered).
  */
 (function () {
   'use strict';
 
   var MIN_SCALE = 0.94;
+  /** Progress (0–1) of the next card over this one from which this card counts as covered. */
+  var COVERED_AT = 0.75;
   var cards = Array.prototype.slice.call(document.querySelectorAll('[data-stack-card]'));
   if (cards.length < 2) return;
 
@@ -26,13 +30,26 @@
   }
 
   /**
-   * Removes the inline scale and fade from every card.
+   * Records whether a card is covered and fires "stack-cover" when that changes.
+   * @param {HTMLElement} card - A [data-stack-card].
+   * @param {boolean} covered - True when the next card is (almost) fully on top of it.
+   * @returns {void}
+   */
+  function setCovered(card, covered) {
+    if (card.hasAttribute('data-stack-covered') === covered) return;
+    card.toggleAttribute('data-stack-covered', covered);
+    card.dispatchEvent(new CustomEvent('stack-cover', { bubbles: true, detail: { covered: covered } }));
+  }
+
+  /**
+   * Removes the inline scale and fade from every card (none is covered then).
    * @returns {void}
    */
   function reset() {
     cards.forEach(function (card) {
       card.style.transform = '';
       card.style.opacity = '';
+      setCovered(card, false);
     });
   }
 
@@ -59,6 +76,7 @@
 
       card.style.transform = progress > 0 ? 'scale(' + (1 - (1 - MIN_SCALE) * progress).toFixed(4) + ')' : '';
       card.style.opacity = progress > 0 ? (1 - progress).toFixed(3) : '';
+      setCovered(card, progress >= COVERED_AT);
     }
   }
 

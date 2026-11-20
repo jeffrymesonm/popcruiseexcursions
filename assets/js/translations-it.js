@@ -12,7 +12,7 @@ window.SITE_TRANSLATIONS.it = {
   'meta.title': 'Escursioni a Puerto Plata da Amber Cove e Taíno Bay',
   'meta.description': 'Escursioni per crocieristi a Puerto Plata: cascate di Damajagua, City Tour, giornata a Playa Dorada e barche private. Partenza da Amber Cove e Taíno Bay.',
   'nav.skip': 'Vai al contenuto',
-  'nav.home': 'Puerto Plata Cruise Excursions, torna in alto',
+  'nav.home': 'Puerto Plata Cruise Excursions, pagina principale',
   'nav.language': 'Lingua',
   'nav.book': 'Prenota',
   'nav.openMenu': 'Apri il menu',
@@ -24,7 +24,6 @@ window.SITE_TRANSLATIONS.it = {
   'nav.faq': 'FAQ',
 
   // Hero
-  'hero.badge': 'Escursioni da Amber Cove e Taíno Bay',
   'hero.title.1': 'La tua giornata a terra a Puerto Plata,',
   'hero.title.2': 'trasformata in avventura.',
   'hero.lead': 'Cascate, storia, spiagge ed emozioni. Ti veniamo a prendere ad Amber Cove o a Taíno Bay e organizziamo la giornata in base all’orario della tua nave.',
@@ -55,9 +54,9 @@ window.SITE_TRANSLATIONS.it = {
   'about.fact.1': 'Ritiro ad Amber Cove e a Taíno Bay',
   'about.fact.2': '6 escursioni da',
   'about.fact.4': 'Prenota su WhatsApp: +1 (829) 627-7733',
+  'about.fact.5': 'Prenota via e-mail: popcruiseexcursions@gmail.com',
 
   // Adventure route
-  'adventures.tag': '6 avventure',
   'adventures.title': 'Scegli la tua avventura',
   'adventures.lead': 'Segui la jeep: ogni tappa è un modo diverso di vivere Puerto Plata.',
   'tours.damajagua.short': 'Damajagua',
@@ -75,7 +74,6 @@ window.SITE_TRANSLATIONS.it = {
   'price.from': 'da',
 
   // Tours
-  'tours.tag': 'Escursioni e prezzi',
   'tours.title': 'Prezzi chiari, avventure vere',
   'tours.lead': 'Prezzi in dollari USA, a persona; buggy e quad a veicolo, e le barche si noleggiano intere. Più grande è il gruppo, più basso è il prezzo.',
   'tours.includes': 'Incluso',
@@ -125,7 +123,7 @@ window.SITE_TRANSLATIONS.it = {
   'tours.city.kicker': 'Cultura · Spiaggia',
 
   'tours.horse.title': 'Passeggiata a cavallo',
-  'tours.horse.desc': 'Un’ora e mezza a cavallo sulla spiaggia e nella campagna di Puerto Plata.',
+  'tours.horse.desc': 'Un’ora e mezza a cavallo sulla spiaggia e nella campagna di Puerto Plata, fin dentro il mare.',
   'tours.horse.caption': 'Prezzi a persona della passeggiata a cavallo in base al gruppo',
   'tours.horse.inc1': 'Trasporto andata e ritorno',
   'tours.horse.inc2': 'Acqua durante il percorso',
@@ -140,6 +138,8 @@ window.SITE_TRANSLATIONS.it = {
   'tours.buggy.alt2': 'Buggy rosso biposto su una spiaggia di sabbia grigia',
   'tours.buggy.alt3': 'Casa tipica dominicana in legno azzurro, con cucina aperta e bandiera dominicana',
   'tours.buggy.alt4': 'Vassoio con fave di cacao e chicchi di caffè, accanto a cabosse di cacao',
+  'tours.buggy.alt5': 'Buggy familiare rosso a quattro posti su una spiaggia di sabbia grigia',
+  'tours.buggy.alt6': 'Quad biposto grigio, con sedile e schienale per il passeggero',
   'tours.buggy.kicker': 'Adrenalina',
   'tours.buggy.caption': 'Prezzo a veicolo di buggy e quad in base a quanti veicoli prenota il gruppo',
   'tours.buggy.atv': 'Quad singolo',
@@ -183,7 +183,7 @@ window.SITE_TRANSLATIONS.it = {
   'boats.ft': 'piedi',
   'boats.hours': 'ore',
   'boats.per-boat': 'a barca',
-  'boats.private': 'Prezzo per l’intera barca, non a persona: a bordo solo il vostro gruppo, per 4 ore.',
+  'boats.private': 'Prezzo per l’intera barca, non a persona: a bordo solo il vostro gruppo, per 4 ore. Lo snorkeling è incluso su tutte le barche.',
   'boats.transfer.title': 'Trasporto andata e ritorno (opzionale)',
   'boats.transfer.lead': 'Dal porto crocieristico alla spiaggia di Sosúa e ritorno, per tutto il gruppo. Aggiungilo nel modulo di prenotazione.',
   'boats.transfer.caption': 'Prezzo del trasporto andata e ritorno in base al gruppo',
@@ -193,7 +193,7 @@ window.SITE_TRANSLATIONS.it = {
   'boats.inc.crew': 'Equipaggio a bordo',
   'boats.inc.food': 'Cibo e bevande',
   'boats.inc.music': 'Musica a bordo',
-  'boats.inc.snorkel': 'Sosta per lo snorkeling',
+  'boats.inc.snorkel': 'Snorkeling incluso',
   'boats.inc.snacks': 'Frutta, nachos e salsa',
   'boats.inc.bbq': 'Barbecue',
   'boats.inc.bar': 'Rum, birra, bibite, succhi e acqua',
@@ -222,8 +222,11 @@ window.SITE_TRANSLATIONS.it = {
   'gallery.photo': 'Foto',
   'gallery.pause': 'Metti in pausa il video',
   'gallery.play': 'Riproduci il video',
+  'gallery.video': 'Video',
   'boats.photos': 'Foto della barca',
   'boats.viking.alt2': 'Lo yacht Viking visto da un drone, con un gruppo a poppa',
+  'boats.snorkel.alt': 'Persona che fa snorkeling circondata da pesci sergente in acqua turchese',
+  'boats.snorkel.alt2': 'Bambina con maschera da snorkeling sott’acqua tra i pesci, sopra la sabbia bianca',
   'boats.viking.alt3': 'Coppia che mostra due grossi pesci a bordo dello yacht',
   'boats.yacht-jacuzzi.alt2': 'Jacuzzi a prua dello yacht, con tavole da paddle',
   'boats.yacht-jacuzzi.alt3': 'Coppia nella jacuzzi dello yacht',
@@ -238,9 +241,7 @@ window.SITE_TRANSLATIONS.it = {
   'boats.cat-jacuzzi.alt4': 'Piccolo matrimonio a prua del catamarano',
   'boats.cat-jacuzzi.alt5': 'Gruppo che mangia a bordo durante una festa',
 
-
   // Why us
-  'why.tag': 'Perché sceglierci',
   'why.title': 'La tua giornata a terra, senza pensieri',
   'why.lead': 'Tutto organizzato: a te resta solo da goderti la giornata.',
   'why.1.title': 'Pensato per i crocieristi',
@@ -251,12 +252,11 @@ window.SITE_TRANSLATIONS.it = {
   'why.3.desc': 'Più siete, meno paga ciascuno.',
 
   // Call to action
-  'cta.tag': 'Puerto Plata ti aspetta',
   'cta.title': 'Cascate, storia e spiaggia in un solo giorno. Torna a bordo con la storia più bella della crociera.',
   'cta.whatsapp': 'Scrivici su WhatsApp',
+  'cta.email': 'Scrivici via e-mail',
 
   // FAQ
-  'faq.tag': 'FAQ',
   'faq.title': 'Domande frequenti',
   'faq.lead': 'Quello che ogni crocierista chiede prima di prenotare.',
   'faq.1.q': 'Da dove partono le escursioni?',
@@ -270,16 +270,17 @@ window.SITE_TRANSLATIONS.it = {
   'faq.5.q': 'Il pranzo è incluso nel City Tour?',
   'faq.5.a': 'No. Alla fine del percorso hai tempo libero a Playa Dorada, dove puoi pranzare in uno dei ristoranti sul mare, se vuoi. Pranzo e bevande extra non sono inclusi.',
   'faq.6.q': 'In che lingua sono le escursioni?',
-  'faq.6.a': 'In spagnolo e in inglese. Scrivici su WhatsApp in inglese o in spagnolo.',
+  'faq.6.a': 'In spagnolo e in inglese. Scrivici su WhatsApp o via e-mail, in inglese o in spagnolo.',
   'faq.7.q': 'Qual è la politica di cancellazione?',
   'faq.7.a': 'Se cancelli con 10 o più giorni di anticipo, ti rimborsiamo il 100% di quanto pagato; con meno di 10 giorni, il 50%. Se la tua nave da crociera non arriva a Puerto Plata, ti rimborsiamo il 90%.',
+  'faq.11.q': 'Come si paga?',
+  'faq.11.a': 'Prenoti con un acconto tramite PayPal, Zelle o Cash App: il 50% del totale per le escursioni e un importo fisso per catamarani e yacht (lo trovi nella scheda di ogni barca). Il resto lo paghi di persona il giorno dell’escursione.',
   'faq.8.q': 'Venite a prenderci ad Amber Cove e a Taíno Bay?',
-  'faq.8.a': 'Sì. Ti veniamo a prendere al porto dove attracca la tua nave, Amber Cove o Taíno Bay, e ti riportiamo lì alla fine dell’escursione. Ti confermiamo il punto d’incontro esatto su WhatsApp quando prenoti. Per catamarani e yacht, il trasporto fino a Sosúa è opzionale, con un prezzo in base al gruppo.',
+  'faq.8.a': 'Sì. Ti veniamo a prendere al porto dove attracca la tua nave, Amber Cove o Taíno Bay, e ti riportiamo lì alla fine dell’escursione. Ti confermiamo il punto d’incontro esatto su WhatsApp o via e-mail quando prenoti. Per catamarani e yacht, il trasporto fino a Sosúa è opzionale, con un prezzo in base al gruppo.',
   'faq.9.q': 'In quale porto attraccherà la mia nave?',
   'faq.9.a': 'Lo trovi nell’itinerario della crociera. In generale, Amber Cove accoglie le navi di Carnival Corporation (Carnival, Princess, Holland America…) e Taíno Bay quelle di Royal Caribbean, Celebrity, Norwegian, MSC e altre compagnie. Dicci il nome della tua nave quando prenoti e lo verifichiamo.',
   'faq.10.q': 'Cosa devo portare?',
   'faq.10.a': 'Costume da bagno, asciugamano e crema solare; scarpe che si possano bagnare se vai a Damajagua; un po’ di contanti in dollari per mance e acquisti; e la tessera della crociera con un documento d’identità con foto per risalire a bordo.',
-  'ports.tag': 'Porti crocieristici',
   'ports.title': 'La tua nave attracca ad Amber Cove o a Taíno Bay?',
   'ports.lead': 'Ti veniamo a prendere in entrambi i porti crocieristici di Puerto Plata. Scopri cosa fare dal tuo e quanto ci vuole per ogni escursione (pagine in inglese).',
   'ports.ac.desc': 'Nella baia di Maimón, a circa 15–20 minuti dal centro. Soprattutto navi di Carnival Corporation.',
@@ -288,9 +289,8 @@ window.SITE_TRANSLATIONS.it = {
   'ports.tb.cta': 'Escursioni da Taíno Bay',
 
   // Booking
-  'booking.tag': 'Prenotazioni',
   'booking.title': 'Prenota la tua escursione',
-  'booking.lead': 'Compila i dati e apriamo WhatsApp con la tua prenotazione pronta da inviare (in inglese, così il nostro team può leggerla).',
+  'booking.lead': 'Compila i dati e inviaci la tua prenotazione su WhatsApp o via e-mail: la scriviamo noi per te, pronta da inviare (in inglese, così il nostro team può leggerla).',
   'booking.tour': 'Escursione',
   'booking.boat': 'Barca',
   'booking.vehicle': 'Veicolo',
@@ -306,12 +306,13 @@ window.SITE_TRANSLATIONS.it = {
   'booking.shipPlaceholder': 'Nome della tua nave',
   'booking.estimate': 'Prezzo stimato',
   'booking.submit': 'Prenota su WhatsApp',
+  'booking.submitEmail': 'Prenota via e-mail',
   'booking.alt': 'Palme alte contro il cielo azzurro',
-  'booking.email': 'Preferisci l’e-mail?',
+  'booking.email': 'Per altre informazioni o domande, scrivici a',
   'booking.person': 'persona',
   'booking.persons': 'persone',
   'booking.estimate.quote': 'Su richiesta',
-  'booking.estimate.quoteDetail': 'Ti mandiamo il prezzo su WhatsApp in base al numero di persone.',
+  'booking.estimate.quoteDetail': 'Ti mandiamo il prezzo su WhatsApp o via e-mail in base al numero di persone.',
   'booking.estimate.large': 'Per più di {max} persone, scrivici e ti prepariamo una proposta.',
   'booking.estimate.charter': 'Barca privata intera, fino a {max} persone',
   'booking.estimate.charterExtra': '{base} per la barca + {count} × {extra} per persona in più',
@@ -326,6 +327,7 @@ window.SITE_TRANSLATIONS.it = {
   'booking.error.datePast': 'Questa data è già passata. Scegli oggi o una data futura.',
   'booking.error.name': 'Scrivi il tuo nome (almeno 2 lettere).',
   'booking.sent': 'Abbiamo aperto WhatsApp con la tua prenotazione pronta. Manca solo l’invio.',
+  'booking.sentEmail': 'Abbiamo aperto la tua app di posta con la prenotazione pronta. Se non si è aperta, scrivici all’indirizzo qui sotto.',
 
   // Footer
   'footer.tours': 'Escursioni',

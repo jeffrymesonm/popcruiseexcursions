@@ -78,5 +78,11 @@
     if (event.key === 'Escape' && isOpen) setOpen(false, true);
   });
 
+  // Back/forward cache (Safari on iPhone): a page left from the open menu (e.g. a language link) comes
+  // back exactly as it was, menu open; close it when the page is shown again.
+  window.addEventListener('pageshow', function (event) {
+    if (event.persisted) setOpen(false, false);
+  });
+
   syncToggleLabel();
 })();

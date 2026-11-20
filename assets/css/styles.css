@@ -14,7 +14,7 @@
   --color-fg: #0e3a3c;          /* text, dark surfaces, footer (deep lagoon) */
   --color-fg-hover: #17504f;    /* hover on dark buttons */
   --color-card: #efe6d5;        /* card surfaces */
-  --color-tag: #e6dac3;         /* tag pill on the page background */
+  --color-tag: #e6dac3;         /* soft sand: borders, chips, thumbnail hover */
   --color-muted-fg: #4b5f5c;    /* secondary text */
   --color-placeholder: #86938f; /* input placeholders */
   --color-accent: #0f9488;      /* focus rings, check icons (3:1+ on sand) */
@@ -166,30 +166,6 @@ button {
 
 .section {
   padding-block: var(--section-space);
-}
-
-/* Small pill label above section titles. */
-.tag {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.25rem 0.75rem;
-  border-radius: var(--radius-pill);
-  background: var(--color-tag);
-  font-size: 0.875rem;
-  font-weight: 500;
-  line-height: 1.25rem;
-  letter-spacing: 0;
-}
-
-/* Variant used inside card surfaces, where the default would blend in. */
-.tag--light {
-  background: var(--color-bg);
-}
-
-/* Variant for dark sections. */
-.tag--dark {
-  background: rgba(255, 255, 255, 0.12);
-  color: var(--color-sun);
 }
 
 .btn {
@@ -641,45 +617,6 @@ button {
   flex-direction: column;
   align-items: flex-start;
   max-width: 34rem;
-}
-
-.hero__badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  line-height: 1.25rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.hero__pulse {
-  position: relative;
-  width: 0.5rem;
-  height: 0.5rem;
-  flex: none;
-  border-radius: 50%;
-  background: var(--color-sun);
-}
-
-.hero__pulse::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: var(--color-sun);
-  opacity: 0.7;
-  animation: ping 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
-
-@keyframes ping {
-  75%,
-  100% {
-    opacity: 0;
-    transform: scale(2.4);
-  }
 }
 
 .hero__title {
@@ -1205,9 +1142,10 @@ button {
 }
 
 /* Thumbnails under the photo (gallery.js); up to five in one row. */
+/* At most 5 thumbnails per row, each at least 3.75rem wide (≥ 44 px tall touch target on phones). */
 .thumbs {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(max(3.75rem, calc((100% - 4 * 0.5rem) / 5)), 1fr));
   gap: 0.5rem;
 }
 
@@ -1972,8 +1910,24 @@ html:not(.js) .boat-photo__name {
   text-wrap: balance;
 }
 
-.trust .btn {
+/* WhatsApp and email buttons: one centred row that wraps onto two lines on narrow phones. */
+.trust__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
   margin-top: 0.75rem;
+}
+
+/* Long labels (French) wrap inside the pill on narrow phones instead of overflowing the card. */
+.trust__actions .btn {
+  max-width: 100%;
+  height: auto;
+  min-height: 3rem;
+  padding-block: 0.75rem;
+  line-height: 1.2;
+  white-space: normal;
+  text-align: center;
 }
 
 @media (min-width: 768px) {
@@ -2372,10 +2326,23 @@ html:not(.js) .boat-photo__name {
   background: var(--color-card);
 }
 
+/* One photo per tour, boat and vehicle; booking.js shows the one being booked and it fades in. */
 .contact__media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: var(--focus, 50% 50%);
+  animation: booking-photo-in 0.4s ease;
+}
+
+.contact__media img[hidden] {
+  display: none;
+}
+
+@keyframes booking-photo-in {
+  from {
+    opacity: 0;
+  }
 }
 
 /* WhatsApp number chip on the photo. */
@@ -2668,6 +2635,7 @@ html:not(.js) .boat-photo__name {
 .about__link {
   text-decoration: underline;
   text-underline-offset: 3px;
+  overflow-wrap: anywhere;
 }
 
 /* ============ Cruise ports block (home page → port pages) ============ */

@@ -65,7 +65,6 @@
     <section class="section cat-boats" id="boats" aria-labelledby="boats-title">
       <div class="container">
         <header class="section-head" data-reveal>
-          <p class="tag" data-i18n="cat.boats.tag">6 barcos privados</p>
           <h2 class="section-head__title" id="boats-title" data-i18n="boats.choose">Elige tu barco</h2>
           <p class="section-head__lead" data-i18n="cat.boats.lead">Toca un barco para ver sus fotos, qué incluye y su precio.</p>
         </header>
@@ -79,11 +78,10 @@
     <section class="section" id="cat-how" aria-labelledby="cat-how-title">
       <div class="container">
         <header class="section-head" data-reveal>
-          <p class="tag" data-i18n="port.pickup.tag">Cómo funciona</p>
           <h2 class="section-head__title" id="cat-how-title" data-i18n="cat.how.title">Cómo se reserva un barco</h2>
         </header>
         <ol class="port-steps" data-reveal>
-          <li data-i18n="cat.how.1">Elige el barco y la fecha, y envíanos la reserva por WhatsApp con el nombre de tu crucero y la hora de embarque.</li>
+          <li data-i18n="cat.how.1">Elige el barco y la fecha, y envíanos la reserva por WhatsApp o por correo con el nombre de tu crucero y la hora de embarque.</li>
           <li data-i18n="cat.how.2">Se reserva con un depósito; el monto de cada barco está en su ficha.</li>
           <li data-i18n="cat.how.3">Los barcos salen de la playa de Sosúa, a 45 minutos de Amber Cove y a 30 de Taíno Bay. Si quieres, agrega el transporte ida y vuelta desde el puerto: su precio depende del tamaño del grupo.</li>
           <li data-i18n="cat.how.4">Organizamos el paseo de 4 horas según la hora de tu barco para que vuelvas a tiempo.</li>
@@ -95,7 +93,6 @@
     <section class="section" id="faq" aria-labelledby="faq-title">
       <div class="container">
         <header class="section-head" data-reveal>
-          <p class="tag" data-i18n="faq.tag">Preguntas</p>
           <h2 class="section-head__title" id="faq-title" data-i18n="cat.faq.title">Preguntas sobre los barcos</h2>
         </header>
         <div class="faq" data-reveal>
@@ -135,7 +132,7 @@
               </h3>
               <div class="faq__panel" id="faq-a3" role="region" aria-labelledby="faq-q3">
                 <div class="faq__panel-inner">
-                  <p class="faq__answer" data-i18n="cat.faq.3.a">Elige el barco, completa el formulario de reserva y te abrimos WhatsApp con la reserva lista para enviar. Se reserva con un depósito; el monto de cada barco está en su ficha. Dinos el nombre de tu crucero y la hora de embarque.</p>
+                  <p class="faq__answer" data-i18n="cat.faq.3.a">Elige el barco, completa el formulario de reserva y envíanosla por WhatsApp o por correo: te la dejamos escrita y lista para enviar. Se reserva con un depósito; el monto de cada barco está en su ficha. Dinos el nombre de tu crucero y la hora de embarque.</p>
                 </div>
               </div>
             </div>
@@ -195,12 +192,17 @@
     <section class="section" aria-labelledby="cta-title">
       <div class="container">
         <div class="trust" data-reveal>
-          <p class="tag tag--light" data-i18n="port.cta.tag">Reserva por WhatsApp</p>
           <h2 class="trust__title" id="cta-title" data-i18n="cat.cta.title">¿No sabes qué barco elegir? Escríbenos con la fecha y cuántas personas son.</h2>
-          <a class="btn btn--whatsapp" href="https://wa.me/18296277733" target="_blank" rel="noopener" data-wa-link>
-            <svg aria-hidden="true"><use href="#icon-whatsapp"/></svg>
-            <span data-i18n="cta.whatsapp">Escríbenos por WhatsApp</span>
-          </a>
+          <div class="trust__actions">
+            <a class="btn btn--whatsapp" href="https://wa.me/18296277733" target="_blank" rel="noopener" data-wa-link>
+              <svg aria-hidden="true"><use href="#icon-whatsapp"/></svg>
+              <span data-i18n="cta.whatsapp">Escríbenos por WhatsApp</span>
+            </a>
+            <a class="btn btn--primary" href="mailto:popcruiseexcursions@gmail.com">
+              <svg aria-hidden="true"><use href="#icon-mail"/></svg>
+              <span data-i18n="cta.email">Escríbenos por correo</span>
+            </a>
+          </div>
           <a class="trust__link" href="{{page-url:amber-cove}}" hreflang="{{page-lang:amber-cove}}" data-i18n="ports.ac.cta">Excursiones desde Amber Cove</a>
           <a class="trust__link" href="{{page-url:taino-bay}}" hreflang="{{page-lang:taino-bay}}" data-i18n="ports.tb.cta">Excursiones desde Taíno Bay</a>
         </div>

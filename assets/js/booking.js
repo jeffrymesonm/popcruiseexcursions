@@ -1,5 +1,5 @@
 /**
- * booking.js — Booking form that ends in a WhatsApp chat.
+ * booking.js — Booking form that ends in a WhatsApp chat or an email.
  *
  * - The visitor picks a tour, zipline (only for tours whose table has a zipline column), the boat
  *   (only for the "catamaran or yacht" tour: each boat has its own table, data-prices="boat-<id>"),
@@ -9,15 +9,19 @@
  *   vehicle for buggies, with as many vehicles as the group needs),
  *   read from the price tables through SitePrices (prices.js). It also shows the deposit that
  *   books the tour (a boat's fixed amount, or a share of the total for the other tours), which
- *   the WhatsApp message repeats. For a boat, the visitor can add the round-trip transport port ↔ Sosúa
+ *   the message repeats. For a boat, the visitor can add the round-trip transport port ↔ Sosúa
  *   (switch off by default; price from the transfer table, more than its largest group = "we quote it").
- * - On submit the fields are validated (bilingual messages) and WhatsApp opens with the booking
- *   already written in the visitor's language, ready to send. Nothing is sent to any server and
- *   nothing the visitor types is logged.
+ * - Two buttons send the same booking: "Book on WhatsApp" (the submit button, also Enter) opens
+ *   WhatsApp, and "Book by email" ([data-booking-email], which holds the address) opens the
+ *   visitor's email app. Either way the fields are validated first (bilingual messages) and the
+ *   booking is already written in the message language, ready to send. Nothing is sent to any
+ *   server and nothing the visitor types is logged.
  * - "Book this tour" buttons ([data-book]) preselect their tour before jumping to the form;
  *   "Book this boat" buttons also carry data-book-boat and preselect the boat. Links from other
  *   pages (the port pages) do the same with ?tour=<id>&boat=<id> in the URL. Without ?tour=, a page
  *   can name its own tour with data-default-tour (the catamaran page: data-default-tour="catamaran").
+ * - The photo next to the form follows the selection: the chosen boat or vehicle, else the tour
+ *   ([data-booking-photo] = "tour:boat", "tour:vehicle" or "tour"; "default" when none matches).
  * Dates: the earliest allowed date is "today" in Puerto Plata (America/Santo_Domingo), because
  * the tour happens there, whatever the visitor's own time zone is.
  */
@@ -50,6 +54,8 @@
   var estimateDetail = form.querySelector('[data-estimate-detail]');
   var estimateDeposit = form.querySelector('[data-estimate-deposit]');
   var statusElement = form.querySelector('[data-form-status]');
+  var emailButton = form.querySelector('[data-booking-email]');
+  var photos = Array.prototype.slice.call(document.querySelectorAll('[data-booking-photo]'));
   var hasTriedSubmit = false;
 
   /** Key of the status message on screen, or null (cleared as soon as the visitor edits the form). */
@@ -257,6 +263,9 @@
   function currentQuote() {
     var count = people();
     if (!(count >= MIN_PEOPLE)) return { state: 'invalid' };
+    // Above the form's limit no price is shown (vehicle and boat tables have no upper row, so they
+    // would price any group, while sending says "1 to 50"): the group is quoted on request instead.
+    if (count > MAX_PEOPLE) return { state: 'large', max: MAX_PEOPLE };
     var tableId = priceTableId();
     if (!window.SitePrices.options(tableId).length) return { state: 'quote' };
     var price = window.SitePrices.quote(tableId, count, currentOption());
@@ -343,10 +352,33 @@
   }
 
   /**
-   * Refreshes the boat field, the zipline and transport switches and the live estimate.
+   * Shows the photo of what is being booked and hides the others: the chosen boat ("catamaran:<boat>")
+   * or vehicle ("buggy:<vehicle>") when the tour has one, else the tour itself, else "default".
+   * @returns {void}
+   */
+  function renderPhoto() {
+    var tour = tourSelect.value;
+    var wanted = [tour, 'default'];
+    if (tour === BOAT_TOUR) wanted.unshift(tour + ':' + boatSelect.value);
+    if (tour === VEHICLE_TOUR) wanted.unshift(tour + ':' + vehicleSelect.value);
+    var shown = null;
+    for (var i = 0; i < wanted.length && !shown; i++) {
+      for (var j = 0; j < photos.length && !shown; j++) {
+        if (photos[j].getAttribute('data-booking-photo') === wanted[i]) shown = photos[j];
+      }
+    }
+    photos.forEach(function (photo) {
+      photo.hidden = photo !== shown;
+    });
+  }
+
+  /**
+   * Refreshes the boat and vehicle fields, the zipline and transport switches, the photo and the
+   * live estimate.
    * @returns {void}
    */
   function renderEstimate() {
+    renderPhoto();
     boatField.hidden = tourSelect.value !== BOAT_TOUR;
     vehicleField.hidden = tourSelect.value !== VEHICLE_TOUR;
     // Only for a boat, and only when the page has the transport price table.
@@ -368,8 +400,9 @@
       estimateDetail.textContent = '';
     }
 
-    // Deposit line: a valid group size and a deposit (a boat's fixed one, or a share of a known total).
-    var depositAmount = result.state === 'invalid' ? null : window.SitePrices.deposit(priceTableId(), quotedTotal(result));
+    // Deposit line: a group size the form accepts and a deposit (a boat's fixed one, or a share of a known total).
+    var bookable = result.state !== 'invalid' && people() <= MAX_PEOPLE;
+    var depositAmount = bookable ? window.SitePrices.deposit(priceTableId(), quotedTotal(result)) : null;
     var percent = window.SitePrices.depositPercent(priceTableId());
     estimateDeposit.hidden = depositAmount === null;
     estimateDeposit.textContent = depositAmount === null
@@ -389,12 +422,11 @@
   }
 
   /**
-   * Writes the booking as a WhatsApp message in the message language (Spanish or English).
-   * When the page is in another language (French, Italian) the message is in English and ends
-   * with the visitor's language, so the team knows who they are talking to.
-   * @returns {string} Message text.
+   * Names what is being booked, in the message language: the tour plus the boat or vehicle and
+   * the zipline choice when the form shows those fields.
+   * @returns {string} e.g. "Buggies y ATV — Buggy" or "Charcos de Damajagua (con zipline)".
    */
-  function buildMessage() {
+  function messageTourName() {
     var tourName = messageText(tourSelect.options[tourSelect.selectedIndex]);
     if (!boatField.hidden) {
       tourName += ' — ' + messageText(boatSelect.options[boatSelect.selectedIndex]);
@@ -405,6 +437,17 @@
     if (!ziplineField.hidden) {
       tourName += ' (' + tm(ziplineInput.checked ? 'booking.msg.withZipline' : 'booking.msg.withoutZipline') + ')';
     }
+    return tourName;
+  }
+
+  /**
+   * Writes the booking as a message (WhatsApp text or email body) in the message language (Spanish
+   * or English). When the page is in another language (French, Italian) the message is in English
+   * and ends with the visitor's language, so the team knows who they are talking to.
+   * @returns {string} Message text.
+   */
+  function buildMessage() {
+    var tourName = messageTourName();
     var result = currentQuote();
     var format = window.SitePrices.format;
     var priceLine = tm('booking.msg.toConfirm');
@@ -480,8 +523,26 @@
   });
   form.addEventListener('change', renderEstimate);
 
-  form.addEventListener('submit', function (event) {
-    event.preventDefault();
+  /**
+   * Opens the visitor's email app with the booking written as a new email to the business.
+   * Line breaks go as CRLF, as mailto: links expect (RFC 6068).
+   * @param {string} address - Business email address (from data-booking-email).
+   * @param {string} message - Booking text from buildMessage().
+   * @returns {void}
+   */
+  function openEmail(address, message) {
+    var subject = fill(tm('booking.msg.subject'), { tour: messageTourName(), date: formatDate(dateInput.value) });
+    window.location.href = 'mailto:' + address +
+      '?subject=' + encodeURIComponent(subject) +
+      '&body=' + encodeURIComponent(message.replace(/\n/g, '\r\n'));
+  }
+
+  /**
+   * Validates the form and, when it is valid, opens the chosen channel with the booking written.
+   * @param {'whatsapp'|'email'} channel - Where the visitor wants to send the booking.
+   * @returns {void}
+   */
+  function sendBooking(channel) {
     hasTriedSubmit = true;
     renderStatus(null);
     var firstInvalid = validateAll();
@@ -489,9 +550,25 @@
       firstInvalid.focus();
       return;
     }
+    if (channel === 'email') {
+      openEmail(emailButton.getAttribute('data-booking-email'), buildMessage());
+      renderStatus('booking.sentEmail', 'success');
+      return;
+    }
     window.SiteWhatsApp.open(buildMessage());
     renderStatus('booking.sent', 'success');
+  }
+
+  // Submit (the WhatsApp button, or Enter in a field) → WhatsApp; the email button → email.
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+    sendBooking('whatsapp');
   });
+  if (emailButton) {
+    emailButton.addEventListener('click', function () {
+      sendBooking('email');
+    });
+  }
 
   /**
    * Checks whether a select offers a value (compared as text, so URL input never reaches a selector).

@@ -17,13 +17,11 @@ window.SITE_TRANSLATIONS.en = Object.assign(window.SITE_TRANSLATIONS.en || {}, {
   'port.tours.lead': 'Prices in US dollars. Travel times are approximate and depend on traffic.',
   'port.details': 'See details',
   'port.time.confirm': 'Travel time: we confirm it when you book',
-  'port.pickup.tag': 'How it works',
   'port.pickup.title': 'We pick you up at the port',
-  'port.pickup.1': 'Book on WhatsApp and tell us your ship’s name and all-aboard time.',
-  'port.pickup.2': 'We confirm the exact meeting point at the port on WhatsApp.',
+  'port.pickup.1': 'Book on WhatsApp or by email and tell us your ship’s name and all-aboard time.',
+  'port.pickup.2': 'We confirm the exact meeting point at the port on WhatsApp or by email.',
   'port.pickup.3': 'We plan the tour around your ship’s schedule and bring you back to the port.',
   'port.pickup.4': 'For catamarans and yachts, transport to Sosúa is optional: add it when you book; it’s priced by group size.',
-  'port.cta.tag': 'Book on WhatsApp',
 
   // Amber Cove
   'port.ac.meta.title': 'Amber Cove Shore Excursions | Puerto Plata Cruise Excursions',

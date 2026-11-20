@@ -204,7 +204,7 @@ test('JSON-LD describes the business, six tours and the FAQ', () => {
   const falls = trips.find((trip) => trip['@id'].endsWith('#tour-damajagua'));
   assert.equal(falls.offers.lowPrice, 50);
   assert.equal(falls.offers.highPrice, 120);
-  assert.equal(graph.find((node) => node['@type'] === 'FAQPage').mainEntity.length, 10);
+  assert.equal(graph.find((node) => node['@type'] === 'FAQPage').mainEntity.length, 11);
 });
 
 test('title targets both ports', () => {
@@ -215,10 +215,10 @@ test('title targets both ports', () => {
   assert.match(html.match(/<h1[\s\S]*?<\/h1>/)[0], /Puerto Plata/);
 });
 
-test('ten FAQs in every main version', () => {
+test('eleven FAQs in every main version', () => {
   for (const file of MAIN_PAGES) {
     const faq = graphOf(read(file)).find((node) => node['@type'] === 'FAQPage');
-    assert.equal(faq.mainEntity.length, 10, file);
+    assert.equal(faq.mainEntity.length, 11, file);
   }
 });
 

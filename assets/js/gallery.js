@@ -10,9 +10,13 @@
  * choice when the visitor switches boats (boat-tabs.js only shows/hides whole frames and strips).
  * Hidden photos use loading="lazy", so a photo downloads only when it is first shown; a video has
  * preload="none", so it downloads only when it first plays.
- * A video plays on its own only while it is the chosen item and on screen (IntersectionObserver), and
- * never with prefers-reduced-motion. Its pause/play button ([data-video-toggle], in the same frame)
- * lets the visitor stop it (WCAG 2.2.2); once paused by the visitor it does not start again by itself.
+ * A video plays on its own only while it is the chosen item, at least VISIBLE_SHARE of it is on screen
+ * (IntersectionObserver) and its card is not covered by the next stacked card ("stack-cover" from
+ * stack-cards.js), and never with prefers-reduced-motion. Its pause/play button ([data-video-toggle],
+ * in the same frame) lets the visitor stop it (WCAG 2.2.2); once paused by the visitor it does not
+ * start again by itself.
+ * Screen readers: each thumbnail is named after what it shows (the photo's alt, or "Video: …" with the
+ * video's label), so with aria-pressed the visitor hears which photo is now on screen.
  * Without JS the strips and the button stay hidden (CSS / hidden attribute) and the video shows its poster.
  */
 (function () {
@@ -45,7 +49,8 @@
     if (!frame) return;
     var toggle = frame.querySelector('[data-video-toggle]');
     // choice: null = automatic, "play" / "pause" = what the visitor asked for with the button.
-    var state = { onScreen: !canWatch, choice: null };
+    // covered: the card is under the next stacked card (tablet and desktop), so nobody sees the video.
+    var state = { onScreen: !canWatch, covered: Boolean(video.closest('[data-stack-covered]')), choice: null };
 
     /**
      * Shows the button only while the video is the visible item, labelled with what it will do.
@@ -66,7 +71,7 @@
      */
     function sync() {
       var wanted = state.choice === 'play' || (state.choice === null && canWatch && !reduceMotion);
-      if (!video.hidden && state.onScreen && wanted) {
+      if (!video.hidden && state.onScreen && !state.covered && wanted) {
         if (video.paused) {
           var attempt = video.play();
           // A browser may refuse to play (data saver, low-power mode): keep the poster and offer "play".
@@ -92,10 +97,19 @@
 
     if (canWatch) {
       new IntersectionObserver(function (entries) {
-        state.onScreen = entries[entries.length - 1].isIntersecting;
+        var entry = entries[entries.length - 1];
+        // isIntersecting is true from the first visible pixel (and the first callback can come with 1 px in
+        // Firefox and Safari), so the share on screen is checked as well.
+        state.onScreen = entry.isIntersecting && entry.intersectionRatio >= VISIBLE_SHARE;
         sync();
-      }, { threshold: VISIBLE_SHARE }).observe(video);
+      }, { threshold: [0, VISIBLE_SHARE] }).observe(video);
     }
+
+    document.addEventListener('stack-cover', function (event) {
+      if (!event.target.contains(video)) return;
+      state.covered = Boolean(event.detail && event.detail.covered);
+      sync();
+    });
 
     videoSync[frame.getAttribute('data-photos')] = sync;
     renderToggle();
@@ -120,6 +134,27 @@
     if (videoSync[id]) videoSync[id]();
   }
 
+  /**
+   * Names every thumbnail after the item it shows, instead of "Photo 1, 2…": the photo's alt text or,
+   * for the video, "Video: " plus its label. Texts are already in the page language (the build
+   * translates alt and aria-label). A thumbnail whose item has no description keeps its "Photo n" text.
+   * @returns {void}
+   */
+  function nameThumbnails() {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-shots]'), function (strip) {
+      var frame = document.querySelector('[data-photos="' + strip.getAttribute('data-shots') + '"]');
+      if (!frame) return;
+      Array.prototype.forEach.call(strip.querySelectorAll('[data-shot]'), function (button) {
+        var item = frame.querySelector('[data-photo="' + button.getAttribute('data-shot') + '"]');
+        if (!item) return;
+        var isVideo = item.tagName === 'VIDEO';
+        var description = isVideo ? item.getAttribute('aria-label') : item.getAttribute('alt');
+        if (!description) return;
+        button.setAttribute('aria-label', isVideo ? (t('gallery.video') || 'Video') + ': ' + description : description);
+      });
+    });
+  }
+
   document.addEventListener('click', function (event) {
     var button = event.target.closest('[data-shot]');
     if (!button) return;
@@ -127,5 +162,6 @@
     if (strip) showShot(strip, button.getAttribute('data-shot'));
   });
 
+  nameThumbnails();
   Array.prototype.forEach.call(document.querySelectorAll('[data-photos] video[data-photo]'), setUpVideo);
 })();
