@@ -11,14 +11,17 @@
  *   books the tour (a boat's fixed amount, or a share of the total for the other tours), which
  *   the message repeats. For a boat, the visitor can add the round-trip transport port ↔ Sosúa
  *   (switch off by default; price from the transfer table, more than its largest group = "we quote it").
- * - Pay with PayPal: for the tours booked with a share of the total (not boats), two buttons under the
- *   estimate open the PayPal payment link of [data-paypal-link], one showing the deposit and one the
- *   full total; the visitor types that amount in PayPal. Hidden while the page has no link.
+ * - Pay with PayPal: for the tours booked with a share of the total (not boats), the [data-paypal] block under
+ *   the estimate lets the visitor pick the deposit or the full price (both amounts shown). Hidden unless the block
+ *   has a PayPal Client ID and a Formspree endpoint. The payment itself is paypal-checkout.js, through
+ *   window.SiteBooking (below): it validates the form, reads the amount and the booking, shows statuses and,
+ *   once paid, hides the block for good and adds the payment lines to any later WhatsApp or email message.
  * - Two buttons send the same booking: "Book on WhatsApp" (the submit button, also Enter) opens
  *   WhatsApp, and "Book by email" ([data-booking-email], which holds the address) opens the
  *   visitor's email app. Either way the fields are validated first (bilingual messages) and the
- *   booking is already written in the message language, ready to send. Nothing is sent to any
- *   server and nothing the visitor types is logged.
+ *   booking is already written in the message language, ready to send. This file sends nothing to any
+ *   server (only after an approved PayPal payment does paypal-checkout.js email the booking through
+ *   Formspree) and nothing the visitor types is logged.
  * - "Book this tour" buttons ([data-book]) preselect their tour before jumping to the form;
  *   "Book this boat" buttons also carry data-book-boat and preselect the boat. Links from other
  *   pages (the port pages) do the same with ?tour=<id>&boat=<id> in the URL. Without ?tour=, a page
@@ -58,12 +61,14 @@
   var estimateDeposit = form.querySelector('[data-estimate-deposit]');
   var statusElement = form.querySelector('[data-form-status]');
   var emailButton = form.querySelector('[data-booking-email]');
-  var payBlock = form.querySelector('[data-paypal-link]');
-  var payDeposit = form.querySelector('[data-paypal-pay="deposit"]');
-  var payTotal = form.querySelector('[data-paypal-pay="total"]');
-  // Only an https:// address counts as the PayPal link, so an empty or mistyped value keeps the buttons hidden.
-  var payLink = payBlock && payDeposit && payTotal ? payBlock.getAttribute('data-paypal-link').trim() : '';
-  if (!/^https:\/\/\S+$/.test(payLink)) payLink = '';
+  var payBlock = form.querySelector('[data-paypal]');
+  var payAmounts = {
+    deposit: form.querySelector('[data-paypal-amount="deposit"]'),
+    total: form.querySelector('[data-paypal-amount="total"]')
+  };
+  var payConfig = readPayConfig();
+  /** What markPaid() received once the booking is paid (the block then stays hidden), else null. */
+  var paidResult = null;
   var photos = Array.prototype.slice.call(document.querySelectorAll('[data-booking-photo]'));
   var hasTriedSubmit = false;
 
@@ -244,12 +249,18 @@
   }
 
   /**
-   * Shows a status line under the button.
-   * @param {string|null} key - Translation key, or null to hide.
+   * Shows a status line under the buttons. Once the booking is paid, "no status" means the payment
+   * status, so editing the form never hides the booking code from the visitor.
+   * @param {string|null} key - Translation key, or null to hide (or to go back to the payment status).
    * @param {'success'|'error'} [tone] - Visual tone.
+   * @param {Object<string, string|number>} [values] - Values of the text's {placeholders}.
    * @returns {void}
    */
-  function renderStatus(key, tone) {
+  function renderStatus(key, tone, values) {
+    if (!key && paidResult) {
+      renderStatus(paidResult.key, paidResult.tone, paidResult.values);
+      return;
+    }
     statusKey = key;
     statusElement.classList.remove('form__status--success', 'form__status--error');
     if (!key) {
@@ -258,7 +269,7 @@
       return;
     }
     statusElement.classList.add('form__status--' + (tone || 'success'));
-    statusElement.textContent = t(key);
+    statusElement.textContent = fill(t(key), values || {});
     statusElement.hidden = false;
   }
 
@@ -419,25 +430,63 @@
       : fill(t(percent === null ? 'booking.estimate.deposit' : 'booking.estimate.depositPercent'), {
         deposit: window.SitePrices.format(depositAmount), percent: percent
       });
-    // Online payment only for a share-of-the-total deposit: boats (fixed deposit) are confirmed first.
-    renderPayPal(percent === null ? null : depositAmount, quotedTotal(result));
+    renderPayPal();
   }
 
   /**
-   * Shows the PayPal buttons with the amounts to pay, or hides them when there is nothing to pay
-   * online or the page has no PayPal link.
-   * @param {number|null} deposit - Deposit in USD, or null when it cannot be paid online.
-   * @param {number|null} total - Group total in USD, or null when the group has no price.
+   * Reads the PayPal Client ID and the Formspree endpoint of the pay block.
+   * @returns {{clientId: string, endpoint: string}|null} Both values, or null when the block is missing or
+   *   either value is empty or malformed (the block then stays hidden).
+   */
+  function readPayConfig() {
+    if (!payBlock || !payAmounts.deposit || !payAmounts.total || !form.elements.payKind) return null;
+    var clientId = (payBlock.getAttribute('data-paypal-client-id') || '').trim();
+    var endpoint = (payBlock.getAttribute('data-formspree-endpoint') || '').trim();
+    if (!/^[A-Za-z0-9_-]{20,}$/.test(clientId)) return null;
+    if (!/^https:\/\/formspree\.io\/f\/[A-Za-z0-9_-]+$/.test(endpoint)) return null;
+    return { clientId: clientId, endpoint: endpoint };
+  }
+
+  /**
+   * Amounts the visitor can pay online for the current selection. Only a share-of-the-total deposit is
+   * paid online: boats (fixed deposit) are confirmed first.
+   * @returns {{deposit: number, total: number, percent: number}|null} USD amounts and the deposit percent, or
+   *   null for boats, groups without a price, or once the booking is paid.
+   */
+  function payableAmounts() {
+    if (paidResult) return null;
+    var percent = window.SitePrices.depositPercent(priceTableId());
+    var total = quotedTotal(currentQuote());
+    if (percent === null || total === null) return null;
+    var deposit = window.SitePrices.deposit(priceTableId(), total);
+    return deposit === null ? null : { deposit: deposit, total: total, percent: percent };
+  }
+
+  /**
+   * Shows the pay block with the deposit and the full price, or hides it when there is nothing to pay
+   * online or the block is not configured.
    * @returns {void}
    */
-  function renderPayPal(deposit, total) {
-    if (!payLink) return;
-    var payable = deposit !== null && total !== null;
-    payBlock.hidden = !payable;
-    if (!payable) return;
+  function renderPayPal() {
+    if (!payConfig) return;
+    var amounts = payableAmounts();
+    payBlock.hidden = !amounts;
+    if (!amounts) return;
     var format = window.SitePrices.format;
-    payDeposit.querySelector('span').textContent = fill(t('booking.pay.deposit'), { amount: format(deposit) });
-    payTotal.querySelector('span').textContent = fill(t('booking.pay.total'), { amount: format(total) });
+    payAmounts.deposit.textContent = fill(t('booking.pay.deposit'), { amount: format(amounts.deposit) });
+    payAmounts.total.textContent = fill(t('booking.pay.total'), { amount: format(amounts.total) });
+  }
+
+  /**
+   * What the visitor is about to pay online: the option checked in the pay block.
+   * @returns {{kind: 'deposit'|'total', amount: number, percent: number}|null} The chosen amount in USD and the
+   *   deposit percent, or null when nothing can be paid online right now.
+   */
+  function payment() {
+    var amounts = payConfig ? payableAmounts() : null;
+    if (!amounts) return null;
+    var kind = form.elements.payKind.value === 'total' ? 'total' : 'deposit';
+    return { kind: kind, amount: amounts[kind], percent: amounts.percent };
   }
 
   /**
@@ -520,6 +569,8 @@
     if (messageLanguage() !== language()) {
       lines.push('• ' + tm('booking.msg.clientLanguage') + ': ' + tm('lang.' + language()));
     }
+    // Paid online: the message also carries the payment (amount, PayPal transaction, booking code).
+    if (paidResult) lines = lines.concat([''], paidResult.lines);
     return lines.join('\n');
   }
 
@@ -566,18 +617,25 @@
   }
 
   /**
+   * Validates every field before the booking leaves the form (WhatsApp, email or PayPal): shows the
+   * errors from now on as the visitor types, and focuses the first invalid field.
+   * @returns {boolean} True when the form is valid.
+   */
+  function validate() {
+    hasTriedSubmit = true;
+    renderStatus(null);
+    var firstInvalid = validateAll();
+    if (firstInvalid) firstInvalid.focus();
+    return !firstInvalid;
+  }
+
+  /**
    * Validates the form and, when it is valid, opens the chosen channel with the booking written.
    * @param {'whatsapp'|'email'} channel - Where the visitor wants to send the booking.
    * @returns {void}
    */
   function sendBooking(channel) {
-    hasTriedSubmit = true;
-    renderStatus(null);
-    var firstInvalid = validateAll();
-    if (firstInvalid) {
-      firstInvalid.focus();
-      return;
-    }
+    if (!validate()) return;
     if (channel === 'email') {
       openEmail(emailButton.getAttribute('data-booking-email'), buildMessage());
       renderStatus('booking.sentEmail', 'success');
@@ -665,8 +723,48 @@
     if (button) preselect(button.getAttribute('data-book'), button.getAttribute('data-book-boat'));
   });
 
+  /**
+   * The booking as it stands, written in the message language, for the payment and the team's email.
+   * @returns {{message: string, tour: string, date: string, dateIso: string, people: string}} The full booking
+   *   message, what is booked, the date spelled out and as YYYY-MM-DD, and the group size ("4 personas").
+   */
+  function snapshot() {
+    var count = people();
+    return {
+      message: buildMessage(),
+      tour: messageTourName(),
+      date: formatDate(dateInput.value),
+      dateIso: dateInput.value,
+      people: count + ' ' + tm(count === 1 ? 'booking.person' : 'booking.persons')
+    };
+  }
+
+  /**
+   * Records a completed online payment: the pay block hides for good (no second payment), the status
+   * stays on screen while the visitor edits the form, and later WhatsApp or email messages carry the lines.
+   * @param {{key: string, tone: 'success'|'error', values: Object<string, string>, lines: string[]}} result -
+   *   Status text key, tone and {placeholders}, and the payment lines for the messages.
+   * @returns {void}
+   */
+  function markPaid(result) {
+    paidResult = { key: result.key, tone: result.tone, values: result.values || {}, lines: result.lines || [] };
+    renderPayPal();
+    renderStatus(null);
+  }
+
   dateInput.min = todayInPuertoPlata();
-  if (payLink) payDeposit.href = payTotal.href = payLink;
   preselectFromUrl();
   renderEstimate();
+
+  // For paypal-checkout.js (loaded after this file).
+  window.SiteBooking = {
+    payConfig: function () {
+      return payConfig && { clientId: payConfig.clientId, endpoint: payConfig.endpoint };
+    },
+    validate: validate,
+    payment: payment,
+    snapshot: snapshot,
+    status: renderStatus,
+    markPaid: markPaid
+  };
 })();

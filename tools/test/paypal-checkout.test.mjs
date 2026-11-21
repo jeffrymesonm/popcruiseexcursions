@@ -14,6 +14,9 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 
+/** PayPal sandbox Client ID: right for testing, never on the published site with a Formspree endpoint set. */
+const SANDBOX_CLIENT_ID = 'ATWrAKuH6y-bBzs0Yt6BfjiYZxCi4w4iZhWipC_AXED7uRRuCZUM1wwiY9GYU8SztF-B0DhgfST6DSl7';
+
 /**
  * Loads assets/js/paypal-checkout.js in a sandbox and returns what it exposes.
  * @returns {object} window.SitePayPal of the sandbox.
@@ -82,4 +85,19 @@ test('email payload: booking message, then the payment lines; reply-to only with
   assert.deepEqual({ ...pp.emailPayload({ subject: 'S', message: 'M', lines: ['a', 'b'], payerEmail: 'x@y.com' }) },
     { _subject: 'S', message: 'M\n\na\nb', email: 'x@y.com' });
   assert.equal('email' in pp.emailPayload({ subject: 'S', message: 'M', lines: [], payerEmail: '' }), false);
+});
+
+test('the pay block is configured, and never with the sandbox Client ID once Formspree is set', () => {
+  const html = fs.readFileSync(path.join(ROOT, 'src/partials/booking.html'), 'utf8');
+  const block = html.match(/<div\b[^>]*\sdata-paypal(?=[\s>])[^>]*>/);
+  assert.ok(block, 'src/partials/booking.html has no pay block [data-paypal]');
+  const attribute = (name) => (block[0].match(new RegExp(`\\s${name}="([^"]*)"`)) || [])[1];
+  const clientId = attribute('data-paypal-client-id');
+  const endpoint = attribute('data-formspree-endpoint');
+  assert.equal(typeof clientId, 'string', 'the pay block has no data-paypal-client-id');
+  assert.equal(typeof endpoint, 'string', 'the pay block has no data-formspree-endpoint');
+  if (endpoint.trim()) {
+    assert.notEqual(clientId.trim(), SANDBOX_CLIENT_ID,
+      'Formspree is set but the Client ID is still the sandbox one: put the live Client ID before publishing');
+  }
 });

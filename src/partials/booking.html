@@ -95,23 +95,29 @@
                 <p class="estimate__detail" data-estimate-detail></p>
                 <p class="estimate__deposit" data-estimate-deposit hidden></p>
               </div>
-              <!-- Pay online (booking.js): data-paypal-link is a PayPal payment link where the buyer types the
-                   amount. Both buttons open it and show the amount to type: the deposit and the full total.
-                   Only for tours booked with a share of the total (data-deposit-percent), not boats, and
-                   hidden while data-paypal-link is empty (it must start with https://). -->
-              <div class="estimate__pay" data-paypal-link="" hidden>
-                <p class="estimate__label" data-i18n="booking.pay.title">Pagar con PayPal</p>
-                <div class="estimate__pay-buttons">
-                  <a class="btn btn--paypal" data-paypal-pay="deposit" target="_blank" rel="noopener" aria-describedby="booking-pay-note">
-                    <svg aria-hidden="true"><use href="#icon-paypal"/></svg>
-                    <span></span>
-                  </a>
-                  <a class="btn btn--paypal btn--paypal-outline" data-paypal-pay="total" target="_blank" rel="noopener" aria-describedby="booking-pay-note">
-                    <svg aria-hidden="true"><use href="#icon-paypal"/></svg>
-                    <span></span>
-                  </a>
-                </div>
-                <p class="estimate__pay-note" id="booking-pay-note" data-i18n="booking.pay.note">PayPal se abre en otra pestaña: escribe ahí el monto del botón. Envíanos también tu reserva por WhatsApp o correo, así sabemos la fecha y tu crucero.</p>
+              <!-- Pay online: booking.js shows this block and fills the two amounts; paypal-checkout.js renders PayPal's
+                   own button in [data-paypal-button], charges the chosen amount (deposit or full price) and, once the
+                   payment is approved, emails the booking to the team through Formspree. Only for tours booked with
+                   a share of the total (data-deposit-percent), not boats. Hidden unless BOTH values are set:
+                   - data-paypal-client-id: PayPal Client ID (public). The one below is the SANDBOX one (test
+                     payments only): put the LIVE Client ID before publishing (tools/test/paypal-checkout.test.mjs
+                     fails if Formspree is set and the sandbox ID is still here).
+                   - data-formspree-endpoint: https://formspree.io/f/<form id> of the form that emails
+                     popcruiseexcursions@gmail.com. -->
+              <div class="estimate__pay" data-paypal data-paypal-client-id="ATWrAKuH6y-bBzs0Yt6BfjiYZxCi4w4iZhWipC_AXED7uRRuCZUM1wwiY9GYU8SztF-B0DhgfST6DSl7" data-formspree-endpoint="" hidden>
+                <fieldset class="estimate__pay-choice">
+                  <legend class="estimate__label" data-i18n="booking.pay.title">Pagar con PayPal</legend>
+                  <label class="pay-option">
+                    <input class="pay-option__input" type="radio" name="payKind" value="deposit" checked>
+                    <span data-paypal-amount="deposit"></span>
+                  </label>
+                  <label class="pay-option">
+                    <input class="pay-option__input" type="radio" name="payKind" value="total">
+                    <span data-paypal-amount="total"></span>
+                  </label>
+                </fieldset>
+                <div class="estimate__pay-button" data-paypal-button></div>
+                <p class="estimate__pay-note" data-i18n="booking.pay.note">Paga con tu cuenta PayPal o con tarjeta. Al pagar, PayPal te manda el recibo y a nosotros nos llega tu reserva.</p>
               </div>
             </div>
 
