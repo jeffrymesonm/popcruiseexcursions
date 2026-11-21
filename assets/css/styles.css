@@ -550,11 +550,16 @@ button {
 }
 
 /* ============ Hero ============ */
+/*
+ * At least one screen tall, and taller when its copy needs it (short phones, longer languages): the
+ * content then pushes the hero down instead of sliding under the absolute nav.
+ */
 .hero {
   position: relative;
-  height: 100vh;
-  height: 100svh;
-  min-height: 36rem;
+  display: flex;
+  flex-direction: column;
+  min-height: max(36rem, 100vh);
+  min-height: max(36rem, 100svh);
   overflow: hidden;
   isolation: isolate;
   color: #fff;
@@ -567,10 +572,33 @@ button {
   background: var(--color-fg);
 }
 
+/* --focus (inline, optional) keeps a photo's subject in view when a narrow screen crops its sides. */
 .hero__image {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: var(--focus, 50% 50%);
+}
+
+/*
+ * Rotating photos of the home hero (hero-slides.js moves .is-active). The shown photo fades in and,
+ * once the intro has run, zooms in slowly; the one leaving fades out and only drops its zoom after
+ * the fade (delayed transform reset), so it never jumps while still visible.
+ */
+.hero__media[data-hero-slides] .hero__image {
+  opacity: 0;
+  transition: opacity 1.2s ease, transform 0s linear 1.2s;
+}
+
+.hero__media[data-hero-slides] .hero__image.is-active {
+  opacity: 1;
+}
+
+.hero-ready .hero__media[data-hero-slides] .hero__image.is-active {
+  transform: scale(1.08);
+  transition: opacity 1.2s ease, transform 8s linear;
 }
 
 /* Top shade so the white logo and nav controls stay readable on bright skies. */
@@ -602,13 +630,18 @@ button {
   pointer-events: none;
 }
 
-/* Extra bottom padding leaves room for the tilted marquee that overlaps the hero's edge. */
+/*
+ * Fills the hero (and grows it when needed). The top padding keeps the copy clear of the nav (about
+ * 5.5rem tall on phones, more from 768 px: see below); the extra bottom padding leaves room for the
+ * tilted marquee that overlaps the hero's edge.
+ */
 .hero__inner {
   display: flex;
+  flex: 1 0 auto;
   align-items: flex-end;
   justify-content: space-between;
   gap: 2rem;
-  height: 100%;
+  padding-top: 7rem;
   padding-bottom: 5.5rem;
 }
 
@@ -648,6 +681,110 @@ button {
   flex-wrap: wrap;
   gap: 0.75rem;
   margin-top: 1.75rem;
+}
+
+/*
+ * Photo controls under the hero buttons: pause/play plus one dot per photo (hero-slides.js).
+ * The pressed dot stretches into a bar that fills up while its photo is on screen; when the fill
+ * ends (animationend) the script shows the next photo, so the bar is also the timer. The fill runs
+ * only with .is-autoplay, after the intro (.hero-ready), and stops while .is-paused (pause button,
+ * hero off screen, tab hidden), while hovered with a mouse or while a dot has keyboard focus.
+ * Each dot is a 24 px target (WCAG 2.5.8) drawing a smaller mark.
+ */
+.hero-slides {
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+  margin-top: 1.5rem;
+  padding: 0.25rem 0.5rem 0.25rem 0.25rem;
+  border-radius: 999px;
+  background: rgba(6, 30, 31, 0.32);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+.hero-slides__toggle {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  margin-right: 0.25rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+}
+
+.hero-slides__toggle:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.hero-slides__toggle svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.hero-slides__dot {
+  position: relative;
+  width: 1.5rem;
+  height: 1.5rem;
+  transition: width 0.4s var(--ease-out);
+}
+
+.hero-slides__dot::before {
+  content: "";
+  position: absolute;
+  inset: 50% 0.5rem auto;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.5) linear-gradient(var(--color-sun), var(--color-sun)) no-repeat left / 0% 100%;
+  transform: translateY(-50%);
+  transition: background-color 0.2s ease;
+}
+
+.hero-slides__dot:hover::before {
+  background-color: rgba(255, 255, 255, 0.85);
+}
+
+.hero-slides__dot[aria-pressed="true"] {
+  width: 3rem;
+}
+
+/* Without autoplay (reduced motion, or before the script runs) the pressed bar is simply full. */
+.hero-slides__dot[aria-pressed="true"]::before {
+  background-size: 100% 100%;
+}
+
+.hero-ready .hero-slides.is-autoplay .hero-slides__dot[aria-pressed="true"]::before {
+  background-color: rgba(255, 255, 255, 0.35);
+  animation: hero-slide-timer var(--hero-interval, 6s) linear both;
+}
+
+.hero-slides.is-paused .hero-slides__dot::before,
+.hero-slides:has(:focus-visible) .hero-slides__dot::before {
+  animation-play-state: paused !important;
+}
+
+@media (hover: hover) {
+  .hero-slides:hover .hero-slides__dot::before {
+    animation-play-state: paused !important;
+  }
+}
+
+.hero-slides__toggle:focus-visible,
+.hero-slides__dot:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+  border-radius: 999px;
+}
+
+@keyframes hero-slide-timer {
+  from {
+    background-size: 0% 100%;
+  }
+
+  to {
+    background-size: 100% 100%;
+  }
 }
 
 /* Floating "from US$…" card (large screens only). */
@@ -707,6 +844,11 @@ button {
 }
 
 @media (min-width: 768px) {
+  /* The nav is taller here (5.5rem logo). */
+  .hero__inner {
+    padding-top: 8.5rem;
+  }
+
   .hero__title {
     font-size: 4rem;
   }
@@ -1664,7 +1806,10 @@ button {
 .tour-card__media img[hidden],
 .tour-card__media video[hidden],
 .media-toggle[hidden],
-.thumbs[hidden] {
+.thumbs[hidden],
+.hero__image[hidden],
+.hero-slides[hidden],
+.hero-slides__toggle[hidden] {
   display: none;
 }
 
@@ -2758,9 +2903,8 @@ html:not(.js) .boat-photo__name {
 /* ============ Port pages (Amber Cove, Taíno Bay) ============ */
 /* Same hero as the home page, shorter: no marquee or price card below it. */
 .hero--port {
-  height: 78vh;
-  height: 78svh;
-  min-height: 34rem;
+  min-height: max(34rem, 78vh);
+  min-height: max(34rem, 78svh);
 }
 
 .hero--port .hero__inner {
@@ -3008,6 +3152,11 @@ html:not(.js) .boat-photo__name {
   .js .hero__media {
     clip-path: none;
     filter: none;
+  }
+
+  /* Hero photos change only when a dot is pressed, with no fade or zoom. */
+  .hero-ready .hero__media[data-hero-slides] .hero__image.is-active {
+    transform: none;
   }
 
   .js .hero__veil,

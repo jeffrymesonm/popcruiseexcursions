@@ -35,6 +35,9 @@ window.SITE_TRANSLATIONS.fr = {
   'hero.card.2': 'Service en espagnol et en anglais',
   'hero.card.3': 'Plus le groupe est grand, meilleur est le prix',
   'hero.card.cta': 'Voir les prix',
+  'hero.photos': 'Photos des excursions',
+  'hero.pause': 'Mettre les photos en pause',
+  'hero.play': 'Faire défiler les photos',
 
   // Marquee
   'marquee.1': 'Cascades de Damajagua',

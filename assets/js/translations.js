@@ -19,6 +19,8 @@ window.SITE_TRANSLATIONS = {
     'gallery.pause': 'Pausar video',
     'gallery.play': 'Reproducir video',
     'gallery.video': 'Video',
+    'hero.pause': 'Pausar fotos',
+    'hero.play': 'Reproducir fotos',
     'price.perPerson': 'por persona',
     'wa.greeting': '¡Hola, Puerto Plata Cruise Excursions! Quiero información sobre sus excursiones en Puerto Plata.',
     'booking.person': 'persona',
@@ -92,6 +94,9 @@ window.SITE_TRANSLATIONS = {
     'hero.card.2': 'Service in English and Spanish',
     'hero.card.3': 'Bigger group, better price',
     'hero.card.cta': 'See prices',
+    'hero.photos': 'Tour photos',
+    'hero.pause': 'Pause photos',
+    'hero.play': 'Play photos',
 
     // Marquee
     'marquee.1': 'Damajagua Waterfalls',
