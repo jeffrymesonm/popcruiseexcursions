@@ -241,6 +241,7 @@ window.SITE_TRANSLATIONS = {
     'boats.hours': 'hours',
     'boats.per-boat': 'per boat',
     'boats.private': 'Price for the whole boat, not per person: only your group on board, for 4 hours. Snorkeling is included on every boat.',
+    'boats.availability': 'Subject to availability: before paying, message us on WhatsApp or by email to confirm the boat is free on your date.',
     'boats.transfer.title': 'Round-trip transport (optional)',
     'boats.transfer.lead': 'From the cruise port to Sosúa beach and back, for your whole group. Add it in the booking form.',
     'boats.transfer.caption': 'Round-trip transport price by group size',
@@ -297,6 +298,8 @@ window.SITE_TRANSLATIONS = {
     'boats.cat-jacuzzi.alt3': 'Going down the slide into the sea',
     'boats.cat-jacuzzi.alt4': 'A small wedding on the catamaran’s bow',
     'boats.cat-jacuzzi.alt5': 'Group eating on board during a party',
+    'boats.cat-jacuzzi.alt6': 'The catamaran anchored in turquoise water, seen from above between thatched roofs',
+    'boats.cat-jacuzzi.alt7': 'The catamaran with a group dressed in white on board, off a green shore',
 
     // Why us
     'why.title': 'Your day ashore, worry-free',
