@@ -68,16 +68,18 @@ test('capture info reads the PayPal capture and survives missing fields', () => 
 test('paid lines: status line only when the payment is not completed', () => {
   const pp = loadSitePayPal();
   const paid = {
-    amountText: 'US$97.50', kindText: 'depósito 50 %', transaction: 'T1', code: 'PCE-1203-AAAA',
-    payerEmail: 'ana@example.com', status: 'COMPLETED'
+    amountText: 'US$97.50', kindText: 'depósito 50 %', paidFor: 'Damajagua · 3 de diciembre de 2026 · 3 personas',
+    transaction: 'T1', code: 'PCE-1203-AAAA', payerEmail: 'ana@example.com', status: 'COMPLETED'
   };
   assert.deepEqual(Array.from(pp.paidLines(paid, (key) => key)), [
-    '• booking.msg.paid: US$97.50 (depósito 50 %)', '• booking.msg.transaction: T1',
+    '• booking.msg.paid: US$97.50 (depósito 50 %)',
+    '• booking.msg.paidFor: Damajagua · 3 de diciembre de 2026 · 3 personas',
+    '• booking.msg.transaction: T1',
     '• booking.msg.code: PCE-1203-AAAA', '• booking.msg.payerEmail: ana@example.com'
   ]);
   const pending = pp.paidLines({ ...paid, payerEmail: '', status: 'PENDING' }, (key) => key);
-  assert.equal(pending.length, 4);
-  assert.equal(pending[3], '• booking.msg.paymentStatus: PENDING');
+  assert.equal(pending.length, 5);
+  assert.equal(pending[4], '• booking.msg.paymentStatus: PENDING');
 });
 
 test('email payload: booking message, then the payment lines; reply-to only with an email', () => {
@@ -100,4 +102,187 @@ test('the pay block is configured, and never with the sandbox Client ID once For
     assert.notEqual(clientId.trim(), SANDBOX_CLIENT_ID,
       'Formspree is set but the Client ID is still the sandbox one: put the live Client ID before publishing');
   }
+});
+
+/**
+ * Runs assets/js/paypal-checkout.js against stubs of the page, booking.js (SiteBooking), PayPal's SDK and fetch,
+ * so the checkout wiring can be driven step by step: the form coming into view, PayPal's callbacks, Formspree.
+ * @param {{blockHidden?: boolean, fetch?: function(): Promise}} [options] - Pay block hidden at start; fetch result.
+ * @returns {object} { log, booking (mutable state), block, slot, intersect(), mutate(), loadSdk(), actions() }.
+ */
+function loadCheckout(options = {}) {
+  const log = { statuses: [], paid: [], emails: [], scripts: [], timers: [], orders: [], resolved: 0, rejected: 0, restarts: 0 };
+  const block = { hidden: Boolean(options.blockHidden) };
+  const slot = { textContent: '', hidden: false, children: [], appendChild(child) { this.children.push(child); } };
+  const observers = {};
+  const state = {
+    payment: { kind: 'deposit', amount: 112.5, percent: 50 },
+    booking: { message: 'Booking message', tour: 'Damajagua', date: '3 de diciembre de 2026', dateIso: '2026-12-03', people: '3 personas' }
+  };
+  const context = vm.createContext({
+    document: {
+      head: { appendChild: (script) => log.scripts.push(script) },
+      querySelector: (selector) => ({ '[data-booking-form]': {}, '[data-paypal]': block, '[data-paypal-button]': slot })[selector] || null,
+      querySelectorAll: () => [],
+      createElement: (tag) => ({ tagName: tag.toUpperCase() })
+    },
+    SiteBooking: {
+      payConfig: () => ({ clientId: 'A'.repeat(20), endpoint: 'https://formspree.io/f/test' }),
+      validate: () => true,
+      payment: () => state.payment && { ...state.payment },
+      snapshot: () => ({ ...state.booking }),
+      status: (key) => log.statuses.push(key),
+      markPaid: (result) => log.paid.push(result)
+    },
+    SiteI18n: { t: (key) => key, messageLanguage: () => 'es', getLanguage: () => 'es' },
+    SitePrices: { format: (amount) => 'US$' + amount },
+    setTimeout: (fn, ms) => log.timers.push({ fn, ms, cleared: false }),
+    clearTimeout: (id) => { if (log.timers[id - 1]) log.timers[id - 1].cleared = true; },
+    fetch: (url, init) => {
+      log.emails.push({ url, init, body: JSON.parse(init.body) });
+      return options.fetch ? options.fetch() : Promise.resolve({ ok: true });
+    },
+    AbortController: class { constructor() { this.signal = {}; } abort() {} },
+    MutationObserver: class { constructor(callback) { observers.mutation = callback; } observe() {} disconnect() {} },
+    IntersectionObserver: class { constructor(callback) { observers.intersection = callback; } observe() {} disconnect() {} }
+  });
+  context.window = context;
+  vm.runInContext(fs.readFileSync(path.join(ROOT, 'assets/js/paypal-checkout.js'), 'utf8'), context);
+  const checkout = {
+    log, state, block, slot,
+    /** The booking form comes near the screen. */
+    intersect: () => observers.intersection && observers.intersection([{ isIntersecting: true }]),
+    /** booking.js toggled the pay block's hidden attribute. */
+    mutate: () => observers.mutation && observers.mutation([]),
+    /** PayPal's script finishes loading; returns the options given to paypal.Buttons(). */
+    loadSdk() {
+      context.paypal = { Buttons: (config) => { checkout.buttons = config; return { render: () => Promise.resolve() }; } };
+      log.scripts[0].onload();
+      return checkout.buttons;
+    },
+    /** PayPal's actions object; capture() returns what the test gives it. */
+    actions: (capture) => ({
+      resolve: () => { log.resolved++; return Promise.resolve(); },
+      reject: () => { log.rejected++; return Promise.resolve(); },
+      restart: () => { log.restarts++; return Promise.resolve(); },
+      order: {
+        create: (order) => { log.orders.push(order); return Promise.resolve('ORDER-' + log.orders.length); },
+        capture: capture || (() => Promise.resolve(captured('COMPLETED')))
+      }
+    })
+  };
+  return checkout;
+}
+
+/**
+ * A captured PayPal order, as actions.order.capture() resolves it.
+ * @param {string} status - Capture status.
+ * @returns {object} Order with one capture and a payer.
+ */
+function captured(status) {
+  return { payer: { email_address: 'ana@example.com' }, purchase_units: [{ payments: { captures: [{ id: 'TX1', status }] } }] };
+}
+
+/**
+ * Lets a checkout with the form on screen load PayPal and returns PayPal's button options.
+ * @param {object} checkout - loadCheckout() result.
+ * @returns {object} Options given to paypal.Buttons().
+ */
+function readyButtons(checkout) {
+  checkout.intersect();
+  return checkout.loadSdk();
+}
+
+test('PayPal loads only once the booking form is near the screen and the pay block shows', () => {
+  const visible = loadCheckout();
+  assert.equal(visible.log.scripts.length, 0, 'loaded before the form came into view');
+  visible.intersect();
+  assert.equal(visible.log.scripts.length, 1);
+
+  const hidden = loadCheckout({ blockHidden: true });
+  hidden.intersect();
+  assert.equal(hidden.log.scripts.length, 0, 'loaded while the pay block was hidden');
+  hidden.block.hidden = false;
+  hidden.mutate();
+  assert.equal(hidden.log.scripts.length, 1);
+});
+
+test('a PayPal script that never answers leaves a notice instead of a blank panel', () => {
+  const checkout = loadCheckout();
+  checkout.intersect();
+  const timeout = checkout.log.timers.find((timer) => timer.ms >= 10000);
+  assert.ok(timeout, 'no load timeout');
+  timeout.fn();
+  assert.equal(checkout.slot.children[0].textContent, 'booking.pay.unavailable');
+});
+
+test('no second payment can start while the first one is being captured', async () => {
+  const checkout = loadCheckout();
+  const buttons = readyButtons(checkout);
+  const orderId = await buttons.createOrder({}, checkout.actions());
+  let finishCapture;
+  const approving = buttons.onApprove({ orderID: orderId }, checkout.actions(() => new Promise((resolve) => { finishCapture = resolve; })));
+  await buttons.onClick({}, checkout.actions());
+  assert.equal(checkout.log.rejected, 1, 'PayPal could open again during the capture');
+  assert.ok(checkout.log.statuses.includes('booking.pay.processing'));
+  finishCapture(captured('COMPLETED'));
+  await approving;
+  assert.equal(checkout.log.paid.length, 1);
+  assert.equal(checkout.log.paid[0].key, 'booking.pay.done');
+});
+
+test('a DECLINED capture goes back to PayPal and a FAILED one shows the error; neither counts as paid', async () => {
+  const declined = loadCheckout();
+  let buttons = readyButtons(declined);
+  let orderId = await buttons.createOrder({}, declined.actions());
+  await buttons.onApprove({ orderID: orderId }, declined.actions(() => Promise.resolve(captured('DECLINED'))));
+  assert.equal(declined.log.restarts, 1);
+  assert.equal(declined.log.paid.length, 0);
+  assert.equal(declined.log.emails.length, 0);
+
+  const failed = loadCheckout();
+  buttons = readyButtons(failed);
+  orderId = await buttons.createOrder({}, failed.actions());
+  await buttons.onApprove({ orderID: orderId }, failed.actions(() => Promise.resolve(captured('FAILED'))));
+  assert.ok(failed.log.statuses.includes('booking.pay.error'));
+  assert.equal(failed.log.paid.length, 0);
+  assert.equal(failed.log.emails.length, 0);
+  await buttons.onClick({}, failed.actions());
+  assert.equal(failed.log.resolved, 1, 'the visitor cannot try again after a failed capture');
+});
+
+test('the email describes the booking frozen when PayPal opened, is sent once and survives closing the tab', async () => {
+  const checkout = loadCheckout();
+  const buttons = readyButtons(checkout);
+  const orderId = await buttons.createOrder({}, checkout.actions());
+  checkout.state.booking.message = 'Edited after PayPal opened';
+  checkout.state.payment = { kind: 'total', amount: 450, percent: 50 };
+  await buttons.onApprove({ orderID: orderId }, checkout.actions());
+  await buttons.onApprove({ orderID: orderId }, checkout.actions());
+  assert.equal(checkout.log.emails.length, 1);
+  const email = checkout.log.emails[0];
+  assert.equal(email.init.keepalive, true, 'the email can be cancelled when the tab closes');
+  assert.ok(email.body.message.startsWith('Booking message\n\n'));
+  assert.ok(email.body.message.includes('US$112.5'));
+  assert.ok(email.body.message.includes('booking.msg.paidFor: Damajagua · 3 de diciembre de 2026 · 3 personas'));
+  assert.equal(email.body.email, 'ana@example.com');
+});
+
+test('a captured payment whose frozen booking is missing is still emailed and shown', async () => {
+  const checkout = loadCheckout();
+  const buttons = readyButtons(checkout);
+  await buttons.onApprove({ orderID: 'UNKNOWN-ORDER' }, checkout.actions());
+  assert.equal(checkout.log.emails.length, 1);
+  assert.equal(checkout.log.paid.length, 1);
+});
+
+test('when Formspree fails after the payment, the visitor keeps the code and the transaction', async () => {
+  const checkout = loadCheckout({ fetch: () => Promise.reject(new Error('offline')) });
+  const buttons = readyButtons(checkout);
+  const orderId = await buttons.createOrder({}, checkout.actions());
+  await buttons.onApprove({ orderID: orderId }, checkout.actions());
+  assert.equal(checkout.log.paid.length, 1);
+  assert.equal(checkout.log.paid[0].key, 'booking.pay.emailFailed');
+  assert.equal(checkout.log.paid[0].values.transaction, 'TX1');
+  assert.match(checkout.log.paid[0].values.code, /^PCE-1203-/);
 });
