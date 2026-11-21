@@ -1357,8 +1357,10 @@ button {
   color: var(--color-accent);
 }
 
-/* Boats card: the price is for the whole private boat, not per person (other operators sell seats). */
-.boat-private {
+/* Boats card notices: the price is for the whole private boat, not per person (other operators sell seats),
+   and boats are subject to availability (check on WhatsApp or by email before paying). */
+.boat-private,
+.boat-availability {
   margin-top: 0.75rem;
   padding: 0.6rem 0.85rem;
   border-left: 4px solid var(--color-sun);

@@ -184,6 +184,7 @@ window.SITE_TRANSLATIONS.it = {
   'boats.hours': 'ore',
   'boats.per-boat': 'a barca',
   'boats.private': 'Prezzo per l’intera barca, non a persona: a bordo solo il vostro gruppo, per 4 ore. Lo snorkeling è incluso su tutte le barche.',
+  'boats.availability': 'Soggetto a disponibilità: prima di pagare, scrivici su WhatsApp o via e-mail per confermare che la barca sia libera nella tua data.',
   'boats.transfer.title': 'Trasporto andata e ritorno (opzionale)',
   'boats.transfer.lead': 'Dal porto crocieristico alla spiaggia di Sosúa e ritorno, per tutto il gruppo. Aggiungilo nel modulo di prenotazione.',
   'boats.transfer.caption': 'Prezzo del trasporto andata e ritorno in base al gruppo',
@@ -240,6 +241,8 @@ window.SITE_TRANSLATIONS.it = {
   'boats.cat-jacuzzi.alt3': 'Discesa dallo scivolo in mare',
   'boats.cat-jacuzzi.alt4': 'Piccolo matrimonio a prua del catamarano',
   'boats.cat-jacuzzi.alt5': 'Gruppo che mangia a bordo durante una festa',
+  'boats.cat-jacuzzi.alt6': 'Il catamarano all’ancora in acque turchesi, visto dall’alto tra tetti di palma',
+  'boats.cat-jacuzzi.alt7': 'Il catamarano con un gruppo vestito di bianco a bordo, davanti a una costa verde',
 
   // Why us
   'why.title': 'La tua giornata a terra, senza pensieri',
