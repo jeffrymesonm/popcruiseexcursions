@@ -11,11 +11,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
+import { SANDBOX_CLIENT_ID } from '../lib/paypal.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 
-/** PayPal sandbox Client ID: right for testing, never on the published site with a Formspree endpoint set. */
-const SANDBOX_CLIENT_ID = 'ATWrAKuH6y-bBzs0Yt6BfjiYZxCi4w4iZhWipC_AXED7uRRuCZUM1wwiY9GYU8SztF-B0DhgfST6DSl7';
 
 /**
  * Loads assets/js/paypal-checkout.js in a sandbox and returns what it exposes.
@@ -89,21 +88,6 @@ test('email payload: booking message, then the payment lines; reply-to only with
   assert.equal('email' in pp.emailPayload({ subject: 'S', message: 'M', lines: [], payerEmail: '' }), false);
 });
 
-test('the pay block is configured, and never with the sandbox Client ID once Formspree is set', () => {
-  const html = fs.readFileSync(path.join(ROOT, 'src/partials/booking.html'), 'utf8');
-  const block = html.match(/<div\b[^>]*\sdata-paypal(?=[\s>])[^>]*>/);
-  assert.ok(block, 'src/partials/booking.html has no pay block [data-paypal]');
-  const attribute = (name) => (block[0].match(new RegExp(`\\s${name}="([^"]*)"`)) || [])[1];
-  const clientId = attribute('data-paypal-client-id');
-  const endpoint = attribute('data-formspree-endpoint');
-  assert.equal(typeof clientId, 'string', 'the pay block has no data-paypal-client-id');
-  assert.equal(typeof endpoint, 'string', 'the pay block has no data-formspree-endpoint');
-  if (endpoint.trim()) {
-    assert.notEqual(clientId.trim(), SANDBOX_CLIENT_ID,
-      'Formspree is set but the Client ID is still the sandbox one: put the live Client ID before publishing');
-  }
-});
-
 /**
  * Runs assets/js/paypal-checkout.js against stubs of the page, booking.js (SiteBooking), PayPal's SDK and fetch,
  * so the checkout wiring can be driven step by step: the form coming into view, PayPal's callbacks, Formspree.
@@ -111,7 +95,7 @@ test('the pay block is configured, and never with the sandbox Client ID once For
  * @returns {object} { log, booking (mutable state), block, slot, intersect(), mutate(), loadSdk(), actions() }.
  */
 function loadCheckout(options = {}) {
-  const log = { statuses: [], paid: [], emails: [], scripts: [], timers: [], orders: [], resolved: 0, rejected: 0, restarts: 0 };
+  const log = { statuses: [], tones: [], paid: [], emails: [], scripts: [], timers: [], orders: [], captures: 0, enabled: 0, resolved: 0, rejected: 0, restarts: 0 };
   const block = { hidden: Boolean(options.blockHidden) };
   const slot = { textContent: '', hidden: false, children: [], appendChild(child) { this.children.push(child); } };
   const observers = {};
@@ -131,18 +115,22 @@ function loadCheckout(options = {}) {
       validate: () => true,
       payment: () => state.payment && { ...state.payment },
       snapshot: () => ({ ...state.booking }),
-      status: (key) => log.statuses.push(key),
-      markPaid: (result) => log.paid.push(result)
+      status: (key, tone) => { log.statuses.push(key); log.tones.push(tone); },
+      markPaid: (result) => log.paid.push(result),
+      enablePayPal: () => { log.enabled++; },
+      tm: (key) => key,
+      fill: (text, values) => text.replace(/\{(\w+)\}/g, (match, name) => (name in values ? String(values[name]) : match))
     },
     SiteI18n: { t: (key) => key, messageLanguage: () => 'es', getLanguage: () => 'es' },
     SitePrices: { format: (amount) => 'US$' + amount },
     setTimeout: (fn, ms) => log.timers.push({ fn, ms, cleared: false }),
     clearTimeout: (id) => { if (log.timers[id - 1]) log.timers[id - 1].cleared = true; },
     fetch: (url, init) => {
-      log.emails.push({ url, init, body: JSON.parse(init.body) });
+      log.emails.push({ url, init, body: Object.fromEntries(new URLSearchParams(String(init.body))) });
       return options.fetch ? options.fetch() : Promise.resolve({ ok: true });
     },
     AbortController: class { constructor() { this.signal = {}; } abort() {} },
+    URLSearchParams,
     MutationObserver: class { constructor(callback) { observers.mutation = callback; } observe() {} disconnect() {} },
     IntersectionObserver: class { constructor(callback) { observers.intersection = callback; } observe() {} disconnect() {} }
   });
@@ -167,7 +155,7 @@ function loadCheckout(options = {}) {
       restart: () => { log.restarts++; return Promise.resolve(); },
       order: {
         create: (order) => { log.orders.push(order); return Promise.resolve('ORDER-' + log.orders.length); },
-        capture: capture || (() => Promise.resolve(captured('COMPLETED')))
+        capture: () => { log.captures++; return (capture || (() => Promise.resolve(captured('COMPLETED'))))(); }
       }
     })
   };
@@ -251,17 +239,17 @@ test('a DECLINED capture goes back to PayPal and a FAILED one shows the error; n
   assert.equal(failed.log.resolved, 1, 'the visitor cannot try again after a failed capture');
 });
 
-test('the email describes the booking frozen when PayPal opened, is sent once and survives closing the tab', async () => {
+test('the email describes the paid booking, is sent once, as a simple form post that survives closing the tab', async () => {
   const checkout = loadCheckout();
   const buttons = readyButtons(checkout);
   const orderId = await buttons.createOrder({}, checkout.actions());
-  checkout.state.booking.message = 'Edited after PayPal opened';
-  checkout.state.payment = { kind: 'total', amount: 450, percent: 50 };
   await buttons.onApprove({ orderID: orderId }, checkout.actions());
   await buttons.onApprove({ orderID: orderId }, checkout.actions());
   assert.equal(checkout.log.emails.length, 1);
   const email = checkout.log.emails[0];
   assert.equal(email.init.keepalive, true, 'the email can be cancelled when the tab closes');
+  assert.equal(email.init.headers['Content-Type'], undefined, 'a JSON content type forces a CORS preflight');
+  assert.equal(email.init.headers.Accept, 'application/json');
   assert.ok(email.body.message.startsWith('Booking message\n\n'));
   assert.ok(email.body.message.includes('US$112.5'));
   assert.ok(email.body.message.includes('booking.msg.paidFor: Damajagua · 3 de diciembre de 2026 · 3 personas'));
@@ -285,4 +273,64 @@ test('when Formspree fails after the payment, the visitor keeps the code and the
   assert.equal(checkout.log.paid[0].key, 'booking.pay.emailFailed');
   assert.equal(checkout.log.paid[0].values.transaction, 'TX1');
   assert.match(checkout.log.paid[0].values.code, /^PCE-1203-/);
+});
+
+test('a booking changed while PayPal is open is not charged', async () => {
+  const checkout = loadCheckout();
+  const buttons = readyButtons(checkout);
+  const orderId = await buttons.createOrder({}, checkout.actions());
+  // The visitor edits the form while typing card details: PayPal would charge something else.
+  checkout.state.booking.message = 'Edited after PayPal opened';
+  checkout.state.payment = { kind: 'total', amount: 450, percent: 50 };
+  await buttons.onApprove({ orderID: orderId }, checkout.actions());
+  assert.equal(checkout.log.captures, 0, 'the old amount was captured for a changed booking');
+  assert.equal(checkout.log.emails.length, 0);
+  assert.equal(checkout.log.paid.length, 0);
+  assert.equal(checkout.log.statuses.at(-1), 'booking.pay.changed');
+  await buttons.onClick({}, checkout.actions());
+  assert.equal(checkout.log.resolved, 1, 'the visitor cannot pay the new booking');
+});
+
+test('a card declined when the capture is rejected goes back to PayPal', async () => {
+  const checkout = loadCheckout();
+  const buttons = readyButtons(checkout);
+  const orderId = await buttons.createOrder({}, checkout.actions());
+  const declined = () => Promise.reject(new Error('Order could not be captured: {"details":[{"issue":"INSTRUMENT_DECLINED"}]}'));
+  await buttons.onApprove({ orderID: orderId }, checkout.actions(declined));
+  assert.equal(checkout.log.restarts, 1);
+  assert.equal(checkout.log.emails.length, 0);
+});
+
+test('a PENDING payment is not announced as received', async () => {
+  const checkout = loadCheckout();
+  const buttons = readyButtons(checkout);
+  const orderId = await buttons.createOrder({}, checkout.actions());
+  await buttons.onApprove({ orderID: orderId }, checkout.actions(() => Promise.resolve(captured('PENDING'))));
+  assert.equal(checkout.log.emails.length, 1);
+  assert.equal(checkout.log.paid[0].key, 'booking.pay.pending');
+});
+
+test('closing PayPal is not shown as an error', async () => {
+  const checkout = loadCheckout();
+  const buttons = readyButtons(checkout);
+  const orderId = await buttons.createOrder({}, checkout.actions());
+  buttons.onCancel({ orderID: orderId });
+  assert.equal(checkout.log.statuses.at(-1), 'booking.pay.cancelled');
+  assert.equal(checkout.log.tones.at(-1), 'info');
+});
+
+test('the checkout tells booking.js it is there, so the pay block never shows without it', () => {
+  const checkout = loadCheckout();
+  assert.equal(checkout.log.enabled, 1);
+});
+
+test('the build refuses to publish the sandbox Client ID with Formspree set', async () => {
+  const { paypalConfigErrors } = await import('../lib/paypal.mjs');
+  const block = (clientId, endpoint) => `<div class="estimate__pay" data-paypal data-paypal-client-id="${clientId}" data-formspree-endpoint="${endpoint}" hidden>`;
+  assert.equal(paypalConfigErrors(block(SANDBOX_CLIENT_ID, 'https://formspree.io/f/abc')).length, 1);
+  assert.deepEqual(paypalConfigErrors(block(SANDBOX_CLIENT_ID, '')), []);
+  assert.deepEqual(paypalConfigErrors(block('BAA3live', 'https://formspree.io/f/abc')), []);
+  assert.equal(paypalConfigErrors('<div class="estimate"></div>').length, 1, 'a missing pay block passed');
+  assert.deepEqual(paypalConfigErrors(fs.readFileSync(path.join(ROOT, 'src/partials/booking.html'), 'utf8')), []);
+  assert.ok(fs.readFileSync(path.join(ROOT, 'tools/build.mjs'), 'utf8').includes('paypalConfigErrors('), 'the build does not run the check');
 });

@@ -327,6 +327,8 @@ window.SITE_TRANSLATIONS.it = {
   'booking.pay.deposit': 'Acconto · {amount}',
   'booking.pay.total': 'Prezzo totale · {amount}',
   'booking.pay.done': 'Pagamento ricevuto! Il tuo codice di prenotazione è {code}. Ti scriveremo all’e-mail del tuo account PayPal per confermare l’escursione.',
+  'booking.pay.pending': 'PayPal sta verificando il tuo pagamento (codice {code}). Ti scriveremo all’e-mail del tuo account PayPal appena sarà confermato.',
+  'booking.pay.changed': 'La tua prenotazione è cambiata durante il pagamento, quindi non è stato addebitato nulla. Controllala e paga di nuovo.',
   'booking.pay.processing': 'Stiamo elaborando il pagamento… Non chiudere questa pagina.',
   'booking.pay.emailFailed': 'Pagamento ricevuto (codice {code}, transazione {transaction}), ma la tua prenotazione non ci è arrivata. Inviacela su WhatsApp o via e-mail con i pulsanti qui sotto: include già il tuo pagamento.',
   'booking.pay.cancelled': 'Hai annullato il pagamento PayPal. Non è stato addebitato nulla.',

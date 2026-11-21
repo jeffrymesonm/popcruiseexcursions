@@ -33,6 +33,7 @@ import {
 } from './lib/prices.mjs';
 import { seoHeadTags, sitemapXml, jsonLdScript, llmsTxt, absoluteUrl } from './lib/seo.mjs';
 import { buildGraph } from './lib/schema.mjs';
+import { paypalConfigErrors } from './lib/paypal.mjs';
 
 /** Template whose price tables are the single source of prices. */
 const MAIN_TEMPLATE = 'src/index.html';
@@ -615,6 +616,8 @@ export async function build({ root, outDir = root }) {
   } catch (error) {
     return { files: [], removed: [], warnings, errors: [error.message] };
   }
+  // Never publish fake payments: the sandbox PayPal Client ID with Formspree set fails the build.
+  errors.push(...paypalConfigErrors(readPartial('booking.html')));
   const tables = parsePriceTables(mainTemplate);
   const mainBase = extractBaseDictionary(mainTemplate).dict;
   const site = { ...config.SITE, priceRange: priceRange(tables), languages: Object.keys(homePage().versions) };

@@ -2421,6 +2421,11 @@ html:not(.js) .boat-photo__name {
   color: var(--color-error);
 }
 
+/* Neutral statuses (e.g. "you cancelled the PayPal payment"): neither a success nor an error. */
+.form__status--info {
+  color: var(--color-muted-fg);
+}
+
 .contact__media {
   position: relative;
   overflow: hidden;

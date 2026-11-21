@@ -18,7 +18,10 @@
  * - The order is created in the browser: the chosen amount in USD, a description (tour, date, people,
  *   deposit or full price), the booking code as invoice_id, the site's brand name and no shipping.
  *   The booking is frozen at that moment, so the email describes what was paid even if the form changes.
- * - Once PayPal approves, the order is captured. A COMPLETED or PENDING capture counts as paid: the booking
+ * - If the booking changed while PayPal was open (people, date, deposit or full price…), the approved order is not
+ *   captured (nothing is charged) and the visitor is asked to pay again.
+ * - Once PayPal approves, the order is captured. A COMPLETED or PENDING capture counts as paid (PENDING is told as
+ *   "PayPal is reviewing your payment"): the booking
  *   (plus amount, what it paid for, transaction, code and payer email) is POSTed to the Formspree endpoint, which
  *   emails it to the team. Either way the visitor sees the booking code, and if the email failed, is asked to
  *   send the booking on WhatsApp or by email (those messages then carry the payment lines). A DECLINED capture
@@ -146,6 +149,8 @@
   var payBlock = document.querySelector('[data-paypal]');
   var buttonSlot = document.querySelector('[data-paypal-button]');
   if (!config || !i18n || !window.SitePrices || !payBlock || !buttonSlot) return;
+  // booking.js keeps the pay block hidden until this script is running, so it never shows without buttons.
+  booking.enablePayPal();
 
   var SDK_URL = 'https://www.paypal.com/sdk/js';
   var BRAND_NAME = 'Puerto Plata Cruise Excursions';
@@ -166,27 +171,6 @@
   var ordersInProgress = {};
   /** Orders already captured and emailed, by order id (one email per payment). */
   var ordersDone = {};
-
-  /**
-   * Translates a key into the message language (the team's language: Spanish or English).
-   * @param {string} key - booking.msg.* key.
-   * @returns {string} Text for the email.
-   */
-  function label(key) {
-    return i18n.t(key, i18n.messageLanguage());
-  }
-
-  /**
-   * Fills the {placeholders} of a translated text.
-   * @param {string} text - Translated template, e.g. "depósito {percent} %".
-   * @param {Object<string, string|number>} values - Placeholder values by name.
-   * @returns {string} Text with every known placeholder replaced.
-   */
-  function fill(text, values) {
-    return text.replace(/\{(\w+)\}/g, function (match, name) {
-      return Object.prototype.hasOwnProperty.call(values, name) ? String(values[name]) : match;
-    });
-  }
 
   /**
    * Replaces PayPal's buttons with a note when PayPal cannot be used (script blocked, offline…). The note
@@ -247,7 +231,7 @@
       onApprove: onApprove,
       onCancel: function (data) {
         delete ordersInProgress[data.orderID];
-        booking.status('booking.pay.cancelled', 'error');
+        booking.status('booking.pay.cancelled', 'info');
       },
       onError: function () {
         booking.status('booking.pay.error', 'error');
@@ -279,8 +263,8 @@
    */
   function newOrder(chosen, frozen) {
     var kindText = chosen.kind === 'total'
-      ? label('booking.msg.paidTotal')
-      : fill(label('booking.msg.paidDeposit'), { percent: chosen.percent });
+      ? booking.tm('booking.msg.paidTotal')
+      : booking.fill(booking.tm('booking.msg.paidDeposit'), { percent: chosen.percent });
     return {
       booking: frozen,
       amount: chosen.amount,
@@ -324,6 +308,16 @@
    * @returns {Promise} Settles once the visitor sees the result.
    */
   function onApprove(data, actions) {
+    // An order already paid and emailed: nothing to do, and the visitor's result stays on screen.
+    if (ordersDone[data.orderID]) return Promise.resolve(null);
+    // The booking changed while PayPal was open (PayPal's card form leaves the form editable): an approved order
+    // that is never captured expires, so not capturing it means nothing is charged.
+    var frozen = ordersInProgress[data.orderID];
+    if (frozen && bookingChanged(frozen)) {
+      delete ordersInProgress[data.orderID];
+      booking.status('booking.pay.changed', 'error');
+      return Promise.resolve(null);
+    }
     paying = true;
     booking.status('booking.pay.processing', 'success');
     return actions.order.capture().then(function (result) {
@@ -342,8 +336,25 @@
       return finishPayment(data.orderID, result);
     }, function (error) {
       paying = false;
+      // With client-side capture, a declined card usually rejects (the issue is in the error text) rather than
+      // resolving with details: it goes back to PayPal too.
+      if (String(error && error.message ? error.message : error).indexOf('INSTRUMENT_DECLINED') !== -1) {
+        booking.status(null);
+        return actions.restart();
+      }
       throw error;
     });
+  }
+
+  /**
+   * Tells whether the booking changed since an order was created (tour, date, people, name, ship, deposit or
+   * full price): PayPal would then charge for something else than what is on screen.
+   * @param {{booking: {message: string}, amount: number}} order - A frozen order (newOrder).
+   * @returns {boolean} True when the form no longer matches the order.
+   */
+  function bookingChanged(order) {
+    var chosen = booking.payment();
+    return !chosen || chosen.amount !== order.amount || booking.snapshot().message !== order.booking.message;
   }
 
   /**
@@ -371,22 +382,24 @@
     var lines = paidLines({
       amountText: amountText, kindText: order.kindText, paidFor: order.paidFor, transaction: info.transaction,
       code: order.code, payerEmail: info.payerEmail, status: info.status
-    }, label);
+    }, booking.tm);
     var payload = emailPayload({
-      subject: fill(label('booking.msg.paidSubject'), { tour: order.booking.tour, date: order.booking.date, amount: amountText }),
+      subject: booking.fill(booking.tm('booking.msg.paidSubject'), { tour: order.booking.tour, date: order.booking.date, amount: amountText }),
       message: order.booking.message,
       lines: lines,
       payerEmail: info.payerEmail
     });
     return sendEmail(payload).then(function (sent) {
       booking.markPaid(sent
-        ? { key: 'booking.pay.done', tone: 'success', values: { code: order.code }, lines: lines }
+        ? { key: info.status === 'PENDING' ? 'booking.pay.pending' : 'booking.pay.done', tone: 'success', values: { code: order.code }, lines: lines }
         : { key: 'booking.pay.emailFailed', tone: 'error', values: { code: order.code, transaction: info.transaction || '—' }, lines: lines });
     });
   }
 
   /**
-   * POSTs the email to Formspree. keepalive lets the request finish if the visitor closes the tab right away.
+   * POSTs the email to Formspree. keepalive lets the request finish if the visitor closes the tab right away. The
+   * fields go form-encoded (Formspree accepts it) with only an Accept header: a CORS "simple" request, so there is
+   * no preflight, which some browsers have refused for keepalive requests. Empty fields are left out.
    * @param {Object} payload - emailPayload() result.
    * @returns {Promise<boolean>} True when Formspree accepted it; false on any error, refusal or timeout.
    */
@@ -394,10 +407,14 @@
     if (typeof fetch !== 'function') return Promise.resolve(false);
     var controller = typeof AbortController === 'function' ? new AbortController() : null;
     var timer = controller ? setTimeout(function () { controller.abort(); }, EMAIL_TIMEOUT_MS) : null;
+    var body = new URLSearchParams();
+    Object.keys(payload).forEach(function (field) {
+      if (payload[field] != null && payload[field] !== '') body.append(field, payload[field]);
+    });
     return fetch(config.endpoint, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify(payload),
+      headers: { Accept: 'application/json' },
+      body: body,
       keepalive: true,
       signal: controller ? controller.signal : undefined
     }).then(function (response) {

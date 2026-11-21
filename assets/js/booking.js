@@ -13,7 +13,8 @@
  *   (switch off by default; price from the transfer table, more than its largest group = "we quote it").
  * - Pay with PayPal: for the tours booked with a share of the total (not boats), the [data-paypal] block under
  *   the estimate lets the visitor pick the deposit or the full price (both amounts shown). Hidden unless the block
- *   has a PayPal Client ID and a Formspree endpoint. The payment itself is paypal-checkout.js, through
+ *   has a PayPal Client ID and a Formspree endpoint, and until paypal-checkout.js runs (enablePayPal), so it
+ *   never shows without buttons. The payment itself is paypal-checkout.js, through
  *   window.SiteBooking (below): it validates the form, reads the amount and the booking, shows statuses and,
  *   once paid, hides the block for good and adds the payment lines to any later WhatsApp or email message.
  * - Two buttons send the same booking: "Book on WhatsApp" (the submit button, also Enter) opens
@@ -69,6 +70,8 @@
   var payConfig = readPayConfig();
   /** What markPaid() received once the booking is paid (the block then stays hidden), else null. */
   var paidResult = null;
+  /** True once paypal-checkout.js runs (enablePayPal): the pay block never shows before, so never without buttons. */
+  var payPalEnabled = false;
   var photos = Array.prototype.slice.call(document.querySelectorAll('[data-booking-photo]'));
   var hasTriedSubmit = false;
 
@@ -252,7 +255,7 @@
    * Shows a status line under the buttons. Once the booking is paid, "no status" means the payment
    * status, so editing the form never hides the booking code from the visitor.
    * @param {string|null} key - Translation key, or null to hide (or to go back to the payment status).
-   * @param {'success'|'error'} [tone] - Visual tone.
+   * @param {'success'|'error'|'info'} [tone] - Visual tone (info: neutral).
    * @param {Object<string, string|number>} [values] - Values of the text's {placeholders}.
    * @returns {void}
    */
@@ -262,7 +265,7 @@
       return;
     }
     statusKey = key;
-    statusElement.classList.remove('form__status--success', 'form__status--error');
+    statusElement.classList.remove('form__status--success', 'form__status--error', 'form__status--info');
     if (!key) {
       statusElement.hidden = true;
       statusElement.textContent = '';
@@ -468,7 +471,7 @@
    * @returns {void}
    */
   function renderPayPal() {
-    if (!payConfig) return;
+    if (!payConfig || !payPalEnabled) return;
     var amounts = payableAmounts();
     payBlock.hidden = !amounts;
     if (!amounts) return;
@@ -638,11 +641,12 @@
     if (!validate()) return;
     if (channel === 'email') {
       openEmail(emailButton.getAttribute('data-booking-email'), buildMessage());
-      renderStatus('booking.sentEmail', 'success');
+      renderStatus(paidResult ? null : 'booking.sentEmail', 'success');
       return;
     }
     window.SiteWhatsApp.open(buildMessage());
-    renderStatus('booking.sent', 'success');
+    // Once paid, "no status" shows the payment status, which keeps the booking code in view.
+    renderStatus(paidResult ? null : 'booking.sent', 'success');
   }
 
   // Submit (the WhatsApp button, or Enter in a field) → WhatsApp; the email button → email.
@@ -750,6 +754,33 @@
     paidResult = { key: result.key, tone: result.tone, values: result.values || {}, lines: result.lines || [] };
     renderPayPal();
     renderStatus(null);
+    statusElement.tabIndex = -1;
+    statusElement.focus();
+  }
+
+  /**
+   * Shows a status from the PayPal checkout and brings it into view: on phones the status line sits under the
+   * buttons, away from PayPal's.
+   * @param {string|null} key - Translation key, or null.
+   * @param {'success'|'error'|'info'} [tone] - Visual tone.
+   * @param {Object<string, string|number>} [values] - Values of the text's {placeholders}.
+   * @returns {void}
+   */
+  function checkoutStatus(key, tone, values) {
+    renderStatus(key, tone, values);
+    if (key && typeof statusElement.scrollIntoView === 'function') {
+      statusElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+  }
+
+  /**
+   * Called by paypal-checkout.js once it runs: from then on the pay block may show. Without it (script missing
+   * or failed) visitors never see a pay block with no buttons.
+   * @returns {void}
+   */
+  function enablePayPal() {
+    payPalEnabled = true;
+    renderPayPal();
   }
 
   dateInput.min = todayInPuertoPlata();
@@ -764,7 +795,10 @@
     validate: validate,
     payment: payment,
     snapshot: snapshot,
-    status: renderStatus,
-    markPaid: markPaid
+    status: checkoutStatus,
+    markPaid: markPaid,
+    enablePayPal: enablePayPal,
+    fill: fill,
+    tm: tm
   };
 })();
