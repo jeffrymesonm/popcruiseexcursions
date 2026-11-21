@@ -1334,12 +1334,12 @@
                    own button in [data-paypal-button], charges the chosen amount (deposit or full price) and, once the
                    payment is approved, emails the booking to the team through Formspree. Only for tours booked with
                    a share of the total (data-deposit-percent), not boats. Hidden unless BOTH values are set:
-                   - data-paypal-client-id: PayPal Client ID (public). The one below is the SANDBOX one (test
-                     payments only): put the LIVE Client ID before publishing (tools/test/paypal-checkout.test.mjs
-                     fails if Formspree is set and the sandbox ID is still here).
+                   - data-paypal-client-id: PayPal Client ID (public), the LIVE one (real payments) since 2026-11-21.
+                     To test with the sandbox ID, empty data-formspree-endpoint or mock it:
+                     tools/test/paypal-checkout.test.mjs fails if Formspree is set with the sandbox ID.
                    - data-formspree-endpoint: https://formspree.io/f/<form id> of the form that emails
                      popcruiseexcursions@gmail.com. -->
-              <div class="estimate__pay" data-paypal data-paypal-client-id="ATWrAKuH6y-bBzs0Yt6BfjiYZxCi4w4iZhWipC_AXED7uRRuCZUM1wwiY9GYU8SztF-B0DhgfST6DSl7" data-formspree-endpoint="" hidden>
+              <div class="estimate__pay" data-paypal data-paypal-client-id="BAA3_hAuFKz1WLXkOsfir17jTVtriMKlp4U9GM4uQ-QhSAYZBRxxplEnQAGLF2SFW2aJqYzp2-8eNAZFkE" data-formspree-endpoint="https://formspree.io/f/xzerjbpg" hidden>
                 <fieldset class="estimate__pay-choice">
                   <legend class="estimate__label" data-i18n="booking.pay.title">Pagar con PayPal</legend>
                   <label class="pay-option">
