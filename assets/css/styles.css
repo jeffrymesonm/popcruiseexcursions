@@ -2371,14 +2371,35 @@ html:not(.js) .boat-photo__name {
   accent-color: var(--color-sun);
 }
 
-/* PayPal renders its buttons here (an iframe); the minimum height keeps the form from jumping while it loads. */
+/* PayPal renders its buttons and its card form here (iframes with dark text on a transparent background), so
+   the slot is a white panel; the minimum height keeps the form from jumping while PayPal loads. */
 .estimate__pay-button {
   min-height: 3rem;
+  padding: 0.75rem;
+  border-radius: var(--radius-inner);
+  background: #fff;
 }
 
 .estimate__pay-note {
   color: rgba(248, 243, 234, 0.75);
   font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+/* Narrow phones: PayPal's buttons need at least 200 px, more than the estimate leaves inside its 1.25rem side
+   padding on a 320 px screen, so the white panel spans the estimate's full width. */
+@media (max-width: 399px) {
+  .estimate__pay-button {
+    margin-inline: -1.25rem;
+    border-radius: 0;
+  }
+}
+
+/* Shown in place of PayPal's buttons (white panel) when PayPal cannot load. */
+.estimate__pay-error {
+  color: var(--color-error);
+  font-size: 0.875rem;
+  font-weight: 600;
   line-height: 1.4;
 }
 
