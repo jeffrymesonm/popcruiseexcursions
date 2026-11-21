@@ -2293,7 +2293,13 @@ html:not(.js) .boat-photo__name {
   display: none;
 }
 
-/* Deposit that books a boat, set apart under the breakdown (hidden for other tours). */
+/* Price lines of the estimate (the part read out by screen readers as it changes). */
+.estimate__live {
+  display: grid;
+  gap: 0.2rem;
+}
+
+/* Deposit that books the tour, set apart under the breakdown. */
 .estimate__deposit {
   margin-top: 0.4rem;
   padding-top: 0.5rem;
@@ -2302,6 +2308,57 @@ html:not(.js) .boat-photo__name {
   font-size: 0.9375rem;
   font-weight: 600;
   line-height: 1.35;
+}
+
+/* Pay with PayPal: deposit and full-total buttons under the deposit line (tours only, when there is a link). */
+.estimate__pay {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.estimate__pay[hidden] {
+  display: none;
+}
+
+.estimate__pay-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.estimate__pay-buttons .btn {
+  flex: 1 1 10rem;
+}
+
+.estimate__pay-note {
+  color: rgba(248, 243, 234, 0.75);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+/* PayPal gold with PayPal navy text (8.5:1); the outline one is the secondary choice (pay in full). */
+.btn--paypal {
+  background: #ffc439;
+  color: #003087;
+}
+
+.btn--paypal:hover {
+  background: #f2b52b;
+}
+
+.btn--paypal-outline {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px rgba(248, 243, 234, 0.5);
+  color: var(--color-on-dark);
+}
+
+.btn--paypal-outline:hover {
+  background: rgba(248, 243, 234, 0.12);
+}
+
+.estimate :focus-visible {
+  outline-color: var(--color-sun);
 }
 
 .form__status {

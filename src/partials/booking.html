@@ -87,11 +87,32 @@
                 placeholder="Nombre de tu barco" data-i18n-placeholder="booking.shipPlaceholder">
             </div>
 
-            <div class="estimate" aria-live="polite" data-estimate>
-              <p class="estimate__label" data-i18n="booking.estimate">Precio estimado</p>
-              <p class="estimate__value" data-estimate-value>—</p>
-              <p class="estimate__detail" data-estimate-detail></p>
-              <p class="estimate__deposit" data-estimate-deposit hidden></p>
+            <div class="estimate" data-estimate>
+              <!-- Only the price is announced as it changes; the PayPal buttons below are not. -->
+              <div class="estimate__live" aria-live="polite">
+                <p class="estimate__label" data-i18n="booking.estimate">Precio estimado</p>
+                <p class="estimate__value" data-estimate-value>—</p>
+                <p class="estimate__detail" data-estimate-detail></p>
+                <p class="estimate__deposit" data-estimate-deposit hidden></p>
+              </div>
+              <!-- Pay online (booking.js): data-paypal-link is a PayPal payment link where the buyer types the
+                   amount. Both buttons open it and show the amount to type: the deposit and the full total.
+                   Only for tours booked with a share of the total (data-deposit-percent), not boats, and
+                   hidden while data-paypal-link is empty (it must start with https://). -->
+              <div class="estimate__pay" data-paypal-link="" hidden>
+                <p class="estimate__label" data-i18n="booking.pay.title">Pagar con PayPal</p>
+                <div class="estimate__pay-buttons">
+                  <a class="btn btn--paypal" data-paypal-pay="deposit" target="_blank" rel="noopener" aria-describedby="booking-pay-note">
+                    <svg aria-hidden="true"><use href="#icon-paypal"/></svg>
+                    <span></span>
+                  </a>
+                  <a class="btn btn--paypal btn--paypal-outline" data-paypal-pay="total" target="_blank" rel="noopener" aria-describedby="booking-pay-note">
+                    <svg aria-hidden="true"><use href="#icon-paypal"/></svg>
+                    <span></span>
+                  </a>
+                </div>
+                <p class="estimate__pay-note" id="booking-pay-note" data-i18n="booking.pay.note">PayPal se abre en otra pestaña: escribe ahí el monto del botón. Envíanos también tu reserva por WhatsApp o correo, así sabemos la fecha y tu crucero.</p>
+              </div>
             </div>
 
             <!-- Two ways to send the same booking: WhatsApp (submit, also Enter) or email (data-booking-email holds

@@ -11,6 +11,9 @@
  *   books the tour (a boat's fixed amount, or a share of the total for the other tours), which
  *   the message repeats. For a boat, the visitor can add the round-trip transport port ↔ Sosúa
  *   (switch off by default; price from the transfer table, more than its largest group = "we quote it").
+ * - Pay with PayPal: for the tours booked with a share of the total (not boats), two buttons under the
+ *   estimate open the PayPal payment link of [data-paypal-link], one showing the deposit and one the
+ *   full total; the visitor types that amount in PayPal. Hidden while the page has no link.
  * - Two buttons send the same booking: "Book on WhatsApp" (the submit button, also Enter) opens
  *   WhatsApp, and "Book by email" ([data-booking-email], which holds the address) opens the
  *   visitor's email app. Either way the fields are validated first (bilingual messages) and the
@@ -55,6 +58,12 @@
   var estimateDeposit = form.querySelector('[data-estimate-deposit]');
   var statusElement = form.querySelector('[data-form-status]');
   var emailButton = form.querySelector('[data-booking-email]');
+  var payBlock = form.querySelector('[data-paypal-link]');
+  var payDeposit = form.querySelector('[data-paypal-pay="deposit"]');
+  var payTotal = form.querySelector('[data-paypal-pay="total"]');
+  // Only an https:// address counts as the PayPal link, so an empty or mistyped value keeps the buttons hidden.
+  var payLink = payBlock && payDeposit && payTotal ? payBlock.getAttribute('data-paypal-link').trim() : '';
+  if (!/^https:\/\/\S+$/.test(payLink)) payLink = '';
   var photos = Array.prototype.slice.call(document.querySelectorAll('[data-booking-photo]'));
   var hasTriedSubmit = false;
 
@@ -410,6 +419,25 @@
       : fill(t(percent === null ? 'booking.estimate.deposit' : 'booking.estimate.depositPercent'), {
         deposit: window.SitePrices.format(depositAmount), percent: percent
       });
+    // Online payment only for a share-of-the-total deposit: boats (fixed deposit) are confirmed first.
+    renderPayPal(percent === null ? null : depositAmount, quotedTotal(result));
+  }
+
+  /**
+   * Shows the PayPal buttons with the amounts to pay, or hides them when there is nothing to pay
+   * online or the page has no PayPal link.
+   * @param {number|null} deposit - Deposit in USD, or null when it cannot be paid online.
+   * @param {number|null} total - Group total in USD, or null when the group has no price.
+   * @returns {void}
+   */
+  function renderPayPal(deposit, total) {
+    if (!payLink) return;
+    var payable = deposit !== null && total !== null;
+    payBlock.hidden = !payable;
+    if (!payable) return;
+    var format = window.SitePrices.format;
+    payDeposit.querySelector('span').textContent = fill(t('booking.pay.deposit'), { amount: format(deposit) });
+    payTotal.querySelector('span').textContent = fill(t('booking.pay.total'), { amount: format(total) });
   }
 
   /**
@@ -638,6 +666,7 @@
   });
 
   dateInput.min = todayInPuertoPlata();
+  if (payLink) payDeposit.href = payTotal.href = payLink;
   preselectFromUrl();
   renderEstimate();
 })();
