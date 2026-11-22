@@ -35,10 +35,11 @@
   if (!form) return;
 
   /**
-   * Fallback for a page where prices.js or whatsapp.js did not load (e.g. a failed download on a ship's
-   * Wi-Fi): the form can neither price nor write the booking, and the browser must still never submit it
-   * (that would reload the page with the name and ship in the URL). The WhatsApp button opens the plain
-   * chat (number of the page's wa.me links, no text) and the email button an empty email to the business.
+   * Fallback for a page where prices.js, whatsapp.js, i18n.js or the translations did not load (e.g. a
+   * failed download on a ship's Wi-Fi): the form can neither price nor write the booking, and the browser
+   * must still never submit it (that would reload the page with the name and ship in the URL). The
+   * WhatsApp button opens the plain chat (number of the page's wa.me links, no text) and the email button
+   * an empty email to the business.
    * @param {HTMLFormElement} bookingForm - The booking form.
    * @returns {void}
    */
@@ -56,7 +57,17 @@
     }
   }
 
-  if (!window.SitePrices || !window.SiteWhatsApp) {
+  /**
+   * Whether the booking message can be written: i18n.js and its dictionaries loaded. Without them every
+   * line of the booking would be a raw key such as "booking.msg.total".
+   * @returns {boolean} True when the message language translates the booking keys.
+   */
+  function canWriteMessage() {
+    var i18n = window.SiteI18n;
+    return !!i18n && i18n.t('booking.msg.total', i18n.messageLanguage()) !== 'booking.msg.total';
+  }
+
+  if (!window.SitePrices || !window.SiteWhatsApp || !canWriteMessage()) {
     useDirectChannels(form);
     return;
   }
