@@ -2628,6 +2628,13 @@ html:not(.js) .faq__icon {
   line-height: 1.4;
 }
 
+/* The booking-terms link of the pay block: the note's light color at full strength, underlined. */
+.estimate__pay-note a {
+  color: var(--color-on-dark);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
 /* Narrow phones: PayPal's buttons need at least 200 px, more than the estimate leaves inside its 1.25rem side
    padding on a 320 px screen, so the white panel spans the estimate's full width. */
 @media (max-width: 399px) {

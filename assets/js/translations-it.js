@@ -336,6 +336,8 @@ window.SITE_TRANSLATIONS.it = {
   'booking.estimate.depositPercent': 'Acconto per prenotare: {deposit} ({percent}% del totale)',
   'booking.pay.title': 'Paga con PayPal',
   'booking.pay.note': 'Paga con il tuo account PayPal o con carta. Al pagamento, PayPal ti invia la ricevuta e a noi arriva la tua prenotazione.',
+  'booking.pay.terms.prefix': 'Pagando accetti i nostri',
+  'booking.pay.terms.suffix': ', inclusa la politica di cancellazione.',
   'booking.pay.deposit': 'Acconto · {amount}',
   'booking.pay.total': 'Prezzo totale · {amount}',
   'booking.pay.done': 'Pagamento ricevuto! Il tuo codice di prenotazione è {code}. Ti scriveremo all’e-mail del tuo account PayPal per confermare l’escursione.',

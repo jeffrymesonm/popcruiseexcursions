@@ -416,6 +416,8 @@ window.SITE_TRANSLATIONS = {
     'booking.estimate.depositPercent': 'Deposit to book: {deposit} ({percent}% of the total)',
     'booking.pay.title': 'Pay with PayPal',
     'booking.pay.note': 'Pay with your PayPal account or a card. When you pay, PayPal sends you the receipt and your booking reaches us.',
+    'booking.pay.terms.prefix': 'By paying you accept our',
+    'booking.pay.terms.suffix': ', including the cancellation policy.',
     'booking.pay.deposit': 'Deposit · {amount}',
     'booking.pay.total': 'Full price · {amount}',
     'booking.pay.done': 'Payment received! Your booking code is {code}. We’ll email you at your PayPal address to confirm the tour.',

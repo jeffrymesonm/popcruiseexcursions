@@ -120,6 +120,10 @@
                 </fieldset>
                 <div class="estimate__pay-button" data-paypal-button></div>
                 <p class="estimate__pay-note" data-i18n="booking.pay.note">Paga con tu cuenta PayPal o con tarjeta. Al pagar, PayPal te manda el recibo y a nosotros nos llega tu reserva.</p>
+                <!-- Paying means accepting the booking terms, cancellation policy included: PayPal gives no seller
+                     protection for services, so the policy must be in front of the visitor at the moment of paying
+                     (audit A12). Prefix, link, suffix in all four languages; FR and IT link the English page. -->
+                <p class="estimate__pay-note"><span data-i18n="booking.pay.terms.prefix">Al pagar aceptas nuestros</span> <a href="{{page-url:booking-terms}}" hreflang="{{page-lang:booking-terms}}" data-i18n="booking.legal.terms">términos de reserva</a><span data-i18n="booking.pay.terms.suffix">, incluida la política de cancelación.</span></p>
               </div>
             </div>
 

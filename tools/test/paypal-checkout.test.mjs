@@ -2,12 +2,14 @@
  * paypal-checkout.test.mjs — Tests for the pure helpers of the PayPal checkout (assets/js/paypal-checkout.js,
  * window.SitePayPal): the booking code, the payment description, the amount sent to PayPal, what is read back
  * from a capture, and the email sent to the team through Formspree. The script runs in a sandbox with an empty
- * document, so only the helpers load (the checkout wiring needs the booking form).
+ * document, so only the helpers load (the checkout wiring needs the booking form). The last tests check the build:
+ * the sandbox Client ID guard, the booking-terms line of the pay block and the PayPal paragraph of the privacy policy.
  * Run with: node --test "tools/test/*.test.mjs"
  */
-import { test } from 'node:test';
+import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
@@ -549,4 +551,54 @@ test('the build refuses to publish the sandbox Client ID with Formspree set', as
   assert.equal(paypalConfigErrors('<div class="estimate"></div>').length, 1, 'a missing pay block passed');
   assert.deepEqual(paypalConfigErrors(fs.readFileSync(path.join(ROOT, 'src/partials/booking.html'), 'utf8')), []);
   assert.ok(fs.readFileSync(path.join(ROOT, 'tools/build.mjs'), 'utf8').includes('paypalConfigErrors('), 'the build does not run the check');
+});
+
+/** One build of the whole site into a temporary folder, shared by the tests that read generated pages. */
+let siteBuild = null;
+
+/**
+ * Builds the site once (later calls reuse it); the folder is removed after the tests.
+ * @returns {Promise<{errors: string[], read: (file: string) => string}>} Build errors and a reader of its files.
+ */
+function builtSite() {
+  if (!siteBuild) {
+    siteBuild = (async () => {
+      const { build } = await import('../build.mjs');
+      const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pce-'));
+      const result = await build({ root: ROOT, outDir });
+      return { outDir, errors: result.errors, read: (file) => fs.readFileSync(path.join(outDir, file), 'utf8') };
+    })();
+  }
+  return siteBuild;
+}
+
+after(async () => {
+  if (siteBuild) fs.rmSync((await siteBuild).outDir, { recursive: true, force: true });
+});
+
+test('the pay block links the booking terms, cancellation policy included (four languages)', async () => {
+  const site = await builtSite();
+  assert.deepEqual(site.errors, []);
+  const english = ['By paying you accept our booking terms, including the cancellation policy.', '/booking-terms/'];
+  const spanish = ['Al pagar aceptas nuestros términos de reserva, incluida la política de cancelación.', '/es/terminos-de-reserva/'];
+  // Page → [sentence, page its link opens]. French and Italian link the English terms (no FR/IT version).
+  const pages = {
+    'index.html': english,
+    'es/index.html': spanish,
+    'fr/index.html': ['En payant, vous acceptez nos conditions de réservation, y compris la politique d’annulation.', '/booking-terms/'],
+    'it/index.html': ['Pagando accetti i nostri termini di prenotazione, inclusa la politica di cancellazione.', '/booking-terms/'],
+    'puerto-plata-catamaran/index.html': english,
+    'es/catamaran-puerto-plata/index.html': spanish
+  };
+  for (const [file, [sentence, target]] of Object.entries(pages)) {
+    const html = site.read(file);
+    const notes = [...html.matchAll(/<p class="estimate__pay-note">([\s\S]*?)<\/p>/g)];
+    const terms = notes.find((note) => note[1].includes('<a '));
+    assert.ok(terms, `${file}: terms line in the pay block`);
+    assert.ok(terms.index > html.indexOf('data-paypal-button'), `${file}: under the PayPal button`);
+    assert.equal(terms[1].replace(/<[^>]+>/g, ''), sentence, file);
+    const href = terms[1].match(/<a href="([^"]*)"/)[1];
+    const pageUrl = `https://popcruiseexcursions.com/${file.replace(/index\.html$/, '')}`;
+    assert.equal(new URL(href, pageUrl).pathname, target, `${file}: link`);
+  }
 });
