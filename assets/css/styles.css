@@ -906,6 +906,7 @@ button {
   pointer-events: none;
 }
 
+/* The band itself takes the pointer (the wrapper does not), so hovering it can pause the scroll. */
 .marquee {
   margin: -2.75rem -2rem 4rem;
   padding-block: 0.9rem;
@@ -914,12 +915,18 @@ button {
   color: var(--color-fg);
   transform: rotate(-2deg);
   box-shadow: 0 14px 30px rgba(14, 58, 60, 0.18);
+  pointer-events: auto;
 }
 
 .marquee__track {
   display: flex;
   width: max-content;
   animation: marquee 38s linear infinite;
+}
+
+/* Moving text must be pausable (WCAG 2.2.2): it stops while hovered; reduced motion stops it for good. */
+.marquee:hover .marquee__track {
+  animation-play-state: paused;
 }
 
 .marquee__group {
@@ -2817,14 +2824,15 @@ html:not(.js) .faq__icon {
   height: 1.75rem;
 }
 
-/* A soft ring that pulses every few seconds to draw the eye. */
+/* A soft ring that pulses twice when the page opens to draw the eye, then stays hidden: the motion is
+   over within 5 s (WCAG 2.2.2), so it needs no pause control. */
 .wa-float::after {
   content: "";
   position: absolute;
   inset: -2px;
   border-radius: 50%;
   border: 2px solid var(--color-whatsapp);
-  animation: wa-ring 3.2s ease-out infinite;
+  animation: wa-ring 2.4s ease-out 2 forwards;
   pointer-events: none;
 }
 
