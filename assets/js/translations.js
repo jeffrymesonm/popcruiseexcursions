@@ -69,7 +69,7 @@ window.SITE_TRANSLATIONS = {
   en: {
     // Meta and navigation
     'meta.title': 'Puerto Plata Shore Excursions from Amber Cove & Taíno Bay',
-    'meta.description': 'Puerto Plata shore excursions for cruise passengers: Damajagua waterfalls, city tour, Playa Dorada beach day and private boats. Pickup at Amber Cove and Taíno Bay.',
+    'meta.description': 'Puerto Plata shore excursions for cruise passengers: Damajagua waterfalls, city tour, Playa Dorada beach day and private boats. Amber Cove and Taíno Bay pickup.',
     'nav.skip': 'Skip to content',
     'nav.home': 'Puerto Plata Cruise Excursions, home page',
     'nav.language': 'Language',
