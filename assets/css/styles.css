@@ -456,7 +456,11 @@ button {
 }
 
 /* ============ Full-screen menu ============ */
-/* Closed: a zero-height polygon at the top. Open: the polygon drops like a curtain. */
+/*
+ * Closed: a zero-height polygon at the top, and hidden (visibility), so nothing in it can be reached even
+ * where inert is not supported. Open: visible at once and the polygon drops like a curtain; on closing,
+ * visibility waits for the curtain to rise (0.7 s) before hiding it.
+ */
 .menu {
   position: fixed;
   inset: 0;
@@ -470,12 +474,15 @@ button {
   overflow-y: auto;
   background: var(--color-fg);
   color: var(--color-on-dark);
+  visibility: hidden;
   clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
-  transition: clip-path 0.7s var(--ease-curtain);
+  transition: clip-path 0.7s var(--ease-curtain), visibility 0s linear 0.7s;
 }
 
 .menu.is-open {
+  visibility: visible;
   clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+  transition: clip-path 0.7s var(--ease-curtain);
 }
 
 .menu__list {
@@ -3205,6 +3212,12 @@ html:not(.js) .faq__icon {
 
   .wa-float::after {
     display: none;
+  }
+
+  /* Nothing inside the menu may transition: with the 0.01ms transitions above, its links would take the
+     menu's visibility a frame late and could not receive focus when the menu opens. */
+  .menu * {
+    transition-duration: 0s !important;
   }
 
   .js .hero__media {
