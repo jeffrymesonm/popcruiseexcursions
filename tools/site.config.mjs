@@ -5,7 +5,9 @@
  * - PAGES: every page, its Spanish template in src/ and the URL path of each language version.
  *   The default language (English) is the x-default version; "/" is English.
  *   port = a cruise-port page (PORTS key); tour + textKey = a page about one tour (TOURS id; its H1
- *   is the dictionary key <textKey>.h1). Templates link any page with {{page-url:<id>}}.
+ *   is the dictionary key <textKey>.h1); legal + textKey = a legal page (privacy policy, booking terms;
+ *   H1 <textKey>.h1): its JSON-LD is the page and its breadcrumbs only, and llms.txt links its English
+ *   version under "Booking and policies". Templates link any page with {{page-url:<id>}}.
  * - TOURS: the six tours as structured data shows them (names and descriptions come from the
  *   dictionaries, prices from the price tables of src/index.html and its partials: the boat tables are
  *   in src/partials/boats.html).
@@ -49,7 +51,8 @@ export const DICTIONARY_FILES = [
   'assets/js/translations-fr.js',
   'assets/js/translations-it.js',
   'src/i18n/ports.js',
-  'src/i18n/catamaran.js'
+  'src/i18n/catamaran.js',
+  'src/i18n/legal.js'
 ];
 
 /** Pages and their language versions (URL paths end in "/"; the file is <path>index.html). */
@@ -73,6 +76,20 @@ export const PAGES = [
     tour: 'catamaran',
     textKey: 'cat',
     versions: { en: '/puerto-plata-catamaran/', es: '/es/catamaran-puerto-plata/' }
+  },
+  {
+    id: 'privacy',
+    template: 'src/privacy.html',
+    legal: true,
+    textKey: 'privacy',
+    versions: { en: '/privacy/', es: '/es/privacidad/' }
+  },
+  {
+    id: 'booking-terms',
+    template: 'src/booking-terms.html',
+    legal: true,
+    textKey: 'terms',
+    versions: { en: '/booking-terms/', es: '/es/terminos-de-reserva/' }
   }
 ];
 

@@ -3,14 +3,15 @@
  * <script> tag and llms.txt (a Markdown summary of the business for AI assistants).
  *
  * Page definitions (PageDef) come from tools/site.config.mjs:
- *   { id, template, versions: { <lang>: '<url path>' }, port? }
+ *   { id, template, versions: { <lang>: '<url path>' }, port?, tour?, legal?, textKey? }
  * Every version of a page lists all the others (and x-default → the default-language version), so the
  * hreflang annotations are always reciprocal.
  */
 import { escapeAttr } from './translate.mjs';
 
 /**
- * @typedef {{id: string, template: string, versions: Record<string, string>, port?: string}} PageDef
+ * @typedef {{id: string, template: string, versions: Record<string, string>, port?: string, tour?: string,
+ *   legal?: boolean, textKey?: string}} PageDef
  */
 
 /**
@@ -114,12 +115,14 @@ function linkList(links) {
  *   summary: string,
  *   tours: Array<{name: string, url: string, description: string, from: string|null, priceLines: string[]}>,
  *   ports: Array<{title: string, url: string}>,
+ *   policies?: Array<{title: string, url: string}>,
  *   languages: Array<{title: string, url: string}>,
  *   faq: Array<{q: string, a: string}>
  * }} input
+ *   policies = the legal pages (privacy policy, booking terms), listed before the booking questions.
  * @returns {string} Markdown document.
  */
-export function llmsTxt({ site, summary, tours, ports, languages, faq }) {
+export function llmsTxt({ site, summary, tours, ports, policies = [], languages, faq }) {
   const tourBlocks = tours.map((tour) => {
     const price = tour.from ? ` From ${tour.from}.` : ' Price on request (depends on group size).';
     const details = tour.priceLines.map((line) => `  - ${line}`).join('\n');
@@ -149,6 +152,7 @@ export function llmsTxt({ site, summary, tours, ports, languages, faq }) {
     '',
     '## Booking and policies',
     '',
+    ...(policies.length ? [linkList(policies), ''] : []),
     ...questions.flatMap((block) => [block, '']),
     '## Other languages',
     '',

@@ -3142,6 +3142,92 @@ html:not(.js) .faq__icon {
   text-underline-offset: 3px;
 }
 
+/* ============ Legal pages (privacy policy, booking terms) ============ */
+/* Title band: the port pages' hero without a photo (the lagoon color with the glows of the dark panel), only
+   as tall as the nav, the breadcrumbs and the title need. */
+.hero--plain {
+  min-height: 0;
+}
+
+.hero--plain .hero__media {
+  background:
+    radial-gradient(40rem 22rem at 100% 0%, rgba(20, 184, 166, 0.3), transparent 65%),
+    radial-gradient(36rem 20rem at 0% 100%, rgba(255, 197, 61, 0.12), transparent 65%),
+    var(--color-fg);
+}
+
+.hero--plain .hero__inner {
+  padding-bottom: 3rem;
+}
+
+/* Only the breadcrumbs and a short title: the title may use the whole width (one line from tablets up). */
+.hero--plain .hero__content {
+  max-width: none;
+}
+
+/* The text: one column of about 70 characters a line, with air between the sections. */
+.legal {
+  max-width: 35rem;
+  margin-inline: auto;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+
+.legal h2 {
+  margin-top: 2.5rem;
+  font-size: 1.375rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.legal p {
+  margin-top: 0.75rem;
+}
+
+.legal .legal__lead {
+  margin-top: 0;
+  font-size: 1.1875rem;
+  line-height: 1.55;
+}
+
+.legal a {
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+
+/* The phone number never breaks across two lines. */
+.legal a[data-wa-link] {
+  white-space: nowrap;
+}
+
+/* "Last updated", at the end of the text. */
+.legal .legal__updated {
+  margin-top: 3rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-tag);
+  color: var(--color-muted-fg);
+  font-size: 0.9375rem;
+}
+
+@media (min-width: 768px) {
+  .legal {
+    font-size: 1.125rem;
+  }
+
+  .legal h2 {
+    margin-top: 3rem;
+    font-size: 1.625rem;
+  }
+
+  .legal .legal__lead {
+    font-size: 1.25rem;
+  }
+}
+
 /* ============ Motion: hero intro ============ */
 /*
  * With JS: the photo starts as a blurred, inset window and opens to full bleed; the glow behind the copy,
