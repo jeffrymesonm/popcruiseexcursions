@@ -374,6 +374,7 @@ window.SITE_TRANSLATIONS = {
     'booking.submitEmail': 'Book by email',
     'booking.alt': 'Tall palm trees against a blue sky',
     'booking.email': 'For any extra info or questions, email us at',
+    'booking.noscript': 'Without JavaScript this form can’t send your booking. Message us directly on WhatsApp or by email:',
     'booking.person': 'person',
     'booking.persons': 'people',
     'booking.estimate.quote': 'On request',

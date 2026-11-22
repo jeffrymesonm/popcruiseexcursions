@@ -315,6 +315,7 @@ window.SITE_TRANSLATIONS.it = {
   'booking.submitEmail': 'Prenota via e-mail',
   'booking.alt': 'Palme alte contro il cielo azzurro',
   'booking.email': 'Per altre informazioni o domande, scrivici a',
+  'booking.noscript': 'Senza JavaScript questo modulo non può inviare la tua prenotazione. Scrivici direttamente su WhatsApp o via e-mail:',
   'booking.person': 'persona',
   'booking.persons': 'persone',
   'booking.estimate.quote': 'Su richiesta',

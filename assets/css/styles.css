@@ -2236,8 +2236,9 @@ html:not(.js) .faq__icon {
   text-wrap: balance;
 }
 
-/* Email alternative under the booking form. */
-.contact__email {
+/* Email alternative under the booking form, and the direct links shown in the form without JavaScript. */
+.contact__email,
+.form__noscript {
   margin-top: 0.5rem;
   color: var(--color-muted-fg);
   font-size: 0.9375rem;
@@ -2245,7 +2246,12 @@ html:not(.js) .faq__icon {
   overflow-wrap: anywhere;
 }
 
-.contact__email a {
+.form__noscript {
+  text-align: center;
+}
+
+.contact__email a,
+.form__noscript a {
   color: var(--color-fg);
   font-weight: 600;
   text-decoration: underline;

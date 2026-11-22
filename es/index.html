@@ -54,7 +54,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="../assets/css/styles.css?v=06bee67e">
+  <link rel="stylesheet" href="../assets/css/styles.css?v=640c2c2c">
   <title data-i18n="meta.title">Excursiones en Puerto Plata desde Amber Cove y Taíno Bay</title>
   <meta name="description" content="Excursiones para cruceristas en Puerto Plata: Charcos de Damajagua, City Tour, Beach Day en Playa Dorada y barcos privados. Recogida en Amber Cove y Taíno Bay." data-i18n-content="meta.description">
   <!-- Link preview (WhatsApp, Facebook…) uses the same title and description. Canonical, hreflang
@@ -1261,7 +1261,9 @@
           <h2 class="section-head__title" id="booking-title" data-i18n="booking.title">Reserva tu excursión</h2>
           <p class="contact__lead" data-i18n="booking.lead">Completa los datos y envíanos tu reserva por WhatsApp o por correo: te la dejamos escrita y lista para enviar.</p>
 
-          <form class="form" data-booking-form novalidate>
+          <!-- method="dialog": outside a <dialog> the browser never submits the form, so if booking.js does not run
+               the buttons cannot reload the page with the visitor's name in the URL (booking.js handles submit). -->
+          <form class="form" data-booking-form method="dialog" novalidate>
             <div class="field">
               <label class="field__label" for="booking-tour" data-i18n="booking.tour">Excursión</label>
               <select class="field__input field__input--select" id="booking-tour" name="tour" required>
@@ -1371,6 +1373,12 @@
               </div>
             </div>
 
+            <!-- Without JavaScript the form cannot write or send the booking: point to the direct channels. -->
+            <noscript>
+              <p class="form__noscript"><span data-i18n="booking.noscript">Sin JavaScript este formulario no puede enviar tu reserva. Escríbenos directamente por WhatsApp o por correo:</span>
+                <a href="https://wa.me/18296277733" target="_blank" rel="noopener">WhatsApp +1 (829) 627-7733</a> ·
+                <a href="mailto:popcruiseexcursions@gmail.com">popcruiseexcursions@gmail.com</a></p>
+            </noscript>
             <!-- Two ways to send the same booking: WhatsApp (submit, also Enter) or email (data-booking-email holds
                  the address booking.js writes to; keep it equal to the other mailto: links in src/). -->
             <button class="btn btn--whatsapp btn--block" type="submit">
@@ -1479,7 +1487,7 @@
 
   <!-- Order matters: translations before i18n; i18n before the modules that read its strings;
        whatsapp before booking (booking uses SiteWhatsApp); prices before booking (booking uses SitePrices). -->
-  <script src="../assets/js/translations.js?v=527f3624" defer></script>
+  <script src="../assets/js/translations.js?v=c163c791" defer></script>
   <script src="../assets/js/i18n.js?v=36f58c8c" defer></script>
   <script src="../assets/js/hero-intro.js?v=e116a445" defer></script>
   <script src="../assets/js/hero-slides.js?v=1e43f32e" defer></script>
@@ -1492,7 +1500,7 @@
   <script src="../assets/js/reveal.js?v=b6e3c9c3" defer></script>
   <script src="../assets/js/whatsapp.js?v=8b4012c6" defer></script>
   <script src="../assets/js/prices.js?v=4f176edf" defer></script>
-  <script src="../assets/js/booking.js?v=c15eb821" defer></script>
+  <script src="../assets/js/booking.js?v=87972512" defer></script>
   <script src="../assets/js/footer-year.js?v=d34a11d1" defer></script>
 </body>
 </html>

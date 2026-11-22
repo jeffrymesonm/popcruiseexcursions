@@ -32,7 +32,34 @@
   'use strict';
 
   var form = document.querySelector('[data-booking-form]');
-  if (!form || !window.SitePrices || !window.SiteWhatsApp) return;
+  if (!form) return;
+
+  /**
+   * Fallback for a page where prices.js or whatsapp.js did not load (e.g. a failed download on a ship's
+   * Wi-Fi): the form can neither price nor write the booking, and the browser must still never submit it
+   * (that would reload the page with the name and ship in the URL). The WhatsApp button opens the plain
+   * chat (number of the page's wa.me links, no text) and the email button an empty email to the business.
+   * @param {HTMLFormElement} bookingForm - The booking form.
+   * @returns {void}
+   */
+  function useDirectChannels(bookingForm) {
+    bookingForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      var chatLink = document.querySelector('a[href^="https://wa.me/"]');
+      if (chatLink) window.open(chatLink.href.split('?')[0], '_blank', 'noopener');
+    });
+    var mailButton = bookingForm.querySelector('[data-booking-email]');
+    if (mailButton) {
+      mailButton.addEventListener('click', function () {
+        window.location.href = 'mailto:' + mailButton.getAttribute('data-booking-email');
+      });
+    }
+  }
+
+  if (!window.SitePrices || !window.SiteWhatsApp) {
+    useDirectChannels(form);
+    return;
+  }
 
   var MIN_PEOPLE = 1;
   var MAX_PEOPLE = 50;

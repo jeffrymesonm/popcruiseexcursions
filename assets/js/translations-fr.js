@@ -315,6 +315,7 @@ window.SITE_TRANSLATIONS.fr = {
   'booking.submitEmail': 'Réserver par e-mail',
   'booking.alt': 'Grands palmiers sur fond de ciel bleu',
   'booking.email': 'Pour toute information ou question, écrivez-nous à',
+  'booking.noscript': 'Sans JavaScript, ce formulaire ne peut pas envoyer votre réservation. Écrivez-nous directement sur WhatsApp ou par e-mail\u00a0:',
   'booking.person': 'personne',
   'booking.persons': 'personnes',
   'booking.estimate.quote': 'Sur demande',
