@@ -10,10 +10,12 @@
  * Every generated page and sitemap.xml carry a GENERATED banner on line 2: edit src/ and the dictionaries,
  * never the output. Local scripts and stylesheets are linked with ?v=<content hash> (cache-busting; the
  * hash reads CRLF as LF, so every checkout writes the same versions).
+ * The pages carry no HTML comment but that banner: the template comments are notes for whoever edits src/.
  * After writing, the build deletes the pages it generated before but no longer does (a renamed or removed
  * page): only .html / .xml files whose line 2 is its banner, never anything else.
- * A missing translation, an unknown marker, an unpriced "from" label, a missing script or stylesheet or a
- * page without exactly one <h1> stops the build, and nothing is written or deleted.
+ * A missing translation, an unknown marker, an unpriced "from" label, a missing script or stylesheet, a
+ * page without exactly one <h1> or a <meta charset> that does not end within the first 1024 bytes stops
+ * the build, and nothing is written or deleted.
  *
  * Usage: node tools/build.mjs          (writes into the repository root)
  * API:   build({ root, outDir })       (the tests write into a temporary folder)
@@ -28,7 +30,7 @@ import { loadDictionaries } from './lib/dictionaries.mjs';
 import { translateHtml, extractBaseDictionary, decodeEntities } from './lib/translate.mjs';
 import {
   applyIncludes, fillPlaceholders, prefixAssetPaths, stripTemplateOnly, selectLangScripts, relativeUrl, rootPrefix,
-  versionAssetUrls
+  versionAssetUrls, stripComments
 } from './lib/template.mjs';
 import {
   parsePriceTables, minPrice, maxPrice, priceCount, scopePricing, formatUsd, fillPriceFrom, formTablesHtml
@@ -54,6 +56,8 @@ const MARKED_EXTENSIONS = ['.html', '.xml'];
 const UNCLEANED_DIRS = ['assets', 'docs', 'src', 'tools'];
 /** Hex characters of the sha256 content hash written as ?v= on scripts and stylesheets. */
 const VERSION_LENGTH = 8;
+/** Bytes of a page within which its <meta charset> must end (browsers look for the encoding there). */
+const CHARSET_WITHIN = 1024;
 /** How llms.txt says what one "from" price buys, by pricing model (per-person prices need no unit). */
 const PRICE_UNITS = { charter: 'per boat', vehicle: 'per vehicle' };
 
@@ -411,6 +415,11 @@ export function assetVersion(root, assetPath) {
  */
 function validatePage(html, where, errors, warnings) {
   if (!/^<!doctype html>\r?\n<!-- GENERATED/i.test(html)) errors.push(`${where}: missing doctype or GENERATED banner`);
+  const charset = html.match(/<meta charset="[^"]*">/i);
+  const charsetEnd = charset ? Buffer.byteLength(html.slice(0, charset.index + charset[0].length)) : null;
+  if (charsetEnd === null || charsetEnd > CHARSET_WITHIN) {
+    errors.push(`${where}: <meta charset> must end within the first ${CHARSET_WITHIN} bytes (${charset ? `ends at byte ${charsetEnd}` : 'missing'})`);
+  }
   const leftover = html.match(/\{\{[^}]*\}\}/);
   if (leftover) errors.push(`${where}: unresolved marker ${leftover[0]}`);
   const headings = (html.match(/<h1[\s>]/g) || []).length;
@@ -466,7 +475,8 @@ function renderVersion({
 
   const priced = fillPriceFrom(html, tables);
   if (priced.unknown.length) errors.push(`${where}: "from" labels without a price table: ${priced.unknown.join(', ')}`);
-  html = addBanner(priced.html, `${page.template} (${lang})`, 'src/ or the dictionaries');
+  // The template comments are notes for whoever edits src/; the banner is added after they are stripped.
+  html = addBanner(stripComments(priced.html), `${page.template} (${lang})`, 'src/ or the dictionaries');
   validatePage(html, where, errors, warnings);
   return html;
 }

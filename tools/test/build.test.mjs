@@ -494,6 +494,27 @@ test('local scripts and stylesheets carry the content hash of their file', () =>
   assert.ok(read('es/index.html').includes('src="../assets/img/hero.webp"'), 'images keep their plain URL');
 });
 
+test('every page declares its charset within the first 1024 bytes and keeps no comment but its banner', () => {
+  for (const file of result.files.filter((name) => name.endsWith('.html'))) {
+    const html = read(file);
+    assert.ok(Buffer.from(html).subarray(0, 1024).toString('utf8').includes('<meta charset="utf-8">'), `${file}: charset in the first 1024 bytes`);
+    const markup = html.replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, '');
+    assert.deepEqual(markup.match(/<!--[\s\S]*?-->/g), [html.split(/\r?\n/)[1]], `${file}: the banner is the only comment`);
+  }
+});
+
+test('a <meta charset> pushed past the first 1024 bytes stops the build', async () => {
+  const root = copySources();
+  editSource(root, 'src/amber-cove.html', (html) =>
+    html.replace('{{include:head.html}}', `  <meta name="filler" content="${'x'.repeat(1100)}">\n{{include:head.html}}`));
+  const failed = await build({ root, outDir: makeTempDir() });
+  assert.deepEqual(failed.files, []);
+  for (const page of ['amber-cove-excursions/index.html (en)', 'es/excursiones-amber-cove/index.html (es)']) {
+    assert.ok(failed.errors.some((error) => error.startsWith(`${page}: <meta charset> must end within the first 1024 bytes`)),
+      `${page} reports its charset: ${failed.errors.join(' | ')}`);
+  }
+});
+
 test('a script version does not depend on its line breaks (CRLF and LF checkouts agree)', () => {
   const root = makeTempDir();
   plant(root, 'assets/js/crlf.js', 'one();\r\ntwo();\r\n');
