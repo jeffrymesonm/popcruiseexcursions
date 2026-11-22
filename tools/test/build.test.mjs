@@ -515,6 +515,21 @@ test('a <meta charset> pushed past the first 1024 bytes stops the build', async 
   }
 });
 
+test('pages preload the self-hosted latin font at the URL the stylesheet uses, and load nothing from Google', () => {
+  const css = fs.readFileSync(path.join(ROOT, 'assets/css/styles.css'), 'utf8');
+  const latin = css.match(/src: url\("([^"]+)"\) format\("woff2"\);\s*unicode-range: U\+0000-00FF,/);
+  assert.ok(latin, 'styles.css has the latin @font-face');
+  const fontPath = path.posix.join('assets/css', latin[1]);
+  assert.ok(fs.existsSync(path.join(ROOT, fontPath)), `${fontPath} exists`);
+  assert.ok(fs.existsSync(path.join(ROOT, 'assets/fonts/OFL.txt')), 'the font license ships with the fonts');
+  for (const file of result.files.filter((name) => name.endsWith('.html'))) {
+    const html = read(file);
+    const prefix = '../'.repeat(file.split('/').length - 1);
+    assert.ok(html.includes(`<link rel="preload" href="${prefix}${fontPath}" as="font" type="font/woff2" crossorigin>`), `${file}: font preload`);
+    assert.ok(!/fonts\.(googleapis|gstatic)\.com/.test(html), `${file}: nothing from Google Fonts`);
+  }
+});
+
 test('a script version does not depend on its line breaks (CRLF and LF checkouts agree)', () => {
   const root = makeTempDir();
   plant(root, 'assets/js/crlf.js', 'one();\r\ntwo();\r\n');

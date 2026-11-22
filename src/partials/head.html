@@ -15,7 +15,7 @@
     })(document.documentElement);
   </script>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap">
+  <!-- Inter Tight is self-hosted (@font-face in styles.css). Its latin file is on every page: preloaded with the
+       exact URL the stylesheet resolves to (crossorigin, as font requests are), so it downloads alongside the CSS. -->
+  <link rel="preload" href="assets/fonts/inter-tight-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/css/styles.css">
