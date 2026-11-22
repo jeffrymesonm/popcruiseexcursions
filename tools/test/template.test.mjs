@@ -1,7 +1,7 @@
 /**
  * template.test.mjs — Tests for the template engine (tools/lib/template.mjs): includes, placeholders,
- * asset paths, script/stylesheet versions, template-only tags, per-language scripts and relative links
- * between site URLs.
+ * asset paths, script/stylesheet versions, template-only tags, per-language scripts, comment stripping and
+ * relative links between site URLs.
  * Run with: node --test "tools/test/*.test.mjs"
  */
 import { test } from 'node:test';
@@ -14,7 +14,8 @@ import {
   selectLangScripts,
   relativeUrl,
   rootPrefix,
-  versionAssetUrls
+  versionAssetUrls,
+  stripComments
 } from '../lib/template.mjs';
 
 test('applyIncludes inlines partials', () => {
@@ -82,6 +83,14 @@ test('rootPrefix', () => {
   assert.equal(rootPrefix('/es/excursiones-amber-cove/'), '../../');
 });
 
+test('prefixAssetPaths prefixes every srcset and imagesrcset candidate', () => {
+  const html = '<link rel="preload" as="image" imagesrcset="assets/img/a-640.webp 640w, assets/img/a.webp 1600w" imagesizes="100vw">' +
+    '<img src="assets/img/a.webp" srcset="assets/img/a-640.webp 640w,assets/img/a.webp 1600w" sizes="100vw">';
+  assert.equal(prefixAssetPaths(html, '../../'),
+    '<link rel="preload" as="image" imagesrcset="../../assets/img/a-640.webp 640w, ../../assets/img/a.webp 1600w" imagesizes="100vw">' +
+    '<img src="../../assets/img/a.webp" srcset="../../assets/img/a-640.webp 640w,../../assets/img/a.webp 1600w" sizes="100vw">');
+});
+
 test('prefixAssetPaths prefixes a video poster too', () => {
   assert.equal(
     prefixAssetPaths('<video poster="assets/img/a.webp"><source src="assets/video/a.mp4"></video>', '../'),
@@ -109,6 +118,26 @@ test('versionAssetUrls versions local scripts and stylesheets only', () => {
   assert.deepEqual(lines.slice(3, 7), html.split('\n').slice(3, 7), 'images, external URLs, existing queries and links stay');
   assert.equal(lines[7], '<script src="assets/js/gone.js"></script>');
   assert.deepEqual(result.missing, ['assets/js/gone.js']);
+});
+
+test('stripComments drops whole-line comments with their lines (LF and CRLF)', () => {
+  const lf = '<head>\n  <!-- one line -->\n  <meta charset="utf-8">\n  <!--\n    several\n    lines\n  -->\n  <title>T</title>\n</head>';
+  assert.equal(stripComments(lf), '<head>\n  <meta charset="utf-8">\n  <title>T</title>\n</head>');
+  assert.equal(stripComments(lf.replace(/\n/g, '\r\n')), '<head>\r\n  <meta charset="utf-8">\r\n  <title>T</title>\r\n</head>');
+  assert.equal(stripComments('<!-- first line -->\n<p>a</p>\n<!-- last, no line break -->'), '<p>a</p>\n');
+});
+
+test('stripComments drops a comment that shares its line, keeping the markup and line break', () => {
+  assert.equal(stripComments('<p>a</p> <!-- note -->\n<p>b</p>'), '<p>a</p>\n<p>b</p>');
+  assert.equal(stripComments('  <!-- note --><p>a</p>\n'), '  <p>a</p>\n');
+  assert.equal(stripComments('<p>a <!-- note --> b</p>'), '<p>a  b</p>');
+});
+
+test('stripComments never touches script or style text', () => {
+  const html = '<script>\n  // <!-- not a comment -->\n  var a = "<!-- x -->";\n</script>\n' +
+    '<style>\n  /* <!-- kept --> */\n</style>\n<SCRIPT type="application/ld+json">{"a": "<!-- b -->"}</SCRIPT>\n';
+  assert.equal(stripComments(`${html}<!-- gone -->\n`), html);
+  assert.equal(stripComments('<!-- a <script> inside a comment is text -->\n<p>x</p>'), '<p>x</p>');
 });
 
 test('versioned URLs still get the sub-folder prefix', () => {

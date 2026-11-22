@@ -6,16 +6,21 @@
  * src/partials/boats.html), and writes:
  * - one static page per language version ("/" = English, /es/, /fr/, /it/, the port pages, the catamaran page…), each with
  *   its title, description, canonical, hreflang alternates, Open Graph tags and JSON-LD;
- * - sitemap.xml (with language alternates) and llms.txt (a summary for AI assistants).
+ * - sitemap.xml (with language alternates) and llms.txt (a summary for AI assistants);
+ * - 404.html from src/404.html (GitHub Pages serves it for unknown URLs; not in the sitemap or llms.txt).
  * Every generated page and sitemap.xml carry a GENERATED banner on line 2: edit src/ and the dictionaries,
- * never the output. Local scripts and stylesheets are linked with ?v=<content hash> (cache-busting).
+ * never the output. Local scripts and stylesheets are linked with ?v=<content hash> (cache-busting; the
+ * hash reads CRLF as LF, so every checkout writes the same versions).
+ * The pages carry no HTML comment but that banner: the template comments are notes for whoever edits src/.
  * After writing, the build deletes the pages it generated before but no longer does (a renamed or removed
  * page): only .html / .xml files whose line 2 is its banner, never anything else.
- * A missing translation, an unknown marker, an unpriced "from" label, a missing script or stylesheet or a
- * page without exactly one <h1> stops the build, and nothing is written or deleted.
+ * A missing translation, an unknown marker, an unpriced "from" label, a missing script or stylesheet, a
+ * page without exactly one <h1> or a <meta charset> that does not end within the first 1024 bytes stops
+ * the build, and nothing is written or deleted.
  *
  * Usage: node tools/build.mjs          (writes into the repository root)
  * API:   build({ root, outDir })       (the tests write into a temporary folder)
+ *        assetVersion(root, assetPath) (the ?v= version of one script or stylesheet)
  */
 import { createHash } from 'node:crypto';
 import fs from 'node:fs';
@@ -26,7 +31,7 @@ import { loadDictionaries } from './lib/dictionaries.mjs';
 import { translateHtml, extractBaseDictionary, decodeEntities } from './lib/translate.mjs';
 import {
   applyIncludes, fillPlaceholders, prefixAssetPaths, stripTemplateOnly, selectLangScripts, relativeUrl, rootPrefix,
-  versionAssetUrls
+  versionAssetUrls, stripComments
 } from './lib/template.mjs';
 import {
   parsePriceTables, minPrice, maxPrice, priceCount, scopePricing, formatUsd, fillPriceFrom, formTablesHtml
@@ -37,6 +42,10 @@ import { paypalConfigErrors } from './lib/paypal.mjs';
 
 /** Template whose price tables are the single source of prices. */
 const MAIN_TEMPLATE = 'src/index.html';
+/** Template of the page GitHub Pages serves, with status 404, for any unknown URL (at any folder depth). */
+const NOT_FOUND_TEMPLATE = 'src/404.html';
+/** Where GitHub Pages looks for it. */
+const NOT_FOUND_FILE = '404.html';
 /** Folder of the {{include:…}} partials. */
 const PARTIALS_DIR = 'src/partials';
 /** Lengths above which search results cut the title / description (warnings, not errors). */
@@ -53,6 +62,8 @@ const MARKED_EXTENSIONS = ['.html', '.xml'];
 const UNCLEANED_DIRS = ['assets', 'docs', 'src', 'tools'];
 /** Hex characters of the sha256 content hash written as ?v= on scripts and stylesheets. */
 const VERSION_LENGTH = 8;
+/** Bytes of a page within which its <meta charset> must end (browsers look for the encoding there). */
+const CHARSET_WITHIN = 1024;
 /** How llms.txt says what one "from" price buys, by pricing model (per-person prices need no unit). */
 const PRICE_UNITS = { charter: 'per boat', vehicle: 'per vehicle' };
 
@@ -242,11 +253,30 @@ function portOf(page, dict, errors, where) {
 /**
  * Kind of page, for its JSON-LD.
  * @param {object} page - PageDef.
- * @returns {'home'|'port'|'tour'} "port" for cruise-port pages, "tour" for one-tour pages, else "home".
+ * @returns {'home'|'port'|'tour'|'legal'} "port" for cruise-port pages, "tour" for one-tour pages, "legal"
+ *   for the privacy policy and the booking terms, else "home".
  */
 function pageTypeOf(page) {
   if (page.port) return 'port';
-  return page.tour ? 'tour' : 'home';
+  if (page.tour) return 'tour';
+  return page.legal ? 'legal' : 'home';
+}
+
+/**
+ * Breadcrumb names of a legal page (privacy policy, booking terms), for its JSON-LD.
+ * @param {object} page - PageDef with legal and a textKey (its H1 is "<textKey>.h1").
+ * @param {Record<string, string>} dict - Dictionary of the language.
+ * @param {string[]} errors - Collects build errors.
+ * @param {string} where - Page label.
+ * @returns {{homeName: string, pageName: string}|undefined} LegalPageData (see tools/lib/schema.mjs), or
+ *   undefined for other pages.
+ */
+function legalPageOf(page, dict, errors, where) {
+  if (!page.legal) return undefined;
+  return {
+    homeName: textOf(dict, 'port.home', errors, where),
+    pageName: textOf(dict, `${page.textKey}.h1`, errors, where)
+  };
 }
 
 /**
@@ -279,6 +309,9 @@ function tourPageOf(page, dict, errors, where) {
 function markerResolver({ page, lang, urlPath, seoHead, readPartial, hasBooking }) {
   return (name, arg) => {
     if (name === 'home' && arg === null) return relativeUrl(urlPath, homePath(lang));
+    // {{root}}: the path back to the site root ('' on "/", "../" on "/es/"), for files that live there
+    // (favicon.ico: crawlers and browsers also request /favicon.ico without a link).
+    if (name === 'root' && arg === null) return rootPrefix(urlPath);
     // {{book-url}}: the booking form of this page when it has one (home, catamaran page), else the home page's.
     if (name === 'book-url' && arg === null) return hasBooking ? '#booking' : `${relativeUrl(urlPath, homePath(lang))}#booking`;
     if (name === 'current' && arg) return arg === lang ? ' aria-current="page"' : '';
@@ -382,15 +415,18 @@ function removeStaleFiles(outDir, written) {
 }
 
 /**
- * Version of a local script or stylesheet for its ?v= query: the start of the sha256 of its bytes, so it
- * changes exactly when the file does.
+ * Version of a local script or stylesheet for its ?v= query: the start of the sha256 of its text with every
+ * CRLF line break read as LF, so it changes exactly when the file does and is the same in every checkout.
+ * (With core.autocrlf=true a Windows working tree holds some files with CRLF and others with LF, while git
+ * stores and GitHub Pages serves LF: hashing the raw bytes gave each checkout its own versions.)
  * @param {string} root - Repository root.
  * @param {string} assetPath - Site-relative path, e.g. "assets/js/i18n.js".
  * @returns {string|null} VERSION_LENGTH hex characters, or null when the file does not exist.
  */
-function assetVersion(root, assetPath) {
+export function assetVersion(root, assetPath) {
   try {
-    return createHash('sha256').update(fs.readFileSync(path.join(root, assetPath))).digest('hex').slice(0, VERSION_LENGTH);
+    const text = fs.readFileSync(path.join(root, assetPath), 'utf8').replace(/\r\n/g, '\n');
+    return createHash('sha256').update(text).digest('hex').slice(0, VERSION_LENGTH);
   } catch (error) {
     if (error.code === 'ENOENT') return null;
     throw error;
@@ -407,6 +443,11 @@ function assetVersion(root, assetPath) {
  */
 function validatePage(html, where, errors, warnings) {
   if (!/^<!doctype html>\r?\n<!-- GENERATED/i.test(html)) errors.push(`${where}: missing doctype or GENERATED banner`);
+  const charset = html.match(/<meta charset="[^"]*">/i);
+  const charsetEnd = charset ? Buffer.byteLength(html.slice(0, charset.index + charset[0].length)) : null;
+  if (charsetEnd === null || charsetEnd > CHARSET_WITHIN) {
+    errors.push(`${where}: <meta charset> must end within the first ${CHARSET_WITHIN} bytes (${charset ? `ends at byte ${charsetEnd}` : 'missing'})`);
+  }
   const leftover = html.match(/\{\{[^}]*\}\}/);
   if (leftover) errors.push(`${where}: unresolved marker ${leftover[0]}`);
   const headings = (html.match(/<h1[\s>]/g) || []).length;
@@ -449,7 +490,8 @@ function renderVersion({
     tours: toursOf(data, lang, tables, errors, where),
     faq: faqOf(template, data, errors, where),
     port: portOf(page, data, errors, where),
-    tourPage: tourPageOf(page, data, errors, where)
+    tourPage: tourPageOf(page, data, errors, where),
+    legalPage: legalPageOf(page, data, errors, where)
   });
   const seoHead = `${seoHeadTags({ origin: site.origin, page, lang, locales: config.LOCALES, defaultLang: config.DEFAULT_LANG })}\n  ${jsonLdScript(graph)}`;
 
@@ -462,8 +504,31 @@ function renderVersion({
 
   const priced = fillPriceFrom(html, tables);
   if (priced.unknown.length) errors.push(`${where}: "from" labels without a price table: ${priced.unknown.join(', ')}`);
-  html = addBanner(priced.html, `${page.template} (${lang})`, 'src/ or the dictionaries');
+  // The template comments are notes for whoever edits src/; the banner is added after they are stripped.
+  html = addBanner(stripComments(priced.html), `${page.template} (${lang})`, 'src/ or the dictionaries');
   validatePage(html, where, errors, warnings);
+  return html;
+}
+
+/**
+ * The 404 page: its template as it is (one fixed page in four languages, so no translation and no
+ * markers), without comments, with the GENERATED banner and the checks of every page. GitHub Pages serves
+ * it from whatever folder the unknown URL names, so every src/href and CSS url() must be root-absolute
+ * ("/…") or external (https:, mailto:).
+ * @param {string} template - Contents of src/404.html.
+ * @param {string[]} errors - Collects build errors.
+ * @param {string[]} warnings - Collects warnings.
+ * @returns {string} Page markup.
+ */
+function renderNotFound(template, errors, warnings) {
+  const html = addBanner(stripComments(template), NOT_FOUND_TEMPLATE, 'that template');
+  validatePage(html, NOT_FOUND_FILE, errors, warnings);
+  const urls = [...html.matchAll(/\s(?:src|href|poster)="([^"]*)"|url\(["']?([^"')]*)["']?\)/g)]
+    .map((match) => (match[1] === undefined ? match[2] : match[1]));
+  const relative = urls.filter((url) => !/^(?:\/(?!\/)|https:\/\/|mailto:)/.test(url));
+  if (relative.length) {
+    errors.push(`${NOT_FOUND_FILE}: URLs must be root-absolute (the page is served at any depth): ${relative.join(', ')}`);
+  }
   return html;
 }
 
@@ -562,10 +627,14 @@ function buildLlms({ site, dictEn, tables, mainTemplate, templates, rendered, er
       priceLines: priceLines(definition.scope, tables, dictEn, boatNames)
     };
   });
-  const ports = config.PAGES.filter((page) => page.port && page.versions[config.DEFAULT_LANG]).map((page) => ({
-    title: (rendered.get(`${page.id}:${config.DEFAULT_LANG}`) || { title: page.id }).title,
-    url: absoluteUrl(site.origin, page.versions[config.DEFAULT_LANG])
-  }));
+  // Links to the English version of one kind of page (port pages, legal pages), with its rendered title.
+  const englishLinks = (isKind) => config.PAGES.filter((page) => isKind(page) && page.versions[config.DEFAULT_LANG])
+    .map((page) => ({
+      title: (rendered.get(`${page.id}:${config.DEFAULT_LANG}`) || { title: page.id }).title,
+      url: absoluteUrl(site.origin, page.versions[config.DEFAULT_LANG])
+    }));
+  const ports = englishLinks((page) => page.port);
+  const policies = englishLinks((page) => page.legal);
   const languages = config.PAGES.flatMap((page) => Object.entries(page.versions)
     .filter(([lang]) => lang !== config.DEFAULT_LANG)
     .map(([lang, urlPath]) => ({
@@ -579,12 +648,12 @@ function buildLlms({ site, dictEn, tables, mainTemplate, templates, rendered, er
     }
   }
   const summary = dictEn['about.lead'] || dictEn['meta.description'] || '';
-  return llmsTxt({ site, summary, tours, ports, languages, faq });
+  return llmsTxt({ site, summary, tours, ports, policies, languages, faq });
 }
 
 /**
- * Builds every page version, sitemap.xml and llms.txt, then deletes the pages an earlier build generated
- * that are no longer built.
+ * Builds every page version, 404.html, sitemap.xml and llms.txt, then deletes the pages an earlier build
+ * generated that are no longer built.
  * @param {{root: string, outDir?: string}} options - root: repository root; outDir: where to write (default root).
  * @returns {Promise<{files: string[], removed: string[], warnings: string[], errors: string[]}>} Written and
  *   deleted files (relative to outDir, "/"-separated), warnings, and errors (when there are errors nothing
@@ -652,6 +721,12 @@ export async function build({ root, outDir = root }) {
         errors.push(`${where}: ${error.message}`);
       }
     }
+  }
+
+  try {
+    outputs.set(NOT_FOUND_FILE, renderNotFound(readSource(NOT_FOUND_TEMPLATE), errors, warnings));
+  } catch (error) {
+    errors.push(`${NOT_FOUND_TEMPLATE}: ${error.message}`);
   }
 
   const sitemap = sitemapXml({ origin: site.origin, pages: config.PAGES, defaultLang: config.DEFAULT_LANG });

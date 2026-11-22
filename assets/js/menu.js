@@ -16,21 +16,23 @@
   var isOpen = false;
 
   /**
-   * Returns a translated label, with a fallback if i18n.js did not load.
+   * Translates a label into the page language.
    * @param {string} key - Translation key.
-   * @param {string} fallback - Text used when no translator is available.
-   * @returns {string} Label text.
+   * @returns {string|null} Label text, or null when i18n.js or the dictionaries did not load.
    */
-  function label(key, fallback) {
-    return window.SiteI18n ? window.SiteI18n.t(key) : fallback;
+  function label(key) {
+    var text = window.SiteI18n ? window.SiteI18n.t(key) : key;
+    return text === key ? null : text;
   }
 
   /**
-   * Updates the toggle's accessible name for the current state.
+   * Updates the toggle's accessible name for the current state. Without translations the label the
+   * build wrote in the page language stays (aria-expanded still tells whether the menu is open).
    * @returns {void}
    */
   function syncToggleLabel() {
-    toggle.setAttribute('aria-label', isOpen ? label('nav.closeMenu', 'Cerrar menú') : label('nav.openMenu', 'Abrir menú'));
+    var text = label(isOpen ? 'nav.closeMenu' : 'nav.openMenu');
+    if (text) toggle.setAttribute('aria-label', text);
   }
 
   /**

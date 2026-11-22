@@ -7,8 +7,8 @@
  * - {{name}} / {{name:arg}} are filled per page and language by the build (see tools/build.mjs);
  * - data-template-only marks tags that exist only in the template (its noindex meta);
  * - data-lang-script="xx" marks scripts that only the page in language xx loads.
- * It also writes the relative paths that let one template serve pages at different folder depths, and
- * the ?v= versions of local scripts and stylesheets (cache-busting).
+ * It also writes the relative paths that let one template serve pages at different folder depths and
+ * the ?v= versions of local scripts and stylesheets (cache-busting), and strips the HTML comments.
  */
 
 /** {{include:<file>}} — 1 = file name. */
@@ -22,6 +22,13 @@ const TEMPLATE_ONLY = /[ \t]*<[a-zA-Z][^>]*\sdata-template-only(?:="[^"]*")?[^>]
 
 /** <script … data-lang-script="xx" …></script> with its indentation and line break — 1 = language. */
 const LANG_SCRIPT = /[ \t]*<script\b[^>]*\sdata-lang-script="([a-z]+)"[^>]*><\/script>[ \t]*(?:\r?\n)?/g;
+
+/**
+ * A whole <script> or <style> element (1 = its tag name: its text is not markup, so it is kept), or an
+ * HTML comment with the spaces before it (2), the spaces after it (3) and the line break that ends its
+ * line, if any (4: '' at the end of the input).
+ */
+const RAW_TEXT_OR_COMMENT = /<(script|style)\b[^>]*>[\s\S]*?<\/\1\s*>|([ \t]*)<!--[\s\S]*?-->([ \t]*)(\r?\n|$)?/gi;
 
 /**
  * Inlines {{include:<file>}} markers.
@@ -55,7 +62,8 @@ export function fillPlaceholders(html, resolve) {
 
 /**
  * Makes relative asset paths work from a page that lives in a sub-folder: every src/href/poster value
- * and every srcset candidate that starts with "assets/" gets the prefix.
+ * and every srcset candidate (also imagesrcset, on an image preload) that starts with "assets/" gets
+ * the prefix.
  * @param {string} html - Markup.
  * @param {string} prefix - Path back to the site root, e.g. "../" ('' leaves the markup as is).
  * @returns {string} Markup with prefixed asset paths.
@@ -64,7 +72,7 @@ export function prefixAssetPaths(html, prefix) {
   if (!prefix) return html;
   return html
     .replace(/(\s(?:src|href|poster)=")assets\//g, (match, start) => `${start}${prefix}assets/`)
-    .replace(/(\ssrcset=")([^"]*)(")/g, (match, start, value, end) =>
+    .replace(/(\s(?:image)?srcset=")([^"]*)(")/g, (match, start, value, end) =>
       start + value.replace(/(^|,\s*)assets\//g, (candidate, separator) => `${separator}${prefix}assets/`) + end);
 }
 
@@ -100,6 +108,25 @@ export function versionAssetUrls(html, versionOf) {
  */
 export function stripTemplateOnly(html) {
   return html.replace(TEMPLATE_ONLY, '');
+}
+
+/**
+ * Removes the HTML comments: notes for whoever edits src/, which visitors would download for nothing
+ * (the build adds its GENERATED banner afterwards). A comment that fills whole lines goes with its
+ * indentation and line break, so no blank line is left where it was; one that shares its line with
+ * markup goes alone (with the spaces between it and the line break when it ends the line). The text of
+ * <script> and <style> elements is never touched. (The templates hold no "<!--" inside a <title> or
+ * <textarea>, whose text is not markup either.)
+ * @param {string} html - Markup.
+ * @returns {string} Markup without comments.
+ */
+export function stripComments(html) {
+  return html.replace(RAW_TEXT_OR_COMMENT, (match, rawTag, before, after, lineBreak, offset) => {
+    if (rawTag) return match;
+    const startsLine = offset === 0 || html[offset - 1] === '\n';
+    if (lineBreak === undefined) return before + after;
+    return startsLine ? '' : lineBreak;
+  });
 }
 
 /**

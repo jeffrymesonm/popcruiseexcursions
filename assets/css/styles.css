@@ -1,11 +1,37 @@
 /*
  * styles.css — Visual layer for Puerto Plata Cruise Excursions (built on the "Laurel" template).
- * Order: tokens → base → shared components (container, tag, buttons, section head)
+ * Order: fonts → tokens → base → shared components (container, tag, buttons, section head)
  *        → sections (nav, menu, hero, marquee, about, adventure route + jeep, tours, why,
  *          call-to-action, FAQ, booking, footer, floating WhatsApp)
  *        → motion (hero intro, scroll reveal) → reduced motion.
  * Mobile-first. Breakpoints: 768px (md), 1024px (lg), 1280px (xl), 1536px (2xl).
  */
+
+/* ============ Fonts ============ */
+/*
+ * Inter Tight, self-hosted (no request to Google: visitors' IPs stay with this site, and no third-party
+ * stylesheet blocks the first paint). The files are the variable fonts Google Fonts serves for weights
+ * 400–700, one per subset, with Google's unicode-range values: a page downloads latin-ext only when it
+ * shows one of its characters. License: assets/fonts/OFL.txt (SIL Open Font License 1.1).
+ * src/partials/head.html preloads the latin file with this same URL.
+ */
+@font-face {
+  font-family: "Inter Tight";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("../fonts/inter-tight-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Inter Tight";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("../fonts/inter-tight-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
 
 /* ============ Tokens ============ */
 :root {
@@ -16,7 +42,8 @@
   --color-card: #efe6d5;        /* card surfaces */
   --color-tag: #e6dac3;         /* soft sand: borders, chips, thumbnail hover */
   --color-muted-fg: #4b5f5c;    /* secondary text */
-  --color-placeholder: #86938f; /* input placeholders */
+  --color-placeholder: #5f6f6b; /* input placeholders (4.7:1 on sand), switch track when off */
+  --color-field-border: #74817d; /* form field outlines (3:1+ on cards) */
   --color-accent: #0f9488;      /* focus rings, check icons (3:1+ on sand) */
   --color-sea: #14b8a6;         /* decorative turquoise */
   --color-sun: #ffc53d;         /* primary call-to-action, highlights */
@@ -223,15 +250,18 @@ button {
   background: var(--color-whatsapp-hover);
 }
 
+/* Secondary button on the hero photos: dark glass with a light outline, so its white text stays readable on
+   bright photos too. */
 .btn--glass {
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(6, 30, 31, 0.42);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55);
   color: #fff;
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
 }
 
 .btn--glass:hover {
-  background: rgba(255, 255, 255, 0.24);
+  background: rgba(6, 30, 31, 0.62);
 }
 
 .btn--block {
@@ -312,18 +342,16 @@ button {
   color: #fff;
   font-size: 0.8125rem;
   font-weight: 600;
-  opacity: 0.8;
-  transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .lang-switch__option:hover {
-  opacity: 1;
+  background: rgba(255, 255, 255, 0.16);
 }
 
 .lang-switch__option[aria-current="page"] {
   background: var(--color-on-dark);
   color: var(--color-fg);
-  opacity: 1;
 }
 
 /* ============ Navigation ============ */
@@ -392,8 +420,10 @@ button {
   gap: 0.5rem;
 }
 
+/* Over the hero photo the selector is dark glass, so its white letters stay readable on bright skies. */
 .lang-switch--nav {
   display: none;
+  background: rgba(6, 30, 31, 0.42);
 }
 
 .nav__toggle {
@@ -452,7 +482,11 @@ button {
 }
 
 /* ============ Full-screen menu ============ */
-/* Closed: a zero-height polygon at the top. Open: the polygon drops like a curtain. */
+/*
+ * Closed: a zero-height polygon at the top, and hidden (visibility), so nothing in it can be reached even
+ * where inert is not supported. Open: visible at once and the polygon drops like a curtain; on closing,
+ * visibility waits for the curtain to rise (0.7 s) before hiding it.
+ */
 .menu {
   position: fixed;
   inset: 0;
@@ -466,12 +500,15 @@ button {
   overflow-y: auto;
   background: var(--color-fg);
   color: var(--color-on-dark);
+  visibility: hidden;
   clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
-  transition: clip-path 0.7s var(--ease-curtain);
+  transition: clip-path 0.7s var(--ease-curtain), visibility 0s linear 0.7s;
 }
 
 .menu.is-open {
+  visibility: visible;
   clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+  transition: clip-path 0.7s var(--ease-curtain);
 }
 
 .menu__list {
@@ -550,11 +587,16 @@ button {
 }
 
 /* ============ Hero ============ */
+/*
+ * At least one screen tall, and taller when its copy needs it (short phones, longer languages): the
+ * content then pushes the hero down instead of sliding under the absolute nav.
+ */
 .hero {
   position: relative;
-  height: 100vh;
-  height: 100svh;
-  min-height: 36rem;
+  display: flex;
+  flex-direction: column;
+  min-height: max(36rem, 100vh);
+  min-height: max(36rem, 100svh);
   overflow: hidden;
   isolation: isolate;
   color: #fff;
@@ -567,10 +609,33 @@ button {
   background: var(--color-fg);
 }
 
+/* --focus (inline, optional) keeps a photo's subject in view when a narrow screen crops its sides. */
 .hero__image {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: var(--focus, 50% 50%);
+}
+
+/*
+ * Rotating photos of the home hero (hero-slides.js moves .is-active). The shown photo fades in and,
+ * once the intro has run, zooms in slowly; the one leaving fades out and only drops its zoom after
+ * the fade (delayed transform reset), so it never jumps while still visible.
+ */
+.hero__media[data-hero-slides] .hero__image {
+  opacity: 0;
+  transition: opacity 1.2s ease, transform 0s linear 1.2s;
+}
+
+.hero__media[data-hero-slides] .hero__image.is-active {
+  opacity: 1;
+}
+
+.hero-ready .hero__media[data-hero-slides] .hero__image.is-active {
+  transform: scale(1.08);
+  transition: opacity 1.2s ease, transform 8s linear;
 }
 
 /* Top shade so the white logo and nav controls stay readable on bright skies. */
@@ -583,40 +648,41 @@ button {
 }
 
 /*
- * Large blurred dark glow anchored bottom-left so the copy stays readable on any photo.
- * The ellipse fades to zero inside the box, so the blur never shows a hard top edge.
+ * Fills the hero (and grows it when needed). The top padding keeps the copy clear of the nav (about
+ * 5.5rem tall on phones, more from 768 px: see below); the extra bottom padding leaves room for the
+ * tilted marquee that overlaps the hero's edge.
  */
-.hero__veil {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  z-index: -1;
-  width: max(180vw, 170svh);
-  height: max(95vw, 95svh);
-  background: rgba(6, 30, 31, 0.42);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  -webkit-mask-image: radial-gradient(closest-side, #000 45%, transparent 100%);
-  mask-image: radial-gradient(closest-side, #000 45%, transparent 100%);
-  transform: translate(-50%, 50%);
-  pointer-events: none;
-}
-
-/* Extra bottom padding leaves room for the tilted marquee that overlaps the hero's edge. */
 .hero__inner {
   display: flex;
+  flex: 1 0 auto;
   align-items: flex-end;
   justify-content: space-between;
   gap: 2rem;
-  height: 100%;
+  padding-top: 7rem;
   padding-bottom: 5.5rem;
 }
 
 .hero__content {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   max-width: 34rem;
+}
+
+/*
+ * Dark glow right behind the copy, so the text stays readable on every photo (bright plazas included)
+ * while the rest of the photo stays clear. It is twice the copy's width and height, centred on it, so it
+ * follows the copy in every language and on every page; the ellipse fades out before its edges, so no
+ * hard line shows. Fades in with the hero intro (see "Motion: hero intro").
+ */
+.hero__content::before {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  z-index: -1;
+  background: radial-gradient(closest-side, rgba(6, 30, 31, 0.55) 70%, rgba(6, 30, 31, 0) 100%);
+  pointer-events: none;
 }
 
 .hero__title {
@@ -625,6 +691,14 @@ button {
   line-height: 1.05;
   letter-spacing: var(--tracking-tight);
   text-wrap: balance;
+}
+
+/* A soft dark halo under the letters: extra contrast where a bright detail sits right behind the text
+   (the breadcrumbs of the port and catamaran pages too). */
+.crumbs__list,
+.hero__title,
+.hero__lead {
+  text-shadow: 0 1px 2px rgba(6, 30, 31, 0.45), 0 0 20px rgba(6, 30, 31, 0.45);
 }
 
 .hero__title > span {
@@ -638,7 +712,7 @@ button {
 .hero__lead {
   max-width: 28rem;
   margin-top: 1rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: #fff;
   font-size: 1rem;
   line-height: 1.4;
 }
@@ -648,6 +722,133 @@ button {
   flex-wrap: wrap;
   gap: 0.75rem;
   margin-top: 1.75rem;
+}
+
+/*
+ * Photo controls under the hero buttons: pause/play plus one dot per photo (hero-slides.js).
+ * The pressed dot stretches into a bar that fills up while its photo is on screen; when the fill
+ * ends (animationend) the script shows the next photo, so the bar is also the timer. The fill runs
+ * only with .is-autoplay, after the intro (.hero-ready), and stops while .is-paused (pause button,
+ * hero off screen, tab hidden), while hovered with a mouse or while a dot has keyboard focus.
+ * Each dot is a 24 px button drawing a smaller mark; an invisible ::after makes the hit areas larger
+ * than they look (see below).
+ */
+.hero-slides {
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+  margin-top: 1.5rem;
+  padding: 0.25rem 0.5rem 0.25rem 0.25rem;
+  border-radius: 999px;
+  background: rgba(6, 30, 31, 0.32);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+.hero-slides__toggle {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  margin-right: 0.25rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+}
+
+/*
+ * Invisible hit areas, so the controls are easier to tap while looking the same: the pause button reaches
+ * 44 × 44 px and every dot 44 px tall and as wide as its slot (its 24 px, or 48 px when pressed, plus the
+ * 2 px gaps, which no longer swallow taps). Dots wider than their slot would need wider spacing.
+ */
+.hero-slides__toggle::after,
+.hero-slides__dot::after {
+  content: "";
+  position: absolute;
+}
+
+/* 32 px button: 6 px around it, 7 px on the left (the first dot's area takes 1 px on the right). */
+.hero-slides__toggle::after {
+  inset: -6px -6px -6px -7px;
+}
+
+/* 24 px dot: 10 px above and below; 1 px on each side covers half of the gap to the next dot. */
+.hero-slides__dot::after {
+  inset: -10px -1px;
+}
+
+.hero-slides__toggle:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.hero-slides__toggle svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.hero-slides__dot {
+  position: relative;
+  width: 1.5rem;
+  height: 1.5rem;
+  transition: width 0.4s var(--ease-out);
+}
+
+.hero-slides__dot::before {
+  content: "";
+  position: absolute;
+  inset: 50% 0.5rem auto;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.5) linear-gradient(var(--color-sun), var(--color-sun)) no-repeat left / 0% 100%;
+  transform: translateY(-50%);
+  transition: background-color 0.2s ease;
+}
+
+.hero-slides__dot:hover::before {
+  background-color: rgba(255, 255, 255, 0.85);
+}
+
+.hero-slides__dot[aria-pressed="true"] {
+  width: 3rem;
+}
+
+/* Without autoplay (reduced motion, or before the script runs) the pressed bar is simply full. */
+.hero-slides__dot[aria-pressed="true"]::before {
+  background-size: 100% 100%;
+}
+
+.hero-ready .hero-slides.is-autoplay .hero-slides__dot[aria-pressed="true"]::before {
+  background-color: rgba(255, 255, 255, 0.35);
+  animation: hero-slide-timer var(--hero-interval, 6s) linear both;
+}
+
+.hero-slides.is-paused .hero-slides__dot::before,
+.hero-slides:has(:focus-visible) .hero-slides__dot::before {
+  animation-play-state: paused !important;
+}
+
+@media (hover: hover) {
+  .hero-slides:hover .hero-slides__dot::before {
+    animation-play-state: paused !important;
+  }
+}
+
+.hero-slides__toggle:focus-visible,
+.hero-slides__dot:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+  border-radius: 999px;
+}
+
+@keyframes hero-slide-timer {
+  from {
+    background-size: 0% 100%;
+  }
+
+  to {
+    background-size: 100% 100%;
+  }
 }
 
 /* Floating "from US$…" card (large screens only). */
@@ -707,6 +908,11 @@ button {
 }
 
 @media (min-width: 768px) {
+  /* The nav is taller here (5.5rem logo). */
+  .hero__inner {
+    padding-top: 8.5rem;
+  }
+
   .hero__title {
     font-size: 4rem;
   }
@@ -756,6 +962,7 @@ button {
   pointer-events: none;
 }
 
+/* The band itself takes the pointer (the wrapper does not), so hovering it can pause the scroll. */
 .marquee {
   margin: -2.75rem -2rem 4rem;
   padding-block: 0.9rem;
@@ -764,12 +971,18 @@ button {
   color: var(--color-fg);
   transform: rotate(-2deg);
   box-shadow: 0 14px 30px rgba(14, 58, 60, 0.18);
+  pointer-events: auto;
 }
 
 .marquee__track {
   display: flex;
   width: max-content;
   animation: marquee 38s linear infinite;
+}
+
+/* Moving text must be pausable (WCAG 2.2.2): it stops while hovered; reduced motion stops it for good. */
+.marquee:hover .marquee__track {
+  animation-play-state: paused;
 }
 
 .marquee__group {
@@ -1664,7 +1877,10 @@ button {
 .tour-card__media img[hidden],
 .tour-card__media video[hidden],
 .media-toggle[hidden],
-.thumbs[hidden] {
+.thumbs[hidden],
+.hero__image[hidden],
+.hero-slides[hidden],
+.hero-slides__toggle[hidden] {
   display: none;
 }
 
@@ -2003,12 +2219,22 @@ html:not(.js) .boat-photo__name {
   transform: rotate(45deg);
 }
 
-/* Collapsed panels animate their row from 0fr to 1fr; visibility removes them from tab order. */
+/*
+ * With JS (faq.js), collapsed panels animate their row from 0fr to 1fr; visibility removes them from tab
+ * order. Without JS the questions cannot open anything, so every answer is shown and the "+" is dropped.
+ */
 .faq__panel {
   display: grid;
+}
+
+.js .faq__panel {
   grid-template-rows: 0fr;
   visibility: hidden;
   transition: grid-template-rows 0.35s var(--ease-out), visibility 0s linear 0.35s;
+}
+
+html:not(.js) .faq__icon {
+  display: none;
 }
 
 .faq__item.is-open .faq__panel {
@@ -2073,8 +2299,11 @@ html:not(.js) .boat-photo__name {
   text-wrap: balance;
 }
 
-/* Email alternative under the booking form. */
-.contact__email {
+/* Email alternative under the booking form, the direct links shown in the form without JavaScript, and the
+   line under the booking buttons that links the booking terms and the privacy policy. */
+.contact__email,
+.form__noscript,
+.form__legal {
   margin-top: 0.5rem;
   color: var(--color-muted-fg);
   font-size: 0.9375rem;
@@ -2082,7 +2311,14 @@ html:not(.js) .boat-photo__name {
   overflow-wrap: anywhere;
 }
 
-.contact__email a {
+.form__noscript,
+.form__legal {
+  text-align: center;
+}
+
+.contact__email a,
+.form__noscript a,
+.form__legal a {
   color: var(--color-fg);
   font-weight: 600;
   text-decoration: underline;
@@ -2113,12 +2349,13 @@ html:not(.js) .boat-photo__name {
   line-height: 1.2;
 }
 
+/* The 1px outline (3:1 on the card) shows where each field is; the sand fill alone is too close to the card. */
 .field__input {
   display: block;
   width: 100%;
   height: 3rem;
   padding: 0 1.25rem;
-  border: 1px solid transparent;
+  border: 1px solid var(--color-field-border);
   border-radius: var(--radius-pill);
   background: var(--color-bg);
   color: var(--color-fg);
@@ -2161,13 +2398,15 @@ html:not(.js) .boat-photo__name {
   line-height: 1.35;
 }
 
-/* People counter: − [ n ] + */
+/* People counter: − [ n ] +. The outline goes around the whole counter (an inset shadow, so it stays 3rem
+   tall like the other fields), not around the number inside it. */
 .stepper {
   display: grid;
   grid-template-columns: 3rem 1fr 3rem;
   align-items: center;
   border-radius: var(--radius-pill);
   background: var(--color-bg);
+  box-shadow: inset 0 0 0 1px var(--color-field-border);
 }
 
 .stepper__btn {
@@ -2190,6 +2429,7 @@ html:not(.js) .boat-photo__name {
 
 .stepper__input {
   padding: 0;
+  border-color: transparent;
   background: transparent;
   font-weight: 700;
   text-align: center;
@@ -2415,6 +2655,11 @@ html:not(.js) .boat-photo__name {
   text-align: center;
 }
 
+/* Empty status: out of the form's flow (no extra gap) but still rendered, so it stays a live region. */
+.form__status:empty {
+  position: absolute;
+}
+
 .form__status--success {
   color: #1d5e3a;
 }
@@ -2558,11 +2803,11 @@ html:not(.js) .boat-photo__name {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
   gap: 1rem;
   margin-top: 2.5rem;
   padding-top: 2rem;
-  /* Room for the floating WhatsApp button on phones. */
+  /* Room for the floating WhatsApp button (fixed at the bottom right) at every width: at the end of the page it
+     would otherwise cover the last links of this row. */
   padding-right: 4.5rem;
   border-top: 1px solid rgba(248, 243, 234, 0.2);
   font-size: 0.875rem;
@@ -2570,6 +2815,12 @@ html:not(.js) .boat-photo__name {
 
 .footer__bottom > * {
   opacity: 0.6;
+}
+
+/* The copyright on the left, its links (privacy, booking terms, book) together on the right; on phones the
+   links wrap under it, from the left. */
+.footer__bottom > p {
+  margin-right: auto;
 }
 
 .footer__bottom > .footer__link:hover {
@@ -2641,11 +2892,25 @@ html:not(.js) .boat-photo__name {
   }
 }
 
+/* Tablets: the logo stays above the links (beside four columns it was squeezed to a sliver and distorted),
+   three link columns and the contact column across the full width below. */
 @media (min-width: 768px) {
+  .footer__cols {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.5rem 2rem;
+  }
+}
+
+/* Wide screens: the logo beside the four columns, never shrunk (the columns wrap their text instead). */
+@media (min-width: 1100px) {
   .footer__top {
     flex-direction: row;
     align-items: flex-start;
     justify-content: space-between;
+  }
+
+  .footer__logo {
+    flex-shrink: 0;
   }
 
   .footer__cols {
@@ -2655,10 +2920,6 @@ html:not(.js) .boat-photo__name {
 
   .footer__col--contact {
     grid-column: auto;
-  }
-
-  .footer__bottom {
-    padding-right: 0;
   }
 }
 
@@ -2690,14 +2951,15 @@ html:not(.js) .boat-photo__name {
   height: 1.75rem;
 }
 
-/* A soft ring that pulses every few seconds to draw the eye. */
+/* A soft ring that pulses twice when the page opens to draw the eye, then stays hidden: the motion is
+   over within 5 s (WCAG 2.2.2), so it needs no pause control. */
 .wa-float::after {
   content: "";
   position: absolute;
   inset: -2px;
   border-radius: 50%;
   border: 2px solid var(--color-whatsapp);
-  animation: wa-ring 3.2s ease-out infinite;
+  animation: wa-ring 2.4s ease-out 2 forwards;
   pointer-events: none;
 }
 
@@ -2809,9 +3071,8 @@ html:not(.js) .boat-photo__name {
 /* ============ Port pages (Amber Cove, Taíno Bay) ============ */
 /* Same hero as the home page, shorter: no marquee or price card below it. */
 .hero--port {
-  height: 78vh;
-  height: 78svh;
-  min-height: 34rem;
+  min-height: max(34rem, 78vh);
+  min-height: max(34rem, 78svh);
 }
 
 .hero--port .hero__inner {
@@ -2828,10 +3089,9 @@ html:not(.js) .boat-photo__name {
   flex-wrap: wrap;
   gap: 0.25rem 0.5rem;
   margin-bottom: 1rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: #fff;
   font-size: 0.8125rem;
   font-weight: 500;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
 }
 
 .crumbs__list li + li::before {
@@ -2979,17 +3239,104 @@ html:not(.js) .boat-photo__name {
   text-underline-offset: 3px;
 }
 
+/* ============ Legal pages (privacy policy, booking terms) ============ */
+/* Title band: the port pages' hero without a photo (the lagoon color with the glows of the dark panel), only
+   as tall as the nav, the breadcrumbs and the title need. */
+.hero--plain {
+  min-height: 0;
+}
+
+.hero--plain .hero__media {
+  background:
+    radial-gradient(40rem 22rem at 100% 0%, rgba(20, 184, 166, 0.3), transparent 65%),
+    radial-gradient(36rem 20rem at 0% 100%, rgba(255, 197, 61, 0.12), transparent 65%),
+    var(--color-fg);
+}
+
+.hero--plain .hero__inner {
+  padding-bottom: 3rem;
+}
+
+/* Only the breadcrumbs and a short title: the title may use the whole width (one line from tablets up). */
+.hero--plain .hero__content {
+  max-width: none;
+}
+
+/* The text: one column of about 70 characters a line, with air between the sections. */
+.legal {
+  max-width: 35rem;
+  margin-inline: auto;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+
+.legal h2 {
+  margin-top: 2.5rem;
+  font-size: 1.375rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.legal p {
+  margin-top: 0.75rem;
+}
+
+.legal .legal__lead {
+  margin-top: 0;
+  font-size: 1.1875rem;
+  line-height: 1.55;
+}
+
+.legal a {
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+
+/* The phone number never breaks across two lines. */
+.legal a[data-wa-link] {
+  white-space: nowrap;
+}
+
+/* "Last updated", at the end of the text. */
+.legal .legal__updated {
+  margin-top: 3rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-tag);
+  color: var(--color-muted-fg);
+  font-size: 0.9375rem;
+}
+
+@media (min-width: 768px) {
+  .legal {
+    font-size: 1.125rem;
+  }
+
+  .legal h2 {
+    margin-top: 3rem;
+    font-size: 1.625rem;
+  }
+
+  .legal .legal__lead {
+    font-size: 1.25rem;
+  }
+}
+
 /* ============ Motion: hero intro ============ */
 /*
- * With JS: the photo starts as a blurred, inset window and opens to full bleed; the nav and
- * copy follow. hero-intro.js adds .hero-ready once the photo is decoded (head script fallback: 3 s).
+ * With JS: the photo starts as a blurred, inset window and opens to full bleed; the glow behind the copy,
+ * the nav and the copy follow. hero-intro.js adds .hero-ready once the photo is decoded (head script
+ * fallback: 3 s).
  */
 .js .hero__media {
   clip-path: inset(20% 27% round 1.5rem);
   filter: blur(10px);
 }
 
-.js .hero__veil,
+.js .hero__content::before,
 .js .nav__inner,
 .js [data-hero-item] {
   opacity: 0;
@@ -3006,7 +3353,7 @@ html:not(.js) .boat-photo__name {
   transition: clip-path 1.4s var(--ease-intro), filter 1.4s var(--ease-intro);
 }
 
-.hero-ready .hero__veil {
+.hero-ready .hero__content::before {
   opacity: 1;
   transition: opacity 1s ease 0.9s;
 }
@@ -3020,16 +3367,33 @@ html:not(.js) .boat-photo__name {
 }
 
 /* ============ Motion: scroll reveal ============ */
+/*
+ * reveal.js fades each block in as it scrolls into view. Failsafe: if the script never runs (a download
+ * that fails on a ship's Wi-Fi, an error), the reveal-failsafe animation shows every block after 3 s.
+ * reveal.js cancels it (.reveal-ready on <html>) as soon as it starts, so a normal load never sees it.
+ */
 .js [data-reveal] {
   opacity: 0;
   transform: translateY(1.5rem);
   transition: opacity 0.8s ease, transform 0.8s var(--ease-out);
   transition-delay: var(--delay, 0ms);
+  animation: reveal-failsafe 0.8s var(--ease-out) 3s forwards;
+}
+
+.reveal-ready [data-reveal] {
+  animation: none;
 }
 
 .js [data-reveal].is-visible {
   opacity: 1;
   transform: none;
+}
+
+@keyframes reveal-failsafe {
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* ============ Reduced motion ============ */
@@ -3056,12 +3420,23 @@ html:not(.js) .boat-photo__name {
     display: none;
   }
 
+  /* Nothing inside the menu may transition: with the 0.01ms transitions above, its links would take the
+     menu's visibility a frame late and could not receive focus when the menu opens. */
+  .menu * {
+    transition-duration: 0s !important;
+  }
+
   .js .hero__media {
     clip-path: none;
     filter: none;
   }
 
-  .js .hero__veil,
+  /* Hero photos change only when a dot is pressed, with no fade or zoom. */
+  .hero-ready .hero__media[data-hero-slides] .hero__image.is-active {
+    transform: none;
+  }
+
+  .js .hero__content::before,
   .js .nav__inner,
   .js [data-hero-item],
   .js [data-reveal] {

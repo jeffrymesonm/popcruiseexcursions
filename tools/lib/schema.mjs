@@ -2,7 +2,8 @@
  * schema.mjs — JSON-LD (schema.org) graph for each page version, built from the same data the page
  * shows: the business, the site, the page, the tours with their "from" prices, the FAQ and, on the
  * port pages, the cruise terminal, breadcrumbs and the list of tours from that port; on a tour page
- * (the catamaran page), only that tour, breadcrumbs and the FAQ.
+ * (the catamaran page), only that tour, breadcrumbs and the FAQ; on a legal page (privacy policy, booking
+ * terms), only the business, the site, the page and its breadcrumbs.
  * Never emits ratings or reviews: the business has no published reviews yet.
  *
  * @id rule: an id that repeats on several pages always carries the same content. The business, the site
@@ -22,6 +23,8 @@
  *   homeName: string, pageName: string}} PortData
  * @typedef {{id: string, homeName: string, pageName: string}} TourPageData
  *   A page about one tour: id = its TOURS id; the other fields feed the breadcrumbs.
+ * @typedef {{homeName: string, pageName: string}} LegalPageData
+ *   A legal page (privacy policy, booking terms): the names its breadcrumbs show.
  */
 
 /**
@@ -192,18 +195,21 @@ function portNodes(origin, url, homeUrl, port, tours) {
 /**
  * JSON-LD graph for one page version.
  * Home: every tour as a TouristTrip. Port: terminal, breadcrumbs and tour list. Tour: only the tour
- * named by tourPage.id (the page is about that trip) and breadcrumbs.
+ * named by tourPage.id (the page is about that trip) and breadcrumbs. Legal: only breadcrumbs (the page
+ * is about the business).
  * @param {{origin: string, site: SiteInfo, lang: string, url: string, homeUrl: string,
- *   pageType: 'home'|'port'|'tour', title: string, description: string, audience: string, tours: TourData[],
- *   faq: Array<{q: string, a: string}>, port?: PortData, tourPage?: TourPageData}} input
+ *   pageType: 'home'|'port'|'tour'|'legal', title: string, description: string, audience: string,
+ *   tours: TourData[], faq: Array<{q: string, a: string}>, port?: PortData, tourPage?: TourPageData,
+ *   legalPage?: LegalPageData}} input
  *   homeUrl = home page URL in the page language (breadcrumbs and trip ids).
  * @returns {{'@context': string, '@graph': object[]}} The graph.
  */
 export function buildGraph({
-  origin, site, lang, url, homeUrl, pageType, title, description, audience, tours, faq, port, tourPage
+  origin, site, lang, url, homeUrl, pageType, title, description, audience, tours, faq, port, tourPage, legalPage
 }) {
   const isPort = pageType === 'port' && port;
   const isTour = pageType === 'tour' && tourPage;
+  const isLegal = pageType === 'legal' && legalPage;
   const pageTripId = isTour ? tripId(homeUrl, tourPage.id) : null;
   let about = `${origin}/#org`;
   if (isPort) about = `${origin}/#port-${port.id}`;
@@ -230,6 +236,9 @@ export function buildGraph({
       ...tours.filter((tour) => tour.id === tourPage.id).map((tour) => tripNode(origin, homeUrl, tour, audience)),
       breadcrumbNode(url, tourPage.homeName, homeUrl, tourPage.pageName)
     ];
+  } else if (isLegal) {
+    page.breadcrumb = { '@id': `${url}#breadcrumb` };
+    pageNodes = [breadcrumbNode(url, legalPage.homeName, homeUrl, legalPage.pageName)];
   } else {
     pageNodes = tours.map((tour) => tripNode(origin, homeUrl, tour, audience));
   }

@@ -5,7 +5,9 @@
           <h2 class="section-head__title" id="booking-title" data-i18n="booking.title">Reserva tu excursión</h2>
           <p class="contact__lead" data-i18n="booking.lead">Completa los datos y envíanos tu reserva por WhatsApp o por correo: te la dejamos escrita y lista para enviar.</p>
 
-          <form class="form" data-booking-form novalidate>
+          <!-- method="dialog": outside a <dialog> the browser never submits the form, so if booking.js does not run
+               the buttons cannot reload the page with the visitor's name in the URL (booking.js handles submit). -->
+          <form class="form" data-booking-form method="dialog" novalidate>
             <div class="field">
               <label class="field__label" for="booking-tour" data-i18n="booking.tour">Excursión</label>
               <select class="field__input field__input--select" id="booking-tour" name="tour" required>
@@ -121,6 +123,12 @@
               </div>
             </div>
 
+            <!-- Without JavaScript the form cannot write or send the booking: point to the direct channels. -->
+            <noscript>
+              <p class="form__noscript"><span data-i18n="booking.noscript">Sin JavaScript este formulario no puede enviar tu reserva. Escríbenos directamente por WhatsApp o por correo:</span>
+                <a href="https://wa.me/18296277733" target="_blank" rel="noopener">WhatsApp +1 (829) 627-7733</a> ·
+                <a href="mailto:popcruiseexcursions@gmail.com">popcruiseexcursions@gmail.com</a></p>
+            </noscript>
             <!-- Two ways to send the same booking: WhatsApp (submit, also Enter) or email (data-booking-email holds
                  the address booking.js writes to; keep it equal to the other mailto: links in src/). -->
             <button class="btn btn--whatsapp btn--block" type="submit">
@@ -131,7 +139,11 @@
               <svg aria-hidden="true"><use href="#icon-mail"/></svg>
               <span data-i18n="booking.submitEmail">Reservar por correo</span>
             </button>
-            <p class="form__status" role="status" aria-live="polite" data-form-status hidden></p>
+            <!-- Live region: always in the page (never hidden, only emptied) so screen readers announce its updates. -->
+            <p class="form__status" role="status" aria-live="polite" data-form-status></p>
+            <!-- Booking means accepting the booking terms and the privacy policy. In all four languages the sentence is
+                 prefix, terms link, middle, privacy link, period; FR and IT link the English pages. -->
+            <p class="form__legal"><span data-i18n="booking.legal.prefix">Al reservar aceptas nuestros</span> <a href="{{page-url:booking-terms}}" hreflang="{{page-lang:booking-terms}}" data-i18n="booking.legal.terms">términos de reserva</a> <span data-i18n="booking.legal.middle">y nuestra</span> <a href="{{page-url:privacy}}" hreflang="{{page-lang:privacy}}" data-i18n="booking.legal.privacy">política de privacidad</a>.</p>
           </form>
           <p class="contact__email"><span data-i18n="booking.email">¿Más información o alguna pregunta? Escríbenos a</span> <a href="mailto:popcruiseexcursions@gmail.com">popcruiseexcursions@gmail.com</a></p>
         </div>

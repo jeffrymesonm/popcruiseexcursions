@@ -19,6 +19,8 @@ window.SITE_TRANSLATIONS = {
     'gallery.pause': 'Pausar video',
     'gallery.play': 'Reproducir video',
     'gallery.video': 'Video',
+    'hero.pause': 'Pausar fotos',
+    'hero.play': 'Reproducir fotos',
     'price.perPerson': 'por persona',
     'wa.greeting': '¡Hola, Puerto Plata Cruise Excursions! Quiero información sobre sus excursiones en Puerto Plata.',
     'booking.person': 'persona',
@@ -88,7 +90,7 @@ window.SITE_TRANSLATIONS = {
   en: {
     // Meta and navigation
     'meta.title': 'Puerto Plata Shore Excursions from Amber Cove & Taíno Bay',
-    'meta.description': 'Puerto Plata shore excursions for cruise passengers: Damajagua waterfalls, city tour, Playa Dorada beach day and private boats. Pickup at Amber Cove and Taíno Bay.',
+    'meta.description': 'Puerto Plata shore excursions for cruise passengers: Damajagua waterfalls, city tour, Playa Dorada beach day and private boats. Amber Cove and Taíno Bay pickup.',
     'nav.skip': 'Skip to content',
     'nav.home': 'Puerto Plata Cruise Excursions, home page',
     'nav.language': 'Language',
@@ -113,6 +115,9 @@ window.SITE_TRANSLATIONS = {
     'hero.card.2': 'Service in English and Spanish',
     'hero.card.3': 'Bigger group, better price',
     'hero.card.cta': 'See prices',
+    'hero.photos': 'Tour photos',
+    'hero.pause': 'Pause photos',
+    'hero.play': 'Play photos',
 
     // Marquee
     'marquee.1': 'Damajagua Waterfalls',
@@ -292,7 +297,7 @@ window.SITE_TRANSLATIONS = {
     'boats.ocean-king.desc': 'Two-deck power catamaran with an upper terrace: plenty of room for big groups, barbecue and swim stops in turquoise water.',
     'boats.ocean-king.alt': 'The Ocean King IV power catamaran anchored in turquoise water',
     'boats.libreterre.desc': 'Sailing catamaran with a jacuzzi, water slide, trampoline and upper deck; 4 cabins and 4 bathrooms. The favorite for bachelorette parties and birthdays: we can help with decoration, cake, catering, photos and video (on request).',
-    'boats.libreterre.note': 'Booked with a US$550 deposit. Flexible schedule around your ship’s arrival at Amber Cove or Taino Bay.',
+    'boats.libreterre.note': 'Booked with a US$550 deposit. Flexible schedule around your ship’s arrival at Amber Cove or Taíno Bay.',
     'boats.libreterre.alt': 'Libreterre catamaran with its slide, seen from the air in crystal-clear water',
     'boats.cat-jacuzzi.name': 'Catamaran with jacuzzi',
     'boats.cat-jacuzzi.desc': 'Spacious catamaran with a bow jacuzzi, water slide and upper deck. Plenty of room to celebrate with your group.',
@@ -390,6 +395,12 @@ window.SITE_TRANSLATIONS = {
     'booking.submitEmail': 'Book by email',
     'booking.alt': 'Tall palm trees against a blue sky',
     'booking.email': 'For any extra info or questions, email us at',
+    'booking.noscript': 'Without JavaScript this form can’t send your booking. Message us directly on WhatsApp or by email:',
+    // Under the booking buttons: prefix, terms link, middle, privacy link, then a period.
+    'booking.legal.prefix': 'By booking you accept our',
+    'booking.legal.terms': 'booking terms',
+    'booking.legal.middle': 'and our',
+    'booking.legal.privacy': 'privacy policy',
     'booking.person': 'person',
     'booking.persons': 'people',
     'booking.estimate.quote': 'On request',
@@ -466,6 +477,8 @@ window.SITE_TRANSLATIONS = {
     'footer.contact': 'Contact',
     'footer.ports': 'Ports',
     'footer.pay': 'We accept',
-    'footer.place': 'Puerto Plata, Dominican Republic'
+    'footer.place': 'Puerto Plata, Dominican Republic',
+    'footer.privacy': 'Privacy',
+    'footer.terms': 'Booking terms'
   }
 };

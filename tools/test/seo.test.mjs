@@ -84,3 +84,18 @@ test('llmsTxt lists the business, tours and pages', () => {
   assert.ok(text.includes('https://popcruiseexcursions.com/es/'), text);
   assert.ok(text.includes('Will I make it back to my ship on time?'), text);
 });
+
+test('llmsTxt lists the legal pages before the booking questions', () => {
+  const text = llmsTxt({
+    site: SITE,
+    summary: 'Local tour operator for cruise passengers.',
+    tours: [],
+    ports: [],
+    policies: [{ title: 'Booking terms', url: 'https://popcruiseexcursions.com/booking-terms/' }],
+    languages: [],
+    faq: [{ q: 'How do I pay?', a: 'A deposit, then the rest in person.' }]
+  });
+  const link = text.indexOf('- [Booking terms](https://popcruiseexcursions.com/booking-terms/)');
+  assert.ok(link > text.indexOf('## Booking and policies'), text);
+  assert.ok(link < text.indexOf('### How do I pay?'), text);
+});

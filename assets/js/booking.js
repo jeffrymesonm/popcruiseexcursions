@@ -38,7 +38,45 @@
   'use strict';
 
   var form = document.querySelector('[data-booking-form]');
-  if (!form || !window.SitePrices || !window.SiteWhatsApp) return;
+  if (!form) return;
+
+  /**
+   * Fallback for a page where prices.js, whatsapp.js, i18n.js or the translations did not load (e.g. a
+   * failed download on a ship's Wi-Fi): the form can neither price nor write the booking, and the browser
+   * must still never submit it (that would reload the page with the name and ship in the URL). The
+   * WhatsApp button opens the plain chat (number of the page's wa.me links, no text) and the email button
+   * an empty email to the business.
+   * @param {HTMLFormElement} bookingForm - The booking form.
+   * @returns {void}
+   */
+  function useDirectChannels(bookingForm) {
+    bookingForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      var chatLink = document.querySelector('a[href^="https://wa.me/"]');
+      if (chatLink) window.open(chatLink.href.split('?')[0], '_blank', 'noopener');
+    });
+    var mailButton = bookingForm.querySelector('[data-booking-email]');
+    if (mailButton) {
+      mailButton.addEventListener('click', function () {
+        window.location.href = 'mailto:' + mailButton.getAttribute('data-booking-email');
+      });
+    }
+  }
+
+  /**
+   * Whether the booking message can be written: i18n.js and its dictionaries loaded. Without them every
+   * line of the booking would be a raw key such as "booking.msg.total".
+   * @returns {boolean} True when the message language translates the booking keys.
+   */
+  function canWriteMessage() {
+    var i18n = window.SiteI18n;
+    return !!i18n && i18n.t('booking.msg.total', i18n.messageLanguage()) !== 'booking.msg.total';
+  }
+
+  if (!window.SitePrices || !window.SiteWhatsApp || !canWriteMessage()) {
+    useDirectChannels(form);
+    return;
+  }
 
   var MIN_PEOPLE = 1;
   var MAX_PEOPLE = 50;
@@ -257,8 +295,10 @@
 
   /**
    * Shows a status line under the buttons. Once the booking is paid, "no status" means the payment
-   * status, so editing the form never hides the booking code from the visitor.
-   * @param {string|null} key - Translation key, or null to hide (or to go back to the payment status).
+   * status, so editing the form never hides the booking code from the visitor. The line is never hidden,
+   * only emptied (styles.css collapses it), so screen readers already know the live region and announce
+   * each new text.
+   * @param {string|null} key - Translation key, or null to clear (or to go back to the payment status).
    * @param {'success'|'error'|'info'} [tone] - Visual tone (info: neutral).
    * @param {Object<string, string|number>} [values] - Values of the text's {placeholders}.
    * @returns {void}
@@ -271,13 +311,11 @@
     statusKey = key;
     statusElement.classList.remove('form__status--success', 'form__status--error', 'form__status--info');
     if (!key) {
-      statusElement.hidden = true;
       statusElement.textContent = '';
       return;
     }
     statusElement.classList.add('form__status--' + (tone || 'success'));
     statusElement.textContent = fill(t(key), values || {});
-    statusElement.hidden = false;
   }
 
   /**

@@ -2,7 +2,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 {{root-redirect}}
   <meta name="theme-color" content="#0e3a3c">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230e3a3c'/%3E%3Ccircle cx='16' cy='13' r='6' fill='%23ffc53d'/%3E%3Cpath d='M5 23c3.7-2.7 7.3-2.7 11 0s7.3 2.7 11 0' fill='none' stroke='%2314b8a6' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
+  <!-- Site icons (one artwork, assets/img/favicon.svg): favicon.ico lives at the site root, where crawlers and
+       browsers also ask for it without a link (the "root" marker is the path back to the root from this page);
+       then the SVG, a 192 px PNG (Android, search results) and the apple-touch-icon (180 px, square corners:
+       iOS rounds them itself). -->
+  <link rel="icon" href="{{root}}favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/img/favicon-192.png" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 
   <!--
     Runs before first paint: flags JS support. Each language has its own static page, so nothing is
@@ -15,7 +22,7 @@
     })(document.documentElement);
   </script>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap">
+  <!-- Inter Tight is self-hosted (@font-face in styles.css). Its latin file is on every page: preloaded with the
+       exact URL the stylesheet resolves to (crossorigin, as font requests are), so it downloads alongside the CSS. -->
+  <link rel="preload" href="assets/fonts/inter-tight-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/css/styles.css">
