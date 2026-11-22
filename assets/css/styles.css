@@ -2729,7 +2729,8 @@ html:not(.js) .faq__icon {
   gap: 1rem;
   margin-top: 2.5rem;
   padding-top: 2rem;
-  /* Room for the floating WhatsApp button on phones. */
+  /* Room for the floating WhatsApp button (fixed at the bottom right) at every width: at the end of the page it
+     would otherwise cover the last links of this row. */
   padding-right: 4.5rem;
   border-top: 1px solid rgba(248, 243, 234, 0.2);
   font-size: 0.875rem;
@@ -2820,10 +2821,6 @@ html:not(.js) .faq__icon {
   .footer__cols {
     grid-template-columns: repeat(3, 1fr);
     gap: 2.5rem 2rem;
-  }
-
-  .footer__bottom {
-    padding-right: 0;
   }
 }
 
