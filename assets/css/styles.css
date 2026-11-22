@@ -704,7 +704,8 @@ button {
  * ends (animationend) the script shows the next photo, so the bar is also the timer. The fill runs
  * only with .is-autoplay, after the intro (.hero-ready), and stops while .is-paused (pause button,
  * hero off screen, tab hidden), while hovered with a mouse or while a dot has keyboard focus.
- * Each dot is a 24 px target (WCAG 2.5.8) drawing a smaller mark.
+ * Each dot is a 24 px button drawing a smaller mark; an invisible ::after makes the hit areas larger
+ * than they look (see below).
  */
 .hero-slides {
   display: flex;
@@ -719,6 +720,7 @@ button {
 }
 
 .hero-slides__toggle {
+  position: relative;
   display: grid;
   place-items: center;
   width: 2rem;
@@ -727,6 +729,27 @@ button {
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.16);
   color: #fff;
+}
+
+/*
+ * Invisible hit areas, so the controls are easier to tap while looking the same: the pause button reaches
+ * 44 × 44 px and every dot 44 px tall and as wide as its slot (its 24 px, or 48 px when pressed, plus the
+ * 2 px gaps, which no longer swallow taps). Dots wider than their slot would need wider spacing.
+ */
+.hero-slides__toggle::after,
+.hero-slides__dot::after {
+  content: "";
+  position: absolute;
+}
+
+/* 32 px button: 6 px around it, 7 px on the left (the first dot's area takes 1 px on the right). */
+.hero-slides__toggle::after {
+  inset: -6px -6px -6px -7px;
+}
+
+/* 24 px dot: 10 px above and below; 1 px on each side covers half of the gap to the next dot. */
+.hero-slides__dot::after {
+  inset: -10px -1px;
 }
 
 .hero-slides__toggle:hover {
