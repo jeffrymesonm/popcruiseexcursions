@@ -276,7 +276,7 @@ window.SITE_TRANSLATIONS = {
     'boats.ocean-king.desc': 'Two-deck power catamaran with an upper terrace: plenty of room for big groups, barbecue and swim stops in turquoise water.',
     'boats.ocean-king.alt': 'The Ocean King IV power catamaran anchored in turquoise water',
     'boats.libreterre.desc': 'Sailing catamaran with a jacuzzi, water slide, trampoline and upper deck; 4 cabins and 4 bathrooms. The favorite for bachelorette parties and birthdays: we can help with decoration, cake, catering, photos and video (on request).',
-    'boats.libreterre.note': 'Booked with a US$550 deposit. Flexible schedule around your ship’s arrival at Amber Cove or Taino Bay.',
+    'boats.libreterre.note': 'Booked with a US$550 deposit. Flexible schedule around your ship’s arrival at Amber Cove or Taíno Bay.',
     'boats.libreterre.alt': 'Libreterre catamaran with its slide, seen from the air in crystal-clear water',
     'boats.cat-jacuzzi.name': 'Catamaran with jacuzzi',
     'boats.cat-jacuzzi.desc': 'Spacious catamaran with a bow jacuzzi, water slide and upper deck. Plenty of room to celebrate with your group.',
