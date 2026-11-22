@@ -26,7 +26,8 @@
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   {{seo-head}}
-  <link rel="preload" as="image" href="assets/img/hero-catamaran.webp" fetchpriority="high">
+  <!-- The hero photo, preloaded with the same imagesrcset/imagesizes as its img (any difference and the browser downloads two files). No href: a browser without imagesrcset then skips the preload instead of fetching the largest file on top of the one the img picks. -->
+  <link rel="preload" as="image" imagesrcset="assets/img/hero-catamaran-640.webp 640w, assets/img/hero-catamaran-960.webp 960w, assets/img/hero-catamaran.webp 1280w" imagesizes="100vw" fetchpriority="high">
 </head>
 <body>
 
@@ -40,7 +41,7 @@
     <!-- ============ Hero (same layout as the port pages) ============ -->
     <section class="hero hero--port" id="top" aria-labelledby="cat-title" data-hero>
       <div class="hero__media">
-        <img class="hero__image" src="assets/img/hero-catamaran.webp" alt="" width="1280" height="720" fetchpriority="high" decoding="async">
+        <img class="hero__image" src="assets/img/hero-catamaran.webp" srcset="assets/img/hero-catamaran-640.webp 640w, assets/img/hero-catamaran-960.webp 960w, assets/img/hero-catamaran.webp 1280w" sizes="100vw" alt="" width="1280" height="720" fetchpriority="high" decoding="async">
       </div>
       <div class="hero__inner container">
         <div class="hero__content">

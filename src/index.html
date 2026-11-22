@@ -48,7 +48,8 @@
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   {{seo-head}}
-  <link rel="preload" as="image" href="assets/img/hero.webp" fetchpriority="high">
+  <!-- The hero photo, preloaded with the same imagesrcset/imagesizes as its img (any difference and the browser downloads two files). No href: a browser without imagesrcset then skips the preload instead of fetching the largest file on top of the one the img picks. -->
+  <link rel="preload" as="image" imagesrcset="assets/img/hero-640.webp 640w, assets/img/hero-960.webp 960w, assets/img/hero-1280.webp 1280w, assets/img/hero.webp 1600w" imagesizes="100vw" fetchpriority="high">
 </head>
 <body>
 
@@ -61,15 +62,18 @@
     <!-- ============ Hero ============
          Rotating tour photos (hero-slides.js): the first one is the page's main image (preloaded); the
          others stay hidden + lazy until the script shows them, so they never compete with it. Without
-         JS only the first one shows. The dots and the pause button sit under the buttons. -->
+         JS only the first one shows. The dots and the pause button sit under the buttons.
+         Each photo lists its variants NAME-640/-960/-1280.webp (only those narrower than the file) and
+         the file itself as srcset, with sizes="100vw": phones download a smaller file. The preload in the
+         head repeats the first photo's srcset and sizes exactly. -->
     <section class="hero" id="top" aria-labelledby="hero-title" data-hero>
       <div class="hero__media" data-hero-slides>
-        <img class="hero__image is-active" src="assets/img/hero.webp" alt="" width="1600" height="1065" fetchpriority="high" decoding="async">
-        <img class="hero__image" src="assets/img/tour-buggy.webp" alt="" width="1280" height="852" loading="lazy" decoding="async" style="--focus: 35% 50%" hidden>
-        <img class="hero__image" src="assets/img/hero-catamaran.webp" alt="" width="1280" height="720" loading="lazy" decoding="async" style="--focus: 45% 50%" hidden>
-        <img class="hero__image" src="assets/img/tour-horse.webp" alt="" width="1400" height="1050" loading="lazy" decoding="async" hidden>
-        <img class="hero__image" src="assets/img/tour-city.webp" alt="" width="1400" height="934" loading="lazy" decoding="async" hidden>
-        <img class="hero__image" src="assets/img/about.webp" alt="" width="1400" height="934" loading="lazy" decoding="async" style="--focus: 50% 30%" hidden>
+        <img class="hero__image is-active" src="assets/img/hero.webp" srcset="assets/img/hero-640.webp 640w, assets/img/hero-960.webp 960w, assets/img/hero-1280.webp 1280w, assets/img/hero.webp 1600w" sizes="100vw" alt="" width="1600" height="1065" fetchpriority="high" decoding="async">
+        <img class="hero__image" src="assets/img/tour-buggy.webp" srcset="assets/img/tour-buggy-640.webp 640w, assets/img/tour-buggy-960.webp 960w, assets/img/tour-buggy.webp 1280w" sizes="100vw" alt="" width="1280" height="852" loading="lazy" decoding="async" style="--focus: 35% 50%" hidden>
+        <img class="hero__image" src="assets/img/hero-catamaran.webp" srcset="assets/img/hero-catamaran-640.webp 640w, assets/img/hero-catamaran-960.webp 960w, assets/img/hero-catamaran.webp 1280w" sizes="100vw" alt="" width="1280" height="720" loading="lazy" decoding="async" style="--focus: 45% 50%" hidden>
+        <img class="hero__image" src="assets/img/tour-horse.webp" srcset="assets/img/tour-horse-640.webp 640w, assets/img/tour-horse-960.webp 960w, assets/img/tour-horse-1280.webp 1280w, assets/img/tour-horse.webp 1400w" sizes="100vw" alt="" width="1400" height="1050" loading="lazy" decoding="async" hidden>
+        <img class="hero__image" src="assets/img/tour-city.webp" srcset="assets/img/tour-city-640.webp 640w, assets/img/tour-city-960.webp 960w, assets/img/tour-city-1280.webp 1280w, assets/img/tour-city.webp 1400w" sizes="100vw" alt="" width="1400" height="934" loading="lazy" decoding="async" hidden>
+        <img class="hero__image" src="assets/img/about.webp" srcset="assets/img/about-640.webp 640w, assets/img/about-960.webp 960w, assets/img/about-1280.webp 1280w, assets/img/about.webp 1400w" sizes="100vw" alt="" width="1400" height="934" loading="lazy" decoding="async" style="--focus: 50% 30%" hidden>
       </div>
       <div class="hero__inner container">
         <div class="hero__content">

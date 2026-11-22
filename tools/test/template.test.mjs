@@ -83,6 +83,14 @@ test('rootPrefix', () => {
   assert.equal(rootPrefix('/es/excursiones-amber-cove/'), '../../');
 });
 
+test('prefixAssetPaths prefixes every srcset and imagesrcset candidate', () => {
+  const html = '<link rel="preload" as="image" imagesrcset="assets/img/a-640.webp 640w, assets/img/a.webp 1600w" imagesizes="100vw">' +
+    '<img src="assets/img/a.webp" srcset="assets/img/a-640.webp 640w,assets/img/a.webp 1600w" sizes="100vw">';
+  assert.equal(prefixAssetPaths(html, '../../'),
+    '<link rel="preload" as="image" imagesrcset="../../assets/img/a-640.webp 640w, ../../assets/img/a.webp 1600w" imagesizes="100vw">' +
+    '<img src="../../assets/img/a.webp" srcset="../../assets/img/a-640.webp 640w,../../assets/img/a.webp 1600w" sizes="100vw">');
+});
+
 test('prefixAssetPaths prefixes a video poster too', () => {
   assert.equal(
     prefixAssetPaths('<video poster="assets/img/a.webp"><source src="assets/video/a.mp4"></video>', '../'),

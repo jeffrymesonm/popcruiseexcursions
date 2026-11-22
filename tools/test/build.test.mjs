@@ -106,6 +106,24 @@ function graphOf(html) {
   return JSON.parse(match[1])['@graph'];
 }
 
+/**
+ * Pixel size of a WebP file, from its header (lossy VP8, lossless VP8L or extended VP8X).
+ * @param {string} file - Absolute path.
+ * @returns {{width: number, height: number}|null} Size, or null when the file is not a WebP.
+ */
+function webpSize(file) {
+  const bytes = fs.readFileSync(file);
+  if (bytes.toString('ascii', 0, 4) !== 'RIFF' || bytes.toString('ascii', 8, 12) !== 'WEBP') return null;
+  const chunk = bytes.toString('ascii', 12, 16);
+  if (chunk === 'VP8 ') return { width: bytes.readUInt16LE(26) & 0x3fff, height: bytes.readUInt16LE(28) & 0x3fff };
+  if (chunk === 'VP8L') {
+    const bits = bytes.readUInt32LE(21);
+    return { width: (bits & 0x3fff) + 1, height: ((bits >> 14) & 0x3fff) + 1 };
+  }
+  if (chunk === 'VP8X') return { width: bytes.readUIntLE(24, 3) + 1, height: bytes.readUIntLE(27, 3) + 1 };
+  return null;
+}
+
 before(async () => {
   outDir = makeTempDir();
   result = await build({ root: ROOT, outDir });
@@ -537,6 +555,28 @@ test('every page links the site icons with paths that resolve from its folder', 
     const pageUrl = new URL(`https://popcruiseexcursions.com/${file.replace(/index\.html$/, '')}`);
     const links = [...read(file).matchAll(/<link rel="(?:icon|apple-touch-icon)" href="([^"]+)"/g)];
     assert.deepEqual(links.map((link) => new URL(link[1], pageUrl).pathname.slice(1)), icons, `${file}: icon links`);
+  }
+});
+
+test('hero photos list their variants with true widths, and the preload repeats the first one', () => {
+  for (const file of result.files.filter((name) => name.endsWith('.html'))) {
+    const html = read(file);
+    const pageUrl = new URL(`https://popcruiseexcursions.com/${file.replace(/index\.html$/, '')}`);
+    const heroes = [...html.matchAll(/<img class="hero__image[^"]*" src="([^"]+)" srcset="([^"]+)" sizes="([^"]+)"/g)];
+    assert.ok(heroes.length >= 1, `${file}: a hero photo with srcset`);
+    for (const [, src, srcset] of heroes) {
+      const candidates = srcset.split(', ').map((candidate) => candidate.split(' '));
+      const widths = candidates.map(([, descriptor]) => Number(descriptor.slice(0, -1)));
+      assert.deepEqual(widths, [...widths].sort((a, b) => a - b), `${file}: ${src} candidates from small to large`);
+      assert.equal(candidates[candidates.length - 1][0], src, `${file}: ${src} is the largest candidate`);
+      for (const [url, descriptor] of candidates) {
+        const asset = new URL(url, pageUrl).pathname.slice(1);
+        assert.equal(`${webpSize(path.join(ROOT, asset)).width}w`, descriptor, `${file}: ${asset} is ${descriptor} wide`);
+      }
+    }
+    const preload = html.match(/<link rel="preload" as="image" imagesrcset="([^"]+)" imagesizes="([^"]+)" fetchpriority="high">/);
+    assert.ok(preload, `${file}: hero preload`);
+    assert.deepEqual([preload[1], preload[2]], [heroes[0][2], heroes[0][3]], `${file}: the preload matches the first hero photo`);
   }
 });
 
