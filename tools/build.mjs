@@ -8,7 +8,8 @@
  *   its title, description, canonical, hreflang alternates, Open Graph tags and JSON-LD;
  * - sitemap.xml (with language alternates) and llms.txt (a summary for AI assistants).
  * Every generated page and sitemap.xml carry a GENERATED banner on line 2: edit src/ and the dictionaries,
- * never the output. Local scripts and stylesheets are linked with ?v=<content hash> (cache-busting).
+ * never the output. Local scripts and stylesheets are linked with ?v=<content hash> (cache-busting; the
+ * hash reads CRLF as LF, so every checkout writes the same versions).
  * After writing, the build deletes the pages it generated before but no longer does (a renamed or removed
  * page): only .html / .xml files whose line 2 is its banner, never anything else.
  * A missing translation, an unknown marker, an unpriced "from" label, a missing script or stylesheet or a
@@ -16,6 +17,7 @@
  *
  * Usage: node tools/build.mjs          (writes into the repository root)
  * API:   build({ root, outDir })       (the tests write into a temporary folder)
+ *        assetVersion(root, assetPath) (the ?v= version of one script or stylesheet)
  */
 import { createHash } from 'node:crypto';
 import fs from 'node:fs';
@@ -381,15 +383,18 @@ function removeStaleFiles(outDir, written) {
 }
 
 /**
- * Version of a local script or stylesheet for its ?v= query: the start of the sha256 of its bytes, so it
- * changes exactly when the file does.
+ * Version of a local script or stylesheet for its ?v= query: the start of the sha256 of its text with every
+ * CRLF line break read as LF, so it changes exactly when the file does and is the same in every checkout.
+ * (With core.autocrlf=true a Windows working tree holds some files with CRLF and others with LF, while git
+ * stores and GitHub Pages serves LF: hashing the raw bytes gave each checkout its own versions.)
  * @param {string} root - Repository root.
  * @param {string} assetPath - Site-relative path, e.g. "assets/js/i18n.js".
  * @returns {string|null} VERSION_LENGTH hex characters, or null when the file does not exist.
  */
-function assetVersion(root, assetPath) {
+export function assetVersion(root, assetPath) {
   try {
-    return createHash('sha256').update(fs.readFileSync(path.join(root, assetPath))).digest('hex').slice(0, VERSION_LENGTH);
+    const text = fs.readFileSync(path.join(root, assetPath), 'utf8').replace(/\r\n/g, '\n');
+    return createHash('sha256').update(text).digest('hex').slice(0, VERSION_LENGTH);
   } catch (error) {
     if (error.code === 'ENOENT') return null;
     throw error;

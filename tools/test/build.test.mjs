@@ -1,8 +1,9 @@
 /**
  * build.test.mjs — Integration test of the static build (tools/build.mjs): runs the real build into a
  * temporary folder and checks the generated pages, sitemap.xml and llms.txt; a few tests build a modified
- * copy of the sources (missing translation, changed price) or a folder with stale files. Every temporary
- * folder is deleted when the tests end.
+ * copy of the sources (missing translation, changed price) or a folder with stale files, and one checks
+ * assetVersion (the ?v= of scripts and stylesheets) on its own. Every temporary folder is deleted when the
+ * tests end.
  * Run with: node --test "tools/test/*.test.mjs"
  */
 import { test, before, after } from 'node:test';
@@ -12,7 +13,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { build } from '../build.mjs';
+import { build, assetVersion } from '../build.mjs';
 import { parsePriceTables, minPrice, formatUsd } from '../lib/prices.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -485,11 +486,24 @@ test('local scripts and stylesheets carry the content hash of their file', () =>
       const match = url.match(/^((?:\.\.\/)*)(assets\/[^?]+)\?v=([0-9a-f]{8})$/);
       assert.ok(match, `${file}: ${url} is versioned`);
       assert.equal(match[1], prefix, `${file}: ${url} is relative to the page`);
-      const hash = createHash('sha256').update(fs.readFileSync(path.join(ROOT, match[2]))).digest('hex').slice(0, 8);
-      assert.equal(match[3], hash, `${file}: ${url} is the hash of ${match[2]}`);
+      const served = fs.readFileSync(path.join(ROOT, match[2]), 'utf8').replace(/\r\n/g, '\n');
+      const hash = createHash('sha256').update(served).digest('hex').slice(0, 8);
+      assert.equal(match[3], hash, `${file}: ${url} is the hash of ${match[2]} (as git stores it: LF)`);
     }
   }
   assert.ok(read('es/index.html').includes('src="../assets/img/hero.webp"'), 'images keep their plain URL');
+});
+
+test('a script version does not depend on its line breaks (CRLF and LF checkouts agree)', () => {
+  const root = makeTempDir();
+  plant(root, 'assets/js/crlf.js', 'one();\r\ntwo();\r\n');
+  plant(root, 'assets/js/lf.js', 'one();\ntwo();\n');
+  plant(root, 'assets/js/other.js', 'one();\ntwo();\nthree();\n');
+  const expected = createHash('sha256').update('one();\ntwo();\n').digest('hex').slice(0, 8);
+  assert.equal(assetVersion(root, 'assets/js/lf.js'), expected, 'the sha256 of the LF text');
+  assert.equal(assetVersion(root, 'assets/js/crlf.js'), expected, 'CRLF reads as LF');
+  assert.notEqual(assetVersion(root, 'assets/js/other.js'), expected, 'a content change still changes the version');
+  assert.equal(assetVersion(root, 'assets/js/missing.js'), null);
 });
 
 test('sitemap.xml is marked as generated and keeps its XML declaration first', () => {
