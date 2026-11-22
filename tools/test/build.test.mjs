@@ -539,7 +539,8 @@ test('builds the legal pages (privacy policy, booking terms) in English and Span
     assert.ok(html.includes(`hreflang="en" href="${ORIGIN}${en}"`), file);
     assert.ok(html.includes(`hreflang="es" href="${ORIGIN}${es}"`), file);
     assert.ok(html.includes(`hreflang="x-default" href="${ORIGIN}${en}"`), file);
-    assert.match(html, new RegExp(`<title[^>]*>${h1}</title>`), file);
+    // The title names the business: a bare "Privacy policy" says nothing in a results page or a browser tab.
+    assert.ok(html.includes(`>${h1} | Puerto Plata Cruise Excursions</title>`), `${file}: title`);
     assert.match(html, new RegExp(`<h1[^>]*>${h1}</h1>`), file);
     const description = html.match(/<meta name="description" content="([^"]*)"/)[1];
     assert.ok(description.length >= 70 && description.length <= 160, `${file}: description has ${description.length} characters`);
@@ -578,10 +579,11 @@ test('sitemap and llms.txt list the legal pages', () => {
   const sitemap = read('sitemap.xml');
   for (const { urlPath } of LEGAL_PAGES) assert.ok(sitemap.includes(`<loc>${ORIGIN}${urlPath}</loc>`), urlPath);
   const llms = read('llms.txt');
-  const policies = llms.indexOf(`- [Privacy policy](${ORIGIN}/privacy/)`);
+  const brand = ' | Puerto Plata Cruise Excursions';
+  const policies = llms.indexOf(`- [Privacy policy${brand}](${ORIGIN}/privacy/)`);
   assert.ok(policies > llms.indexOf('## Booking and policies'), 'privacy policy under "Booking and policies"');
-  assert.ok(llms.includes(`- [Booking terms](${ORIGIN}/booking-terms/)`));
-  assert.ok(llms.includes(`- [Español: Términos de reserva](${ORIGIN}/es/terminos-de-reserva/)`));
+  assert.ok(llms.includes(`- [Booking terms${brand}](${ORIGIN}/booking-terms/)`));
+  assert.ok(llms.includes(`- [Español: Términos de reserva${brand}](${ORIGIN}/es/terminos-de-reserva/)`));
 });
 
 test('every footer links the legal pages in its language (French and Italian: the English pages)', () => {

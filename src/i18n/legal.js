@@ -17,7 +17,7 @@ window.SITE_TRANSLATIONS.en = Object.assign(window.SITE_TRANSLATIONS.en || {}, {
   'legal.orEmail': 'or email',
 
   // Privacy policy
-  'privacy.meta.title': 'Privacy policy',
+  'privacy.meta.title': 'Privacy policy | Puerto Plata Cruise Excursions',
   'privacy.meta.description': 'What the Puerto Plata Cruise Excursions booking form asks for, where it goes, and how to ask us to delete it.',
   'privacy.h1': 'Privacy policy',
   'privacy.intro': 'Puerto Plata Cruise Excursions runs shore excursions in Puerto Plata, Dominican Republic, for cruise passengers. This page explains what personal data we use when you book, why, and who it is shared with. If you have questions, message us on WhatsApp at',
@@ -40,7 +40,7 @@ window.SITE_TRANSLATIONS.en = Object.assign(window.SITE_TRANSLATIONS.en || {}, {
   'privacy.updated': 'Last updated: November 22, 2026.',
 
   // Booking terms
-  'terms.meta.title': 'Booking terms',
+  'terms.meta.title': 'Booking terms | Puerto Plata Cruise Excursions',
   'terms.meta.description': 'How booking works at Puerto Plata Cruise Excursions: prices in US dollars, deposit, paying the rest and the cancellation policy.',
   'terms.h1': 'Booking terms',
   'terms.intro': 'These are the terms for bookings with Puerto Plata Cruise Excursions. If anything is unclear, message us on WhatsApp at',
