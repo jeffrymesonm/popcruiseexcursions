@@ -602,3 +602,17 @@ test('the pay block links the booking terms, cancellation policy included (four 
     assert.equal(new URL(href, pageUrl).pathname, target, `${file}: link`);
   }
 });
+
+test('the privacy policy tells what paying with PayPal shares and keeps (English and Spanish)', async () => {
+  const site = await builtSite();
+  assert.deepEqual(site.errors, []);
+  // PayPal's own script and cookies, the paid booking emailed through Formspree, the payment status in the tab.
+  const expected = {
+    'privacy/index.html': ['PayPal’s script loads', 'its own cookies', 'through Formspree', 'session storage', 'no cookies of its own'],
+    'es/privacidad/index.html': ['el script de PayPal', 'sus propias cookies', 'a través de Formspree', 'almacenamiento de sesión', 'cookies propias']
+  };
+  for (const [file, phrases] of Object.entries(expected)) {
+    const html = site.read(file);
+    for (const phrase of phrases) assert.ok(html.includes(phrase), `${file}: "${phrase}"`);
+  }
+});

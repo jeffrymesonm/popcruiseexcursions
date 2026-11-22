@@ -5,7 +5,9 @@
   "node tools/build.mjs".
   Spanish copy lives here; English in src/i18n/legal.js (privacy.* and legal.* keys). Confirmed facts only:
   what the booking form asks for, WhatsApp and email, PayPal / Zelle / Cash App, the language choice kept in
-  localStorage ("site-lang"), GitHub Pages hosting, fonts, images and videos served from the site itself. No
+  localStorage ("site-lang"), GitHub Pages hosting, fonts, images and videos served from the site itself, and
+  the PayPal checkout (PayPal's script and its cookies, the paid booking emailed through Formspree, the payment
+  status in sessionStorage: "pce-paid", "pce-unsent-email"). No
   legal name, RNC or address until the client confirms them (README, "Pendiente de confirmar con el cliente").
   Keep it true: if the site ever loads something from another server or stores something new in the browser
   (analytics, a map, a payment script), update "Lo que guarda tu navegador" and the date at the end, in both
@@ -72,9 +74,10 @@
 
           <h2 data-i18n="privacy.payments.title">Pagos</h2>
           <p data-i18n="privacy.payments.text">Los depósitos se pagan por PayPal, Zelle o Cash App, y el resto en persona el día de la excursión. Cada servicio de pago trata tus datos de pago según su propia política de privacidad; nosotros no vemos ni guardamos los datos de tu tarjeta.</p>
+          <p data-i18n="privacy.payments.paypal">Si pagas con PayPal desde el formulario de reserva, el pago lo procesa PayPal: al llegar al formulario se carga el script de PayPal, que puede usar sus propias cookies para prevenir fraudes. Al completar el pago, tu reserva, el importe, el código de reserva, el número de la transacción y el nombre y el correo de tu cuenta PayPal nos llegan por correo a través de Formspree (Estados Unidos). Mientras la pestaña siga abierta, tu navegador guarda el estado del pago (almacenamiento de sesión), para no pedirte el pago otra vez si recargas la página y para reenviarnos el aviso si no llegó a salir.</p>
 
           <h2 data-i18n="privacy.browser.title">Lo que guarda tu navegador</h2>
-          <p data-i18n="privacy.browser.text">El sitio no usa cookies, ni herramientas de análisis, ni publicidad. Si eliges un idioma, tu navegador lo recuerda (almacenamiento local) para mostrarte el sitio en ese idioma la próxima vez; puedes borrarlo desde la configuración de tu navegador. Las fuentes, imágenes y vídeos se sirven desde nuestro propio sitio.</p>
+          <p data-i18n="privacy.browser.text">El sitio no usa cookies propias, ni herramientas de análisis, ni publicidad. Si eliges un idioma, tu navegador lo recuerda (almacenamiento local) para mostrarte el sitio en ese idioma la próxima vez; puedes borrarlo desde la configuración de tu navegador. Las fuentes, imágenes y vídeos se sirven desde nuestro propio sitio.</p>
 
           <h2 data-i18n="privacy.hosting.title">Alojamiento del sitio</h2>
           <p data-i18n="privacy.hosting.text">El sitio está alojado en GitHub Pages (GitHub, Inc., Estados Unidos). Como cualquier servidor web, GitHub registra datos técnicos de cada visita, como la dirección IP, para mantener el servicio seguro.</p>
