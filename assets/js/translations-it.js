@@ -346,5 +346,8 @@ window.SITE_TRANSLATIONS.it = {
   'footer.contact': 'Contatti',
   'footer.ports': 'Porti',
   'footer.pay': 'Pagamenti accettati',
-  'footer.place': 'Puerto Plata, Repubblica Dominicana'
+  'footer.place': 'Puerto Plata, Repubblica Dominicana',
+  // The legal pages exist in English and Spanish only: these links open the English ones.
+  'footer.privacy': 'Privacy',
+  'footer.terms': 'Termini di prenotazione'
 };

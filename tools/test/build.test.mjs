@@ -584,6 +584,28 @@ test('sitemap and llms.txt list the legal pages', () => {
   assert.ok(llms.includes(`- [Español: Términos de reserva](${ORIGIN}/es/terminos-de-reserva/)`));
 });
 
+test('every footer links the legal pages in its language (French and Italian: the English pages)', () => {
+  // Language → [privacy text, terms text, privacy path, terms path, hreflang of both links].
+  const expected = {
+    es: ['Privacidad', 'Términos de reserva', '/es/privacidad/', '/es/terminos-de-reserva/', 'es'],
+    en: ['Privacy', 'Booking terms', '/privacy/', '/booking-terms/', 'en'],
+    fr: ['Confidentialité', 'Conditions de réservation', '/privacy/', '/booking-terms/', 'en'],
+    it: ['Privacy', 'Termini di prenotazione', '/privacy/', '/booking-terms/', 'en']
+  };
+  for (const file of result.files.filter((name) => name.endsWith('.html'))) {
+    const html = read(file);
+    const [privacy, terms, privacyPath, termsPath, hreflang] = expected[html.match(/<html lang="([a-z]+)">/)[1]];
+    const footer = html.match(/<footer[\s\S]*?<\/footer>/)[0];
+    const pageUrl = `${ORIGIN}/${file.replace(/index\.html$/, '')}`;
+    for (const [key, text, target] of [['footer.privacy', privacy, privacyPath], ['footer.terms', terms, termsPath]]) {
+      const link = footer.match(new RegExp(`<a class="footer__link" href="([^"]*)" hreflang="([a-z]+)" data-i18n="${key}">([^<]*)</a>`));
+      assert.ok(link, `${file}: ${key} link`);
+      assert.equal(new URL(link[1], pageUrl).pathname, target, `${file}: ${key} goes to ${target}`);
+      assert.deepEqual([link[2], link[3]], [hreflang, text], `${file}: ${key}`);
+    }
+  }
+});
+
 test('no page loads anything from another server, as the privacy policy says', () => {
   // Google Fonts are the one exception until the fonts are served from assets/: then remove it.
   const allowed = /^https:\/\/(popcruiseexcursions\.com|fonts\.googleapis\.com|fonts\.gstatic\.com)(\/|$)/;

@@ -430,6 +430,8 @@ window.SITE_TRANSLATIONS = {
     'footer.contact': 'Contact',
     'footer.ports': 'Ports',
     'footer.pay': 'We accept',
-    'footer.place': 'Puerto Plata, Dominican Republic'
+    'footer.place': 'Puerto Plata, Dominican Republic',
+    'footer.privacy': 'Privacy',
+    'footer.terms': 'Booking terms'
   }
 };

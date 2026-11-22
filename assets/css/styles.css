@@ -2722,7 +2722,6 @@ html:not(.js) .faq__icon {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
   gap: 1rem;
   margin-top: 2.5rem;
   padding-top: 2rem;
@@ -2734,6 +2733,12 @@ html:not(.js) .faq__icon {
 
 .footer__bottom > * {
   opacity: 0.6;
+}
+
+/* The copyright on the left, its links (privacy, booking terms, book) together on the right; on phones the
+   links wrap under it, from the left. */
+.footer__bottom > p {
+  margin-right: auto;
 }
 
 .footer__bottom > .footer__link:hover {
