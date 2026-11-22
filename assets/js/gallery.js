@@ -32,11 +32,13 @@
 
   /**
    * Translates a runtime label.
-   * @param {string} key - Translation key ("gallery.play" / "gallery.pause").
-   * @returns {string|null} Text in the page language, or null without i18n (the label then stays as is).
+   * @param {string} key - Translation key ("gallery.play" / "gallery.pause" / "gallery.video").
+   * @returns {string|null} Text in the page language, or null without i18n.js or its dictionaries (the
+   *   label then stays as is).
    */
   function t(key) {
-    return window.SiteI18n ? window.SiteI18n.t(key) : null;
+    var text = window.SiteI18n ? window.SiteI18n.t(key) : key;
+    return text === key ? null : text;
   }
 
   /**

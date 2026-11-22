@@ -35,10 +35,12 @@
   /**
    * Translates a runtime label.
    * @param {string} key - Translation key ("hero.pause" / "hero.play").
-   * @returns {string|null} Text in the page language, or null without i18n (the label then stays as is).
+   * @returns {string|null} Text in the page language, or null without i18n.js or its dictionaries (the
+   *   label then stays as is).
    */
   function t(key) {
-    return window.SiteI18n ? window.SiteI18n.t(key) : null;
+    var text = window.SiteI18n ? window.SiteI18n.t(key) : key;
+    return text === key ? null : text;
   }
 
   /**
