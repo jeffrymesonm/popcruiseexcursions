@@ -16,7 +16,8 @@
   --color-card: #efe6d5;        /* card surfaces */
   --color-tag: #e6dac3;         /* soft sand: borders, chips, thumbnail hover */
   --color-muted-fg: #4b5f5c;    /* secondary text */
-  --color-placeholder: #86938f; /* input placeholders */
+  --color-placeholder: #5f6f6b; /* input placeholders (4.7:1 on sand), switch track when off */
+  --color-field-border: #74817d; /* form field outlines (3:1+ on cards) */
   --color-accent: #0f9488;      /* focus rings, check icons (3:1+ on sand) */
   --color-sea: #14b8a6;         /* decorative turquoise */
   --color-sun: #ffc53d;         /* primary call-to-action, highlights */
@@ -315,18 +316,16 @@ button {
   color: #fff;
   font-size: 0.8125rem;
   font-weight: 600;
-  opacity: 0.8;
-  transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .lang-switch__option:hover {
-  opacity: 1;
+  background: rgba(255, 255, 255, 0.16);
 }
 
 .lang-switch__option[aria-current="page"] {
   background: var(--color-on-dark);
   color: var(--color-fg);
-  opacity: 1;
 }
 
 /* ============ Navigation ============ */
@@ -395,8 +394,10 @@ button {
   gap: 0.5rem;
 }
 
+/* Over the hero photo the selector is dark glass, so its white letters stay readable on bright skies. */
 .lang-switch--nav {
   display: none;
+  background: rgba(6, 30, 31, 0.42);
 }
 
 .nav__toggle {
@@ -2265,12 +2266,13 @@ html:not(.js) .boat-photo__name {
   line-height: 1.2;
 }
 
+/* The 1px outline (3:1 on the card) shows where each field is; the sand fill alone is too close to the card. */
 .field__input {
   display: block;
   width: 100%;
   height: 3rem;
   padding: 0 1.25rem;
-  border: 1px solid transparent;
+  border: 1px solid var(--color-field-border);
   border-radius: var(--radius-pill);
   background: var(--color-bg);
   color: var(--color-fg);
@@ -2313,13 +2315,15 @@ html:not(.js) .boat-photo__name {
   line-height: 1.35;
 }
 
-/* People counter: − [ n ] + */
+/* People counter: − [ n ] +. The outline goes around the whole counter (an inset shadow, so it stays 3rem
+   tall like the other fields), not around the number inside it. */
 .stepper {
   display: grid;
   grid-template-columns: 3rem 1fr 3rem;
   align-items: center;
   border-radius: var(--radius-pill);
   background: var(--color-bg);
+  box-shadow: inset 0 0 0 1px var(--color-field-border);
 }
 
 .stepper__btn {
@@ -2342,6 +2346,7 @@ html:not(.js) .boat-photo__name {
 
 .stepper__input {
   padding: 0;
+  border-color: transparent;
   background: transparent;
   font-weight: 700;
   text-align: center;
