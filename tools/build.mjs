@@ -284,6 +284,9 @@ function tourPageOf(page, dict, errors, where) {
 function markerResolver({ page, lang, urlPath, seoHead, readPartial, hasBooking }) {
   return (name, arg) => {
     if (name === 'home' && arg === null) return relativeUrl(urlPath, homePath(lang));
+    // {{root}}: the path back to the site root ('' on "/", "../" on "/es/"), for files that live there
+    // (favicon.ico: crawlers and browsers also request /favicon.ico without a link).
+    if (name === 'root' && arg === null) return rootPrefix(urlPath);
     // {{book-url}}: the booking form of this page when it has one (home, catamaran page), else the home page's.
     if (name === 'book-url' && arg === null) return hasBooking ? '#booking' : `${relativeUrl(urlPath, homePath(lang))}#booking`;
     if (name === 'current' && arg) return arg === lang ? ' aria-current="page"' : '';

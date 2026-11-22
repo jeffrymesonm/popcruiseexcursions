@@ -530,6 +530,16 @@ test('pages preload the self-hosted latin font at the URL the stylesheet uses, a
   }
 });
 
+test('every page links the site icons with paths that resolve from its folder', () => {
+  const icons = ['favicon.ico', 'assets/img/favicon.svg', 'assets/img/favicon-192.png', 'assets/img/apple-touch-icon.png'];
+  for (const icon of icons) assert.ok(fs.existsSync(path.join(ROOT, icon)), `${icon} exists`);
+  for (const file of result.files.filter((name) => name.endsWith('.html'))) {
+    const pageUrl = new URL(`https://popcruiseexcursions.com/${file.replace(/index\.html$/, '')}`);
+    const links = [...read(file).matchAll(/<link rel="(?:icon|apple-touch-icon)" href="([^"]+)"/g)];
+    assert.deepEqual(links.map((link) => new URL(link[1], pageUrl).pathname.slice(1)), icons, `${file}: icon links`);
+  }
+});
+
 test('a script version does not depend on its line breaks (CRLF and LF checkouts agree)', () => {
   const root = makeTempDir();
   plant(root, 'assets/js/crlf.js', 'one();\r\ntwo();\r\n');
