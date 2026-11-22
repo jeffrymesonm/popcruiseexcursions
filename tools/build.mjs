@@ -6,7 +6,8 @@
  * src/partials/boats.html), and writes:
  * - one static page per language version ("/" = English, /es/, /fr/, /it/, the port pages, the catamaran page…), each with
  *   its title, description, canonical, hreflang alternates, Open Graph tags and JSON-LD;
- * - sitemap.xml (with language alternates) and llms.txt (a summary for AI assistants).
+ * - sitemap.xml (with language alternates) and llms.txt (a summary for AI assistants);
+ * - 404.html from src/404.html (GitHub Pages serves it for unknown URLs; not in the sitemap or llms.txt).
  * Every generated page and sitemap.xml carry a GENERATED banner on line 2: edit src/ and the dictionaries,
  * never the output. Local scripts and stylesheets are linked with ?v=<content hash> (cache-busting; the
  * hash reads CRLF as LF, so every checkout writes the same versions).
@@ -40,6 +41,10 @@ import { buildGraph } from './lib/schema.mjs';
 
 /** Template whose price tables are the single source of prices. */
 const MAIN_TEMPLATE = 'src/index.html';
+/** Template of the page GitHub Pages serves, with status 404, for any unknown URL (at any folder depth). */
+const NOT_FOUND_TEMPLATE = 'src/404.html';
+/** Where GitHub Pages looks for it. */
+const NOT_FOUND_FILE = '404.html';
 /** Folder of the {{include:…}} partials. */
 const PARTIALS_DIR = 'src/partials';
 /** Lengths above which search results cut the title / description (warnings, not errors). */
@@ -485,6 +490,28 @@ function renderVersion({
 }
 
 /**
+ * The 404 page: its template as it is (one fixed page in four languages, so no translation and no
+ * markers), without comments, with the GENERATED banner and the checks of every page. GitHub Pages serves
+ * it from whatever folder the unknown URL names, so every src/href and CSS url() must be root-absolute
+ * ("/…") or external (https:, mailto:).
+ * @param {string} template - Contents of src/404.html.
+ * @param {string[]} errors - Collects build errors.
+ * @param {string[]} warnings - Collects warnings.
+ * @returns {string} Page markup.
+ */
+function renderNotFound(template, errors, warnings) {
+  const html = addBanner(stripComments(template), NOT_FOUND_TEMPLATE, 'that template');
+  validatePage(html, NOT_FOUND_FILE, errors, warnings);
+  const urls = [...html.matchAll(/\s(?:src|href|poster)="([^"]*)"|url\(["']?([^"')]*)["']?\)/g)]
+    .map((match) => (match[1] === undefined ? match[2] : match[1]));
+  const relative = urls.filter((url) => !/^(?:\/(?!\/)|https:\/\/|mailto:)/.test(url));
+  if (relative.length) {
+    errors.push(`${NOT_FOUND_FILE}: URLs must be root-absolute (the page is served at any depth): ${relative.join(', ')}`);
+  }
+  return html;
+}
+
+/**
  * Price lines of a vehicle table for llms.txt, one per vehicle ("Single ATV (1 person): US$90 per vehicle
  * for 1 to 2 vehicles, US$75 per vehicle for 3 or more vehicles"), plus the share that books it.
  * @param {object} table - Parsed table with pricing "vehicle" (see tools/lib/prices.mjs).
@@ -600,8 +627,8 @@ function buildLlms({ site, dictEn, tables, mainTemplate, templates, rendered, er
 }
 
 /**
- * Builds every page version, sitemap.xml and llms.txt, then deletes the pages an earlier build generated
- * that are no longer built.
+ * Builds every page version, 404.html, sitemap.xml and llms.txt, then deletes the pages an earlier build
+ * generated that are no longer built.
  * @param {{root: string, outDir?: string}} options - root: repository root; outDir: where to write (default root).
  * @returns {Promise<{files: string[], removed: string[], warnings: string[], errors: string[]}>} Written and
  *   deleted files (relative to outDir, "/"-separated), warnings, and errors (when there are errors nothing
@@ -667,6 +694,12 @@ export async function build({ root, outDir = root }) {
         errors.push(`${where}: ${error.message}`);
       }
     }
+  }
+
+  try {
+    outputs.set(NOT_FOUND_FILE, renderNotFound(readSource(NOT_FOUND_TEMPLATE), errors, warnings));
+  } catch (error) {
+    errors.push(`${NOT_FOUND_TEMPLATE}: ${error.message}`);
   }
 
   const sitemap = sitemapXml({ origin: site.origin, pages: config.PAGES, defaultLang: config.DEFAULT_LANG });
