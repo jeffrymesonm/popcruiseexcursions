@@ -774,8 +774,9 @@
 
   /**
    * The booking as it stands, written in the message language, for the payment and the team's email.
-   * @returns {{message: string, tour: string, date: string, dateIso: string, people: string}} The full booking
-   *   message, what is booked, the date spelled out and as YYYY-MM-DD, and the group size ("4 personas").
+   * @returns {{message: string, tour: string, date: string, dateIso: string, people: string, ship: string}} The
+   *   full booking message, what is booked, the date spelled out and as YYYY-MM-DD, the group size ("4 personas")
+   *   and the cruise ship as typed ('' when not given).
    */
   function snapshot() {
     var count = people();
@@ -784,7 +785,8 @@
       tour: messageTourName(),
       date: formatDate(dateInput.value),
       dateIso: dateInput.value,
-      people: count + ' ' + tm(count === 1 ? 'booking.person' : 'booking.persons')
+      people: count + ' ' + tm(count === 1 ? 'booking.person' : 'booking.persons'),
+      ship: form.elements.ship.value.trim()
     };
   }
 

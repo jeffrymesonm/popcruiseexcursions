@@ -432,6 +432,26 @@ test('the order sent to PayPal: chosen amount in USD, booking code as invoice, w
   assert.ok(checkout.log.orders[1].purchase_units[0].description.endsWith('booking.msg.paidTotal'));
 });
 
+test('the PayPal description names the cruise ship when given, last, so a long name is what gets cut', async () => {
+  const checkout = loadCheckout();
+  const buttons = readyButtons(checkout);
+  checkout.state.booking.ship = 'Wonder of the Seas';
+  await buttons.createOrder({}, checkout.actions());
+  assert.equal(checkout.log.orders[0].purchase_units[0].description,
+    'Damajagua · 3 de diciembre de 2026 · 3 personas · booking.msg.paidDeposit · booking.msg.ship: Wonder of the Seas');
+
+  checkout.state.booking.ship = 'S'.repeat(80);
+  await buttons.createOrder({}, checkout.actions());
+  const cut = checkout.log.orders[1].purchase_units[0].description;
+  assert.equal(Array.from(cut).length, 127);
+  assert.ok(cut.startsWith('Damajagua · 3 de diciembre de 2026 · 3 personas · booking.msg.paidDeposit · booking.msg.ship: S'));
+  assert.ok(cut.endsWith('…'));
+
+  checkout.state.booking.ship = '';
+  await buttons.createOrder({}, checkout.actions());
+  assert.ok(checkout.log.orders[2].purchase_units[0].description.endsWith('booking.msg.paidDeposit'), 'no ship, no label');
+});
+
 test('retries for the same day keep the booking code, so PayPal can refuse a second payment', async () => {
   const checkout = loadCheckout();
   const buttons = readyButtons(checkout);

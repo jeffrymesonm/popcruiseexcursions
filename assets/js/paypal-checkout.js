@@ -20,7 +20,8 @@
  *   payment is being captured (no second payment). Closing PayPal or a PayPal error always lets the visitor try
  *   again.
  * - The order is created in the browser: the chosen amount in USD, a description (tour, date, people,
- *   deposit or full price), the booking code as invoice_id, the site's brand name and no shipping. Retries for the
+ *   deposit or full price, then the cruise ship when given, last so a long name is what gets cut), the booking
+ *   code as invoice_id, the site's brand name and no shipping. Retries for the
  *   same tour day keep the booking code, so a PayPal account that blocks repeated invoice ids refuses a second
  *   payment. The booking is frozen at that moment.
  * - If the booking changed while PayPal was open (tour, date, people, deposit or full price), the approved order is
@@ -67,7 +68,7 @@
 
   /**
    * Joins the parts of the payment description, cut to what PayPal accepts.
-   * @param {string[]} parts - Tour, date, people, deposit or full price (empty parts are skipped).
+   * @param {string[]} parts - Tour, date, people, deposit or full price, cruise ship (empty parts are skipped).
    * @returns {string} Parts joined with " · ", at most 127 characters (cut ones end with "…").
    */
   function description(parts) {
@@ -312,16 +313,19 @@
   /**
    * Describes what a PayPal order pays for, from the booking as it is when PayPal opens.
    * @param {{kind: string, amount: number, percent: number, total: number}} chosen - SiteBooking.payment().
-   * @param {{tour: string, date: string, dateIso: string, people: string}} frozen - SiteBooking.snapshot().
+   * @param {{tour: string, date: string, dateIso: string, people: string, ship?: string}} frozen -
+   *   SiteBooking.snapshot().
    * @returns {{booking: Object, kind: string, amount: number, total: number, code: string, kindText: string,
    *   paidFor: string, description: string}} The frozen booking, deposit or total, the amount in USD and the
    *   booking's full price, the booking code, "depósito 50 %" / "total", what it pays for (tour · date · people)
-   *   and the PayPal description (the same plus the kind of payment).
+   *   and the PayPal description (the same plus the kind of payment and "Crucero: <ship>" when given, so the
+   *   team sees the ship in PayPal's own payment email too).
    */
   function newOrder(chosen, frozen) {
     var kindText = chosen.kind === 'total'
       ? booking.tm('booking.msg.paidTotal')
       : booking.fill(booking.tm('booking.msg.paidDeposit'), { percent: chosen.percent });
+    var shipText = frozen.ship ? booking.tm('booking.msg.ship') + ': ' + frozen.ship : '';
     return {
       booking: frozen,
       kind: chosen.kind,
@@ -330,7 +334,7 @@
       code: codeFor(frozen.dateIso),
       kindText: kindText,
       paidFor: description([frozen.tour, frozen.date, frozen.people]),
-      description: description([frozen.tour, frozen.date, frozen.people, kindText])
+      description: description([frozen.tour, frozen.date, frozen.people, kindText, shipText])
     };
   }
 
