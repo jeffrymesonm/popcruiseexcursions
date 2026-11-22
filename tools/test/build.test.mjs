@@ -568,11 +568,13 @@ test('every page links the site icons with paths that resolve from its folder', 
 });
 
 test('every srcset lists existing files with their true widths, the largest being the img src', () => {
-  for (const file of sitePages()) {
+  let checked = 0;
+  for (const file of result.files.filter((name) => name.endsWith('.html'))) {
     const html = read(file);
     const pageUrl = new URL(`https://popcruiseexcursions.com/${file.replace(/index\.html$/, '')}`);
     const images = [...html.matchAll(/<img\b[^>]*\ssrc="([^"]+)" srcset="([^"]+)" sizes="[^"]+"/g)];
-    assert.ok(images.length >= 1, `${file}: images with srcset`);
+    assert.equal(images.length, (html.match(/<img\b[^>]*\ssrcset="/g) || []).length, `${file}: every srcset is written src, srcset, sizes`);
+    checked += images.length;
     for (const [, src, srcset] of images) {
       const candidates = srcset.split(', ').map((candidate) => candidate.split(' '));
       const widths = candidates.map(([, descriptor]) => Number(descriptor.slice(0, -1)));
@@ -584,15 +586,23 @@ test('every srcset lists existing files with their true widths, the largest bein
       }
     }
   }
+  assert.ok(checked >= 30, `${checked} images with srcset checked`);
 });
 
-test('the hero preload repeats the srcset and sizes of the first hero photo', () => {
+test('an image preload repeats the srcset and sizes of the first hero photo', () => {
+  const preloaded = [];
   for (const file of sitePages()) {
     const html = read(file);
-    const hero = html.match(/<img class="hero__image[^"]*" src="[^"]+" srcset="([^"]+)" sizes="([^"]+)"/);
+    assert.ok(!/<link rel="preload" as="image" href=/.test(html), `${file}: no single-file image preload (it would download twice)`);
     const preload = html.match(/<link rel="preload" as="image" imagesrcset="([^"]+)" imagesizes="([^"]+)" fetchpriority="high">/);
-    assert.ok(hero && preload, `${file}: hero photo with srcset and its preload`);
+    if (!preload) continue;
+    const hero = html.match(/<img class="hero__image[^"]*" src="[^"]+" srcset="([^"]+)" sizes="([^"]+)"/);
+    assert.ok(hero, `${file}: the preloaded photo is a hero photo with srcset`);
     assert.deepEqual([preload[1], preload[2]], [hero[1], hero[2]], `${file}: the preload matches the first hero photo`);
+    preloaded.push(file);
+  }
+  for (const file of [...MAIN_PAGES, 'amber-cove-excursions/index.html', 'es/excursiones-taino-bay/index.html', 'puerto-plata-catamaran/index.html']) {
+    assert.ok(preloaded.includes(file), `${file} preloads its hero photo`);
   }
 });
 
