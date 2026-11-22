@@ -1,44 +1,29 @@
 # robots.txt — popcruiseexcursions.com
 # Every crawler is welcome: search engines and AI assistants are how cruise passengers find tours.
 # The AI crawlers are listed by name so the intent is explicit.
+# /src/ (page templates) and /tools/ (the build) are published with the site but are not pages, so no
+# crawler should index them. A crawler obeys only the most specific group that names it, so every group
+# carries both Disallow lines (before Allow, for parsers that take the first matching rule).
 
 User-agent: *
+Disallow: /src/
+Disallow: /tools/
 Allow: /
 
 User-agent: Googlebot
-Allow: /
-
 User-agent: Bingbot
-Allow: /
-
 User-agent: GPTBot
-Allow: /
-
 User-agent: OAI-SearchBot
-Allow: /
-
 User-agent: ChatGPT-User
-Allow: /
-
 User-agent: ClaudeBot
-Allow: /
-
 User-agent: Claude-SearchBot
-Allow: /
-
 User-agent: Claude-User
-Allow: /
-
 User-agent: PerplexityBot
-Allow: /
-
 User-agent: Perplexity-User
-Allow: /
-
 User-agent: Google-Extended
-Allow: /
-
 User-agent: Applebot-Extended
+Disallow: /src/
+Disallow: /tools/
 Allow: /
 
 Sitemap: https://popcruiseexcursions.com/sitemap.xml
