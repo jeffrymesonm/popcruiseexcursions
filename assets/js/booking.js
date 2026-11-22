@@ -271,8 +271,9 @@
   }
 
   /**
-   * Shows a status line under the button.
-   * @param {string|null} key - Translation key, or null to hide.
+   * Shows a status line under the button. The line is never hidden, only emptied (styles.css collapses
+   * it), so screen readers already know the live region and announce each new text.
+   * @param {string|null} key - Translation key, or null to clear.
    * @param {'success'|'error'} [tone] - Visual tone.
    * @returns {void}
    */
@@ -280,13 +281,11 @@
     statusKey = key;
     statusElement.classList.remove('form__status--success', 'form__status--error');
     if (!key) {
-      statusElement.hidden = true;
       statusElement.textContent = '';
       return;
     }
     statusElement.classList.add('form__status--' + (tone || 'success'));
     statusElement.textContent = t(key);
-    statusElement.hidden = false;
   }
 
   /**

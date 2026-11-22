@@ -2542,6 +2542,11 @@ html:not(.js) .faq__icon {
   text-align: center;
 }
 
+/* Empty status: out of the form's flow (no extra gap) but still rendered, so it stays a live region. */
+.form__status:empty {
+  position: absolute;
+}
+
 .form__status--success {
   color: #1d5e3a;
 }

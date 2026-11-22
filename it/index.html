@@ -54,7 +54,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="../assets/css/styles.css?v=640c2c2c">
+  <link rel="stylesheet" href="../assets/css/styles.css?v=28e0b1ea">
   <title data-i18n="meta.title">Escursioni a Puerto Plata da Amber Cove e Taíno Bay</title>
   <meta name="description" content="Escursioni per crocieristi a Puerto Plata: cascate di Damajagua, City Tour, giornata a Playa Dorada e barche private. Partenza da Amber Cove e Taíno Bay." data-i18n-content="meta.description">
   <!-- Link preview (WhatsApp, Facebook…) uses the same title and description. Canonical, hreflang
@@ -1389,7 +1389,8 @@
               <svg aria-hidden="true"><use href="#icon-mail"/></svg>
               <span data-i18n="booking.submitEmail">Prenota via e-mail</span>
             </button>
-            <p class="form__status" role="status" aria-live="polite" data-form-status hidden></p>
+            <!-- Live region: always in the page (never hidden, only emptied) so screen readers announce its updates. -->
+            <p class="form__status" role="status" aria-live="polite" data-form-status></p>
           </form>
           <p class="contact__email"><span data-i18n="booking.email">Per altre informazioni o domande, scrivici a</span> <a href="mailto:popcruiseexcursions@gmail.com">popcruiseexcursions@gmail.com</a></p>
         </div>
@@ -1501,7 +1502,7 @@
   <script src="../assets/js/reveal.js?v=b6e3c9c3" defer></script>
   <script src="../assets/js/whatsapp.js?v=43140bd0" defer></script>
   <script src="../assets/js/prices.js?v=4f176edf" defer></script>
-  <script src="../assets/js/booking.js?v=87972512" defer></script>
+  <script src="../assets/js/booking.js?v=abb97309" defer></script>
   <script src="../assets/js/footer-year.js?v=d34a11d1" defer></script>
 </body>
 </html>

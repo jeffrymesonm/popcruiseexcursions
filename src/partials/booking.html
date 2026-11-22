@@ -133,7 +133,8 @@
               <svg aria-hidden="true"><use href="#icon-mail"/></svg>
               <span data-i18n="booking.submitEmail">Reservar por correo</span>
             </button>
-            <p class="form__status" role="status" aria-live="polite" data-form-status hidden></p>
+            <!-- Live region: always in the page (never hidden, only emptied) so screen readers announce its updates. -->
+            <p class="form__status" role="status" aria-live="polite" data-form-status></p>
           </form>
           <p class="contact__email"><span data-i18n="booking.email">¿Más información o alguna pregunta? Escríbenos a</span> <a href="mailto:popcruiseexcursions@gmail.com">popcruiseexcursions@gmail.com</a></p>
         </div>
