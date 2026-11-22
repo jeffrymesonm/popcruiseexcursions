@@ -2273,9 +2273,11 @@ html:not(.js) .faq__icon {
   text-wrap: balance;
 }
 
-/* Email alternative under the booking form, and the direct links shown in the form without JavaScript. */
+/* Email alternative under the booking form, the direct links shown in the form without JavaScript, and the
+   line under the booking buttons that links the booking terms and the privacy policy. */
 .contact__email,
-.form__noscript {
+.form__noscript,
+.form__legal {
   margin-top: 0.5rem;
   color: var(--color-muted-fg);
   font-size: 0.9375rem;
@@ -2283,12 +2285,14 @@ html:not(.js) .faq__icon {
   overflow-wrap: anywhere;
 }
 
-.form__noscript {
+.form__noscript,
+.form__legal {
   text-align: center;
 }
 
 .contact__email a,
-.form__noscript a {
+.form__noscript a,
+.form__legal a {
   color: var(--color-fg);
   font-weight: 600;
   text-decoration: underline;

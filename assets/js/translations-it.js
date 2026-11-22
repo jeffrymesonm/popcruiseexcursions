@@ -316,6 +316,11 @@ window.SITE_TRANSLATIONS.it = {
   'booking.alt': 'Palme alte contro il cielo azzurro',
   'booking.email': 'Per altre informazioni o domande, scrivici a',
   'booking.noscript': 'Senza JavaScript questo modulo non può inviare la tua prenotazione. Scrivici direttamente su WhatsApp o via e-mail:',
+  // Under the booking buttons (the links open the English pages): prefix, terms, middle, privacy, then a period.
+  'booking.legal.prefix': 'Prenotando accetti i nostri',
+  'booking.legal.terms': 'termini di prenotazione',
+  'booking.legal.middle': 'e la nostra',
+  'booking.legal.privacy': 'informativa sulla privacy',
   'booking.person': 'persona',
   'booking.persons': 'persone',
   'booking.estimate.quote': 'Su richiesta',

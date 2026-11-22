@@ -316,6 +316,11 @@ window.SITE_TRANSLATIONS.fr = {
   'booking.alt': 'Grands palmiers sur fond de ciel bleu',
   'booking.email': 'Pour toute information ou question, écrivez-nous à',
   'booking.noscript': 'Sans JavaScript, ce formulaire ne peut pas envoyer votre réservation. Écrivez-nous directement sur WhatsApp ou par e-mail\u00a0:',
+  // Under the booking buttons (the links open the English pages): prefix, terms, middle, privacy, then a period.
+  'booking.legal.prefix': 'En réservant, vous acceptez nos',
+  'booking.legal.terms': 'conditions de réservation',
+  'booking.legal.middle': 'et notre',
+  'booking.legal.privacy': 'politique de confidentialité',
   'booking.person': 'personne',
   'booking.persons': 'personnes',
   'booking.estimate.quote': 'Sur demande',

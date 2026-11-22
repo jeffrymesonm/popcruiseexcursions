@@ -135,6 +135,9 @@
             </button>
             <!-- Live region: always in the page (never hidden, only emptied) so screen readers announce its updates. -->
             <p class="form__status" role="status" aria-live="polite" data-form-status></p>
+            <!-- Booking means accepting the booking terms and the privacy policy. In all four languages the sentence is
+                 prefix, terms link, middle, privacy link, period; FR and IT link the English pages. -->
+            <p class="form__legal"><span data-i18n="booking.legal.prefix">Al reservar aceptas nuestros</span> <a href="{{page-url:booking-terms}}" hreflang="{{page-lang:booking-terms}}" data-i18n="booking.legal.terms">términos de reserva</a> <span data-i18n="booking.legal.middle">y nuestra</span> <a href="{{page-url:privacy}}" hreflang="{{page-lang:privacy}}" data-i18n="booking.legal.privacy">política de privacidad</a>.</p>
           </form>
           <p class="contact__email"><span data-i18n="booking.email">¿Más información o alguna pregunta? Escríbenos a</span> <a href="mailto:popcruiseexcursions@gmail.com">popcruiseexcursions@gmail.com</a></p>
         </div>

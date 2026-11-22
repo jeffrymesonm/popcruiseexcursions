@@ -606,6 +606,29 @@ test('every footer links the legal pages in its language (French and Italian: th
   }
 });
 
+test('under the booking buttons, booking accepts the terms and the privacy policy (four languages)', () => {
+  const sentences = {
+    es: 'Al reservar aceptas nuestros términos de reserva y nuestra política de privacidad.',
+    en: 'By booking you accept our booking terms and our privacy policy.',
+    fr: 'En réservant, vous acceptez nos conditions de réservation et notre politique de confidentialité.',
+    it: 'Prenotando accetti i nostri termini di prenotazione e la nostra informativa sulla privacy.'
+  };
+  for (const file of [...MAIN_PAGES, 'puerto-plata-catamaran/index.html', 'es/catamaran-puerto-plata/index.html']) {
+    const html = read(file);
+    const lang = html.match(/<html lang="([a-z]+)">/)[1];
+    const line = (html.match(/<p class="form__legal">([\s\S]*?)<\/p>/) || [])[1];
+    assert.ok(line, `${file}: legal line`);
+    assert.ok(html.indexOf('class="form__legal"') > html.indexOf('data-booking-email='), `${file}: under the buttons`);
+    assert.equal(line.replace(/<[^>]+>/g, ''), sentences[lang], file);
+    // Spanish pages link the Spanish versions; English, French and Italian pages the English ones.
+    const pageUrl = `${ORIGIN}/${file.replace(/index\.html$/, '')}`;
+    const links = [...line.matchAll(/<a href="([^"]*)" hreflang="([a-z]+)"/g)].map((match) => [new URL(match[1], pageUrl).pathname, match[2]]);
+    const target = lang === 'es' ? LEGAL_PAGES.filter((page) => page.lang === 'es') : LEGAL_PAGES.filter((page) => page.lang === 'en');
+    const [privacy, terms] = target.map((page) => [page.urlPath, page.lang]);
+    assert.deepEqual(links, [terms, privacy], file);
+  }
+});
+
 test('no page loads anything from another server, as the privacy policy says', () => {
   // Google Fonts are the one exception until the fonts are served from assets/: then remove it.
   const allowed = /^https:\/\/(popcruiseexcursions\.com|fonts\.googleapis\.com|fonts\.gstatic\.com)(\/|$)/;
