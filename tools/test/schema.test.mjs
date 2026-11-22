@@ -149,6 +149,22 @@ test('tour graph has one trip, breadcrumbs and the FAQ', () => {
   assert.equal(nodes(graph, 'BoatTerminal').length, 0);
 });
 
+test('legal graph has the business, the site, the page and breadcrumbs only', () => {
+  const url = `${ORIGIN}/privacy/`;
+  const graph = buildGraph({
+    origin: ORIGIN, site: SITE, lang: 'en', url, homeUrl: `${ORIGIN}/`, pageType: 'legal',
+    title: 'Privacy policy', description: 'What the booking form asks for.', audience: 'Cruise passengers',
+    tours: TOURS, faq: [], legalPage: { homeName: 'Home', pageName: 'Privacy policy' }
+  });
+  assert.deepEqual(graph['@graph'].map((node) => node['@type']), ['TravelAgency', 'WebSite', 'WebPage', 'BreadcrumbList']);
+  const [page] = nodes(graph, 'WebPage');
+  assert.equal(page.about['@id'], `${ORIGIN}/#org`);
+  assert.equal(page.breadcrumb['@id'], `${url}#breadcrumb`);
+  assert.ok(!('mainEntity' in page));
+  const [crumbs] = nodes(graph, 'BreadcrumbList');
+  assert.deepEqual(crumbs.itemListElement.map((item) => [item.name, item.item]), [['Home', `${ORIGIN}/`], ['Privacy policy', url]]);
+});
+
 test('ids: the site is one node in every language, a trip has one id per language', () => {
   const spanish = buildGraph({
     origin: ORIGIN, site: SITE, lang: 'es', url: `${ORIGIN}/es/`, homeUrl: `${ORIGIN}/es/`, pageType: 'home',

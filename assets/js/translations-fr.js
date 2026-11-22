@@ -316,6 +316,11 @@ window.SITE_TRANSLATIONS.fr = {
   'booking.alt': 'Grands palmiers sur fond de ciel bleu',
   'booking.email': 'Pour toute information ou question, écrivez-nous à',
   'booking.noscript': 'Sans JavaScript, ce formulaire ne peut pas envoyer votre réservation. Écrivez-nous directement sur WhatsApp ou par e-mail\u00a0:',
+  // Under the booking buttons (the links open the English pages): prefix, terms, middle, privacy, then a period.
+  'booking.legal.prefix': 'En réservant, vous acceptez nos',
+  'booking.legal.terms': 'conditions de réservation',
+  'booking.legal.middle': 'et notre',
+  'booking.legal.privacy': 'politique de confidentialité',
   'booking.person': 'personne',
   'booking.persons': 'personnes',
   'booking.estimate.quote': 'Sur demande',
@@ -346,5 +351,8 @@ window.SITE_TRANSLATIONS.fr = {
   'footer.contact': 'Contact',
   'footer.ports': 'Ports',
   'footer.pay': 'Paiements acceptés',
-  'footer.place': 'Puerto Plata, République dominicaine'
+  'footer.place': 'Puerto Plata, République dominicaine',
+  // The legal pages exist in English and Spanish only: these links open the English ones.
+  'footer.privacy': 'Confidentialité',
+  'footer.terms': 'Conditions de réservation'
 };

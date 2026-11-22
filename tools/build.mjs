@@ -252,11 +252,30 @@ function portOf(page, dict, errors, where) {
 /**
  * Kind of page, for its JSON-LD.
  * @param {object} page - PageDef.
- * @returns {'home'|'port'|'tour'} "port" for cruise-port pages, "tour" for one-tour pages, else "home".
+ * @returns {'home'|'port'|'tour'|'legal'} "port" for cruise-port pages, "tour" for one-tour pages, "legal"
+ *   for the privacy policy and the booking terms, else "home".
  */
 function pageTypeOf(page) {
   if (page.port) return 'port';
-  return page.tour ? 'tour' : 'home';
+  if (page.tour) return 'tour';
+  return page.legal ? 'legal' : 'home';
+}
+
+/**
+ * Breadcrumb names of a legal page (privacy policy, booking terms), for its JSON-LD.
+ * @param {object} page - PageDef with legal and a textKey (its H1 is "<textKey>.h1").
+ * @param {Record<string, string>} dict - Dictionary of the language.
+ * @param {string[]} errors - Collects build errors.
+ * @param {string} where - Page label.
+ * @returns {{homeName: string, pageName: string}|undefined} LegalPageData (see tools/lib/schema.mjs), or
+ *   undefined for other pages.
+ */
+function legalPageOf(page, dict, errors, where) {
+  if (!page.legal) return undefined;
+  return {
+    homeName: textOf(dict, 'port.home', errors, where),
+    pageName: textOf(dict, `${page.textKey}.h1`, errors, where)
+  };
 }
 
 /**
@@ -470,7 +489,8 @@ function renderVersion({
     tours: toursOf(data, lang, tables, errors, where),
     faq: faqOf(template, data, errors, where),
     port: portOf(page, data, errors, where),
-    tourPage: tourPageOf(page, data, errors, where)
+    tourPage: tourPageOf(page, data, errors, where),
+    legalPage: legalPageOf(page, data, errors, where)
   });
   const seoHead = `${seoHeadTags({ origin: site.origin, page, lang, locales: config.LOCALES, defaultLang: config.DEFAULT_LANG })}\n  ${jsonLdScript(graph)}`;
 
@@ -606,10 +626,14 @@ function buildLlms({ site, dictEn, tables, mainTemplate, templates, rendered, er
       priceLines: priceLines(definition.scope, tables, dictEn, boatNames)
     };
   });
-  const ports = config.PAGES.filter((page) => page.port && page.versions[config.DEFAULT_LANG]).map((page) => ({
-    title: (rendered.get(`${page.id}:${config.DEFAULT_LANG}`) || { title: page.id }).title,
-    url: absoluteUrl(site.origin, page.versions[config.DEFAULT_LANG])
-  }));
+  // Links to the English version of one kind of page (port pages, legal pages), with its rendered title.
+  const englishLinks = (isKind) => config.PAGES.filter((page) => isKind(page) && page.versions[config.DEFAULT_LANG])
+    .map((page) => ({
+      title: (rendered.get(`${page.id}:${config.DEFAULT_LANG}`) || { title: page.id }).title,
+      url: absoluteUrl(site.origin, page.versions[config.DEFAULT_LANG])
+    }));
+  const ports = englishLinks((page) => page.port);
+  const policies = englishLinks((page) => page.legal);
   const languages = config.PAGES.flatMap((page) => Object.entries(page.versions)
     .filter(([lang]) => lang !== config.DEFAULT_LANG)
     .map(([lang, urlPath]) => ({
@@ -623,7 +647,7 @@ function buildLlms({ site, dictEn, tables, mainTemplate, templates, rendered, er
     }
   }
   const summary = dictEn['about.lead'] || dictEn['meta.description'] || '';
-  return llmsTxt({ site, summary, tours, ports, languages, faq });
+  return llmsTxt({ site, summary, tours, ports, policies, languages, faq });
 }
 
 /**

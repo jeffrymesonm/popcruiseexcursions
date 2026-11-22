@@ -375,6 +375,11 @@ window.SITE_TRANSLATIONS = {
     'booking.alt': 'Tall palm trees against a blue sky',
     'booking.email': 'For any extra info or questions, email us at',
     'booking.noscript': 'Without JavaScript this form can’t send your booking. Message us directly on WhatsApp or by email:',
+    // Under the booking buttons: prefix, terms link, middle, privacy link, then a period.
+    'booking.legal.prefix': 'By booking you accept our',
+    'booking.legal.terms': 'booking terms',
+    'booking.legal.middle': 'and our',
+    'booking.legal.privacy': 'privacy policy',
     'booking.person': 'person',
     'booking.persons': 'people',
     'booking.estimate.quote': 'On request',
@@ -430,6 +435,8 @@ window.SITE_TRANSLATIONS = {
     'footer.contact': 'Contact',
     'footer.ports': 'Ports',
     'footer.pay': 'We accept',
-    'footer.place': 'Puerto Plata, Dominican Republic'
+    'footer.place': 'Puerto Plata, Dominican Republic',
+    'footer.privacy': 'Privacy',
+    'footer.terms': 'Booking terms'
   }
 };

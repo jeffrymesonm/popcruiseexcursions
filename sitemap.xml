@@ -69,4 +69,28 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://popcruiseexcursions.com/es/catamaran-puerto-plata/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://popcruiseexcursions.com/puerto-plata-catamaran/"/>
   </url>
+  <url>
+    <loc>https://popcruiseexcursions.com/privacy/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://popcruiseexcursions.com/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://popcruiseexcursions.com/es/privacidad/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://popcruiseexcursions.com/privacy/"/>
+  </url>
+  <url>
+    <loc>https://popcruiseexcursions.com/es/privacidad/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://popcruiseexcursions.com/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://popcruiseexcursions.com/es/privacidad/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://popcruiseexcursions.com/privacy/"/>
+  </url>
+  <url>
+    <loc>https://popcruiseexcursions.com/booking-terms/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://popcruiseexcursions.com/booking-terms/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://popcruiseexcursions.com/es/terminos-de-reserva/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://popcruiseexcursions.com/booking-terms/"/>
+  </url>
+  <url>
+    <loc>https://popcruiseexcursions.com/es/terminos-de-reserva/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://popcruiseexcursions.com/booking-terms/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://popcruiseexcursions.com/es/terminos-de-reserva/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://popcruiseexcursions.com/booking-terms/"/>
+  </url>
 </urlset>
