@@ -2541,6 +2541,19 @@ html:not(.js) .faq__icon {
   gap: 0.2rem;
 }
 
+/* Boats only: subject to availability, confirm before paying. Same sun accent as .boat-availability, on dark. */
+.estimate__notice {
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-left: 4px solid var(--color-sun);
+  border-radius: 0 var(--radius-inner) var(--radius-inner) 0;
+  background: rgba(248, 243, 234, 0.08);
+  color: var(--color-on-dark);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
 /* Deposit that books the tour, set apart under the breakdown. */
 .estimate__deposit {
   margin-top: 0.4rem;

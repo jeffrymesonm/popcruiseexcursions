@@ -445,6 +445,24 @@ test('catamaran page carries the per-person price tables for the booking form', 
   for (const file of MAIN_PAGES) assert.ok(!read(file).includes('data-price-tables'), `${file}: no copy on the home page`);
 });
 
+test('booking form: boats availability notice (hidden until a boat is chosen) and the whole-boat photo', () => {
+  const notices = {
+    'es/index.html': 'Sujeto a disponibilidad',
+    'es/catamaran-puerto-plata/index.html': 'Sujeto a disponibilidad',
+    'index.html': 'Subject to availability',
+    'puerto-plata-catamaran/index.html': 'Subject to availability',
+    'fr/index.html': 'Sous réserve de disponibilité',
+    'it/index.html': 'Soggetto a disponibilità'
+  };
+  for (const [file, start] of Object.entries(notices)) {
+    const html = read(file);
+    const notice = (html.match(/<p class="estimate__notice" data-boat-notice[^>]*>([^<]*)<\/p>/) || [])[1] || '';
+    assert.ok(/<p class="estimate__notice" data-boat-notice data-i18n="booking\.boatNotice" hidden>/.test(html), `${file}: notice hidden`);
+    assert.ok(notice.startsWith(start), `${file}: notice in the page language, got "${notice}"`);
+    assert.match(html, /data-booking-photo="catamaran:cat-jacuzzi" src="assets\/img\/boat-cat-jacuzzi-7\.webp"|data-booking-photo="catamaran:cat-jacuzzi" src="\.\.\/assets\/img\/boat-cat-jacuzzi-7\.webp"|data-booking-photo="catamaran:cat-jacuzzi" src="\.\.\/\.\.\/assets\/img\/boat-cat-jacuzzi-7\.webp"/, `${file}: whole-boat photo`);
+  }
+});
+
 test('minor details: hidden transport switch, transfer table id, port links to the boats', () => {
   for (const file of ['es/index.html', 'puerto-plata-catamaran/index.html']) {
     const html = read(file);

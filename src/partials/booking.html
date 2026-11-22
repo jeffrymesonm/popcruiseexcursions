@@ -96,6 +96,10 @@
                 <p class="estimate__value" data-estimate-value>—</p>
                 <p class="estimate__detail" data-estimate-detail></p>
                 <p class="estimate__deposit" data-estimate-deposit hidden></p>
+                <!-- Shown only for "Catamarán o yate privado" (booking.js): boats depend on the boat being free, so the
+                     visitor confirms on WhatsApp or by email before paying the deposit. Inside the live region so it is
+                     announced when it appears. -->
+                <p class="estimate__notice" data-boat-notice data-i18n="booking.boatNotice" hidden>Sujeto a disponibilidad: envíanos tu reserva por WhatsApp o por correo y te confirmamos si el barco está libre en tu fecha antes de que pagues el depósito.</p>
               </div>
               <!-- Pay online: booking.js shows this block and fills the two amounts; paypal-checkout.js renders PayPal's
                    own button in [data-paypal-button], charges the chosen amount (deposit or full price) and, once the
@@ -169,7 +173,7 @@
           <img data-booking-photo="catamaran:fp43" src="assets/img/boat-fp43.webp" alt="Catamarán blanco navegando frente a la costa de Puerto Plata, visto desde el aire" data-i18n-alt="boats.fp43.alt" width="720" height="960" loading="lazy" decoding="async" hidden>
           <img data-booking-photo="catamaran:ocean-king" src="assets/img/boat-ocean-king.webp" alt="Catamarán de motor The Ocean King IV anclado en agua turquesa" data-i18n-alt="boats.ocean-king.alt" width="720" height="523" loading="lazy" decoding="async" style="--focus: 45% 50%" hidden>
           <img data-booking-photo="catamaran:libreterre" src="assets/img/boat-libreterre.webp" alt="Catamarán Libreterre con tobogán, visto desde el aire en aguas cristalinas" data-i18n-alt="boats.libreterre.alt" width="828" height="824" loading="lazy" decoding="async" hidden>
-          <img data-booking-photo="catamaran:cat-jacuzzi" src="assets/img/boat-cat-jacuzzi.webp" alt="Jacuzzi en la proa del catamarán, frente al salón" data-i18n-alt="boats.cat-jacuzzi.alt" width="960" height="740" loading="lazy" decoding="async" hidden>
+          <img data-booking-photo="catamaran:cat-jacuzzi" src="assets/img/boat-cat-jacuzzi-7.webp" alt="El catamarán con un grupo vestido de blanco a bordo, frente a la costa verde" data-i18n-alt="boats.cat-jacuzzi.alt7" width="562" height="1000" loading="lazy" decoding="async" style="--focus: 35% 40%" hidden>
           <a class="contact__chip" href="https://wa.me/18296277733" target="_blank" rel="noopener" data-wa-link>
             <svg aria-hidden="true"><use href="#icon-whatsapp"/></svg>
             <span>+1 (829) 627-7733</span>

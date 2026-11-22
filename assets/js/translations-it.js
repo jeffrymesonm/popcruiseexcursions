@@ -311,6 +311,7 @@ window.SITE_TRANSLATIONS.it = {
   'booking.ship': 'Nave da crociera (facoltativo)',
   'booking.shipPlaceholder': 'Nome della tua nave',
   'booking.estimate': 'Prezzo stimato',
+  'booking.boatNotice': 'Soggetto a disponibilità: inviaci la tua prenotazione su WhatsApp o via e-mail e ti confermiamo che la barca è libera nella tua data prima del pagamento dell’acconto.',
   'booking.submit': 'Prenota su WhatsApp',
   'booking.submitEmail': 'Prenota via e-mail',
   'booking.alt': 'Palme alte contro il cielo azzurro',

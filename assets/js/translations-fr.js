@@ -311,6 +311,7 @@ window.SITE_TRANSLATIONS.fr = {
   'booking.ship': 'Navire de croisière (facultatif)',
   'booking.shipPlaceholder': 'Nom de votre navire',
   'booking.estimate': 'Prix estimé',
+  'booking.boatNotice': 'Sous réserve de disponibilité : envoyez-nous votre réservation sur WhatsApp ou par e-mail et nous vous confirmons que le bateau est libre à votre date avant le paiement de l’acompte.',
   'booking.submit': 'Réserver sur WhatsApp',
   'booking.submitEmail': 'Réserver par e-mail',
   'booking.alt': 'Grands palmiers sur fond de ciel bleu',

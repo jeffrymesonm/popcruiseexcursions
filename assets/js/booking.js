@@ -100,6 +100,7 @@
   var estimateValue = form.querySelector('[data-estimate-value]');
   var estimateDetail = form.querySelector('[data-estimate-detail]');
   var estimateDeposit = form.querySelector('[data-estimate-deposit]');
+  var boatNotice = form.querySelector('[data-boat-notice]');
   var statusElement = form.querySelector('[data-form-status]');
   var emailButton = form.querySelector('[data-booking-email]');
   var payBlock = form.querySelector('[data-paypal]');
@@ -438,13 +439,14 @@
   }
 
   /**
-   * Refreshes the boat and vehicle fields, the zipline and transport switches, the photo and the
-   * live estimate.
+   * Refreshes the boat and vehicle fields, the zipline and transport switches, the boats' availability notice,
+   * the photo and the live estimate.
    * @returns {void}
    */
   function renderEstimate() {
     renderPhoto();
     boatField.hidden = tourSelect.value !== BOAT_TOUR;
+    boatNotice.hidden = tourSelect.value !== BOAT_TOUR;
     vehicleField.hidden = tourSelect.value !== VEHICLE_TOUR;
     // Only for a boat, and only when the page has the transport price table.
     transferField.hidden = tourSelect.value !== BOAT_TOUR || window.SitePrices.transferMax() === null;

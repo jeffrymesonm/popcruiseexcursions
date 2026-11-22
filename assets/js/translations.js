@@ -391,6 +391,7 @@ window.SITE_TRANSLATIONS = {
     'booking.ship': 'Cruise ship (optional)',
     'booking.shipPlaceholder': 'Your ship’s name',
     'booking.estimate': 'Estimated price',
+    'booking.boatNotice': 'Subject to availability: send us your booking on WhatsApp or by email and we’ll confirm the boat is free on your date before you pay the deposit.',
     'booking.submit': 'Book on WhatsApp',
     'booking.submitEmail': 'Book by email',
     'booking.alt': 'Tall palm trees against a blue sky',
