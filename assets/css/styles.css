@@ -223,15 +223,18 @@ button {
   background: var(--color-whatsapp-hover);
 }
 
+/* Secondary button on the hero photos: dark glass with a light outline, so its white text stays readable on
+   bright photos too. */
 .btn--glass {
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(6, 30, 31, 0.42);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55);
   color: #fff;
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
 }
 
 .btn--glass:hover {
-  background: rgba(255, 255, 255, 0.24);
+  background: rgba(6, 30, 31, 0.62);
 }
 
 .btn--block {
@@ -611,26 +614,6 @@ button {
 }
 
 /*
- * Large blurred dark glow anchored bottom-left so the copy stays readable on any photo.
- * The ellipse fades to zero inside the box, so the blur never shows a hard top edge.
- */
-.hero__veil {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  z-index: -1;
-  width: max(180vw, 170svh);
-  height: max(95vw, 95svh);
-  background: rgba(6, 30, 31, 0.42);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  -webkit-mask-image: radial-gradient(closest-side, #000 45%, transparent 100%);
-  mask-image: radial-gradient(closest-side, #000 45%, transparent 100%);
-  transform: translate(-50%, 50%);
-  pointer-events: none;
-}
-
-/*
  * Fills the hero (and grows it when needed). The top padding keeps the copy clear of the nav (about
  * 5.5rem tall on phones, more from 768 px: see below); the extra bottom padding leaves room for the
  * tilted marquee that overlaps the hero's edge.
@@ -646,10 +629,26 @@ button {
 }
 
 .hero__content {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   max-width: 34rem;
+}
+
+/*
+ * Dark glow right behind the copy, so the text stays readable on every photo (bright plazas included)
+ * while the rest of the photo stays clear. It is twice the copy's width and height, centred on it, so it
+ * follows the copy in every language and on every page; the ellipse fades out before its edges, so no
+ * hard line shows. Fades in with the hero intro (see "Motion: hero intro").
+ */
+.hero__content::before {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  z-index: -1;
+  background: radial-gradient(closest-side, rgba(6, 30, 31, 0.55) 70%, rgba(6, 30, 31, 0) 100%);
+  pointer-events: none;
 }
 
 .hero__title {
@@ -658,6 +657,14 @@ button {
   line-height: 1.05;
   letter-spacing: var(--tracking-tight);
   text-wrap: balance;
+}
+
+/* A soft dark halo under the letters: extra contrast where a bright detail sits right behind the text
+   (the breadcrumbs of the port and catamaran pages too). */
+.crumbs__list,
+.hero__title,
+.hero__lead {
+  text-shadow: 0 1px 2px rgba(6, 30, 31, 0.45), 0 0 20px rgba(6, 30, 31, 0.45);
 }
 
 .hero__title > span {
@@ -671,7 +678,7 @@ button {
 .hero__lead {
   max-width: 28rem;
   margin-top: 1rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: #fff;
   font-size: 1rem;
   line-height: 1.4;
 }
@@ -2921,10 +2928,9 @@ html:not(.js) .boat-photo__name {
   flex-wrap: wrap;
   gap: 0.25rem 0.5rem;
   margin-bottom: 1rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: #fff;
   font-size: 0.8125rem;
   font-weight: 500;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
 }
 
 .crumbs__list li + li::before {
@@ -3074,15 +3080,16 @@ html:not(.js) .boat-photo__name {
 
 /* ============ Motion: hero intro ============ */
 /*
- * With JS: the photo starts as a blurred, inset window and opens to full bleed; the nav and
- * copy follow. hero-intro.js adds .hero-ready once the photo is decoded (head script fallback: 3 s).
+ * With JS: the photo starts as a blurred, inset window and opens to full bleed; the glow behind the copy,
+ * the nav and the copy follow. hero-intro.js adds .hero-ready once the photo is decoded (head script
+ * fallback: 3 s).
  */
 .js .hero__media {
   clip-path: inset(20% 27% round 1.5rem);
   filter: blur(10px);
 }
 
-.js .hero__veil,
+.js .hero__content::before,
 .js .nav__inner,
 .js [data-hero-item] {
   opacity: 0;
@@ -3099,7 +3106,7 @@ html:not(.js) .boat-photo__name {
   transition: clip-path 1.4s var(--ease-intro), filter 1.4s var(--ease-intro);
 }
 
-.hero-ready .hero__veil {
+.hero-ready .hero__content::before {
   opacity: 1;
   transition: opacity 1s ease 0.9s;
 }
@@ -3159,7 +3166,7 @@ html:not(.js) .boat-photo__name {
     transform: none;
   }
 
-  .js .hero__veil,
+  .js .hero__content::before,
   .js .nav__inner,
   .js [data-hero-item],
   .js [data-reveal] {
