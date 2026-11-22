@@ -558,13 +558,13 @@ test('every page links the site icons with paths that resolve from its folder', 
   }
 });
 
-test('hero photos list their variants with true widths, and the preload repeats the first one', () => {
+test('every srcset lists existing files with their true widths, the largest being the img src', () => {
   for (const file of result.files.filter((name) => name.endsWith('.html'))) {
     const html = read(file);
     const pageUrl = new URL(`https://popcruiseexcursions.com/${file.replace(/index\.html$/, '')}`);
-    const heroes = [...html.matchAll(/<img class="hero__image[^"]*" src="([^"]+)" srcset="([^"]+)" sizes="([^"]+)"/g)];
-    assert.ok(heroes.length >= 1, `${file}: a hero photo with srcset`);
-    for (const [, src, srcset] of heroes) {
+    const images = [...html.matchAll(/<img\b[^>]*\ssrc="([^"]+)" srcset="([^"]+)" sizes="[^"]+"/g)];
+    assert.ok(images.length >= 1, `${file}: images with srcset`);
+    for (const [, src, srcset] of images) {
       const candidates = srcset.split(', ').map((candidate) => candidate.split(' '));
       const widths = candidates.map(([, descriptor]) => Number(descriptor.slice(0, -1)));
       assert.deepEqual(widths, [...widths].sort((a, b) => a - b), `${file}: ${src} candidates from small to large`);
@@ -574,9 +574,16 @@ test('hero photos list their variants with true widths, and the preload repeats 
         assert.equal(`${webpSize(path.join(ROOT, asset)).width}w`, descriptor, `${file}: ${asset} is ${descriptor} wide`);
       }
     }
+  }
+});
+
+test('the hero preload repeats the srcset and sizes of the first hero photo', () => {
+  for (const file of result.files.filter((name) => name.endsWith('.html'))) {
+    const html = read(file);
+    const hero = html.match(/<img class="hero__image[^"]*" src="[^"]+" srcset="([^"]+)" sizes="([^"]+)"/);
     const preload = html.match(/<link rel="preload" as="image" imagesrcset="([^"]+)" imagesizes="([^"]+)" fetchpriority="high">/);
-    assert.ok(preload, `${file}: hero preload`);
-    assert.deepEqual([preload[1], preload[2]], [heroes[0][2], heroes[0][3]], `${file}: the preload matches the first hero photo`);
+    assert.ok(hero && preload, `${file}: hero photo with srcset and its preload`);
+    assert.deepEqual([preload[1], preload[2]], [hero[1], hero[2]], `${file}: the preload matches the first hero photo`);
   }
 });
 
