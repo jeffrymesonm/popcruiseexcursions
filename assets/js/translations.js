@@ -78,7 +78,11 @@ window.SITE_TRANSLATIONS = {
     'booking.msg.transaction': 'Transacción PayPal',
     'booking.msg.code': 'Código de reserva',
     'booking.msg.payerEmail': 'Correo del cliente (PayPal)',
-    'booking.msg.paymentStatus': 'Estado del pago en PayPal'
+    'booking.msg.paymentStatus': 'Estado del pago en PayPal',
+    'booking.msg.amountMismatch': 'NO coincide con lo esperado, revísalo en PayPal. Importe esperado',
+    'booking.msg.balanceDue': 'Saldo por cobrar el día de la excursión',
+    'booking.msg.payerName': 'Pagador (PayPal)',
+    'booking.msg.verify': '⚠ Antes de confirmar la reserva, verifica en PayPal que la transacción esté completada, con este importe y este código de reserva. Este correo por sí solo no prueba el pago.'
   },
 
   en: {
@@ -446,6 +450,10 @@ window.SITE_TRANSLATIONS = {
     'booking.msg.code': 'Booking code',
     'booking.msg.payerEmail': 'Customer email (PayPal)',
     'booking.msg.paymentStatus': 'PayPal payment status',
+    'booking.msg.amountMismatch': 'Does NOT match what was expected, check it in PayPal. Expected amount',
+    'booking.msg.balanceDue': 'Balance due on the tour day',
+    'booking.msg.payerName': 'Payer (PayPal)',
+    'booking.msg.verify': '⚠ Before confirming the booking, check in PayPal that the transaction is completed, with this amount and this booking code. This email alone does not prove the payment.',
     // Only in messages sent from the French/Italian page (they go out in English, see i18n.js)
     'booking.msg.clientLanguage': 'Client language',
     'lang.fr': 'French',

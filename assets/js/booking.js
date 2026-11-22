@@ -17,6 +17,8 @@
  *   never shows without buttons. The payment itself is paypal-checkout.js, through
  *   window.SiteBooking (below): it validates the form, reads the amount and the booking, shows statuses and,
  *   once paid, hides the block for good and adds the payment lines to any later WhatsApp or email message.
+ *   The payment status is kept in this tab's sessionStorage ("pce-paid"), so a reload shows it again instead of
+ *   offering a second payment (closing the tab forgets it).
  * - Two buttons send the same booking: "Book on WhatsApp" (the submit button, also Enter) opens
  *   WhatsApp, and "Book by email" ([data-booking-email], which holds the address) opens the
  *   visitor's email app. Either way the fields are validated first (bilingual messages) and the
@@ -68,6 +70,8 @@
     total: form.querySelector('[data-paypal-amount="total"]')
   };
   var payConfig = readPayConfig();
+  /** sessionStorage key of the payment made in this tab (markPaid), shown again after a reload. */
+  var PAID_KEY = 'pce-paid';
   /** What markPaid() received once the booking is paid (the block then stays hidden), else null. */
   var paidResult = null;
   /** True once paypal-checkout.js runs (enablePayPal): the pay block never shows before, so never without buttons. */
@@ -482,14 +486,15 @@
 
   /**
    * What the visitor is about to pay online: the option checked in the pay block.
-   * @returns {{kind: 'deposit'|'total', amount: number, percent: number}|null} The chosen amount in USD and the
-   *   deposit percent, or null when nothing can be paid online right now.
+   * @returns {{kind: 'deposit'|'total', amount: number, percent: number, total: number}|null} The chosen amount in
+   *   USD, the deposit percent and the booking's full price (for the balance due on the tour day), or null when
+   *   nothing can be paid online right now.
    */
   function payment() {
     var amounts = payConfig ? payableAmounts() : null;
     if (!amounts) return null;
     var kind = form.elements.payKind.value === 'total' ? 'total' : 'deposit';
-    return { kind: kind, amount: amounts[kind], percent: amounts.percent };
+    return { kind: kind, amount: amounts[kind], percent: amounts.percent, total: amounts.total };
   }
 
   /**
@@ -746,16 +751,47 @@
   /**
    * Records a completed online payment: the pay block hides for good (no second payment), the status
    * stays on screen while the visitor edits the form, and later WhatsApp or email messages carry the lines.
+   * It is also kept in this tab's sessionStorage, so a reload shows it again instead of a second payment.
    * @param {{key: string, tone: 'success'|'error', values: Object<string, string>, lines: string[]}} result -
    *   Status text key, tone and {placeholders}, and the payment lines for the messages.
+   * @param {{quiet?: boolean}} [options] - quiet: update the status without moving the focus (e.g. on page load).
    * @returns {void}
    */
-  function markPaid(result) {
+  function markPaid(result, options) {
     paidResult = { key: result.key, tone: result.tone, values: result.values || {}, lines: result.lines || [] };
+    try {
+      window.sessionStorage.setItem(PAID_KEY, JSON.stringify(paidResult));
+    } catch (error) {
+      // Private mode or blocked storage: the payment is shown now, just not after a reload.
+    }
     renderPayPal();
     renderStatus(null);
+    if (options && options.quiet) return;
     statusElement.tabIndex = -1;
     statusElement.focus();
+  }
+
+  /**
+   * Shows again a payment made earlier in this tab (the page was reloaded): its status, no pay block, and the
+   * payment lines in later messages.
+   * @returns {void}
+   */
+  function restorePaid() {
+    var stored = null;
+    try {
+      stored = JSON.parse(window.sessionStorage.getItem(PAID_KEY) || 'null');
+    } catch (error) {
+      return;
+    }
+    if (!stored || typeof stored.key !== 'string' || stored.key.indexOf('booking.pay.') !== 0) return;
+    paidResult = {
+      key: stored.key,
+      tone: stored.tone === 'error' ? 'error' : 'success',
+      values: stored.values && typeof stored.values === 'object' ? stored.values : {},
+      lines: Array.isArray(stored.lines) ? stored.lines.map(String) : []
+    };
+    renderPayPal();
+    renderStatus(null);
   }
 
   /**
@@ -786,6 +822,7 @@
   dateInput.min = todayInPuertoPlata();
   preselectFromUrl();
   renderEstimate();
+  if (payConfig) restorePaid();
 
   // For paypal-checkout.js (loaded after this file).
   window.SiteBooking = {
