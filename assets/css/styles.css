@@ -2156,12 +2156,22 @@ html:not(.js) .boat-photo__name {
   transform: rotate(45deg);
 }
 
-/* Collapsed panels animate their row from 0fr to 1fr; visibility removes them from tab order. */
+/*
+ * With JS (faq.js), collapsed panels animate their row from 0fr to 1fr; visibility removes them from tab
+ * order. Without JS the questions cannot open anything, so every answer is shown and the "+" is dropped.
+ */
 .faq__panel {
   display: grid;
+}
+
+.js .faq__panel {
   grid-template-rows: 0fr;
   visibility: hidden;
   transition: grid-template-rows 0.35s var(--ease-out), visibility 0s linear 0.35s;
+}
+
+html:not(.js) .faq__icon {
+  display: none;
 }
 
 .faq__item.is-open .faq__panel {
@@ -3125,16 +3135,33 @@ html:not(.js) .boat-photo__name {
 }
 
 /* ============ Motion: scroll reveal ============ */
+/*
+ * reveal.js fades each block in as it scrolls into view. Failsafe: if the script never runs (a download
+ * that fails on a ship's Wi-Fi, an error), the reveal-failsafe animation shows every block after 3 s.
+ * reveal.js cancels it (.reveal-ready on <html>) as soon as it starts, so a normal load never sees it.
+ */
 .js [data-reveal] {
   opacity: 0;
   transform: translateY(1.5rem);
   transition: opacity 0.8s ease, transform 0.8s var(--ease-out);
   transition-delay: var(--delay, 0ms);
+  animation: reveal-failsafe 0.8s var(--ease-out) 3s forwards;
+}
+
+.reveal-ready [data-reveal] {
+  animation: none;
 }
 
 .js [data-reveal].is-visible {
   opacity: 1;
   transform: none;
+}
+
+@keyframes reveal-failsafe {
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* ============ Reduced motion ============ */
