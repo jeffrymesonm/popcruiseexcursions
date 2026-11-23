@@ -1102,10 +1102,12 @@ button {
   background: var(--color-card);
 }
 
+/* --focus (inline on the img) picks which part of the photo stays in view when the box crops it. */
 .about__media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: var(--focus, 50% 50%);
 }
 
 @media (min-width: 768px) {

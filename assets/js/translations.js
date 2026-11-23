@@ -132,7 +132,7 @@ window.SITE_TRANSLATIONS = {
     'about.quote': 'We’re from Puerto Plata and we know every waterfall, every street and every beach. We want your day ashore to be the best memory of your cruise.',
     'about.author': 'Our team',
     'about.role': 'Local guides',
-    'about.alt': 'Snorkeling among striped fish in turquoise water',
+    'about.alt': 'Our team in Puerto Plata',
     'about.lead': 'Puerto Plata Cruise Excursions is a local tour operator in Puerto Plata, Dominican Republic. We pick up cruise passengers at Amber Cove and Taíno Bay, plan the day around the ship’s schedule and look after you in English and Spanish.',
     'about.fact.1': 'Pickup at Amber Cove and Taíno Bay',
     'about.fact.2': '6 tours from',

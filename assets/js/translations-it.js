@@ -52,7 +52,7 @@ window.SITE_TRANSLATIONS.it = {
   'about.quote': 'Siamo di Puerto Plata e conosciamo ogni cascata, ogni strada e ogni spiaggia. Vogliamo che la tua giornata a terra sia il ricordo più bello della tua crociera.',
   'about.author': 'Il nostro team',
   'about.role': 'Guide locali',
-  'about.alt': 'Snorkeling tra pesci a strisce nell’acqua turchese',
+  'about.alt': 'Il nostro team a Puerto Plata',
   'about.lead': 'Puerto Plata Cruise Excursions è un operatore locale di escursioni a Puerto Plata, nella Repubblica Dominicana. Andiamo a prendere i crocieristi ad Amber Cove e a Taíno Bay, organizziamo la giornata in base all’orario della nave e ti assistiamo in spagnolo e in inglese.',
   'about.fact.1': 'Ritiro ad Amber Cove e a Taíno Bay',
   'about.fact.2': '6 escursioni da',
